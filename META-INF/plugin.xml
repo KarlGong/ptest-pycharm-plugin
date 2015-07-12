@@ -6,14 +6,13 @@
 
   <description><![CDATA[
       <p>PyCharm plugin for running ptest.</p>
-      <p>Currently, the only feature is that it makes it easy to run ptest from within the
-      IDE using the standard context menu options.</p>
+      <p>Currently, the only feature is that easily to run/debug ptest within the IDE using the standard run configuration.</p>
     ]]></description>
 
   <change-notes><![CDATA[
       <p>1.0</p>
       <ul>
-      <li>Support running test by ptest.</li>
+      <li>Support running/debugging ptest using the standard run configuration.</li>
       </ul>
     ]]>
   </change-notes>
