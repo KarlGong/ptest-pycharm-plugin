@@ -19,6 +19,8 @@ import com.jetbrains.python.testing.AbstractPythonTestRunConfiguration;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
+
 public class PythonPTestRunConfiguration extends AbstractPythonTestRunConfiguration {
     protected String title = "ptest";
     protected String pluralTitle = "ptest";
@@ -71,7 +73,7 @@ public class PythonPTestRunConfiguration extends AbstractPythonTestRunConfigurat
     public void setXunitXML(String xunitXML) {
         this.xunitXML = xunitXML;
     }
-    
+
     public boolean isUseOptions() {
         return useOptions;
     }
@@ -186,6 +188,15 @@ public class PythonPTestRunConfiguration extends AbstractPythonTestRunConfigurat
             if (StringUtil.isEmptyOrSpaces(xunitXML)) {
                 throw new RuntimeConfigurationError("Please specify xunit XML");
             }
+        }
+        String workingDirectory = getWorkingDirectory();
+        if (!StringUtil.isEmptyOrSpaces(workingDirectory)) {
+            File workingDirectoryFile = new File(workingDirectory);
+            if (!workingDirectoryFile.isDirectory()) {
+                throw new RuntimeConfigurationWarning("Working directory is not a valid directory");
+            }
+        } else {
+            throw new RuntimeConfigurationWarning("Please specify working directory");
         }
         Sdk sdkPath = PythonSdkType.findSdkByPath(getInterpreterPath());
         PyPackage ptest = null;

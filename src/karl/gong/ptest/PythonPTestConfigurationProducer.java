@@ -3,6 +3,7 @@ package karl.gong.ptest;
 import com.intellij.execution.Location;
 import com.intellij.execution.actions.ConfigurationContext;
 import com.intellij.openapi.util.Ref;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
@@ -14,6 +15,8 @@ import com.jetbrains.python.psi.resolve.QualifiedNameFinder;
 import com.jetbrains.python.testing.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.io.File;
 
 public class PythonPTestConfigurationProducer extends PythonTestConfigurationProducer {
 
@@ -94,6 +97,7 @@ public class PythonPTestConfigurationProducer extends PythonTestConfigurationPro
     protected boolean setupConfigurationForPTestMethod(@NotNull final PsiElement element,
                                                        @Nullable final PythonPTestRunConfiguration configuration) {
         try {
+            setValueForEmptyWorkingDirectory(configuration);
             final PyFunction pyFunction = PsiTreeUtil.getParentOfType(element, PyFunction.class, false);
             configuration.setRunTest(true);
             String testTarget = QualifiedNameFinder.findShortestImportableQName(element.getContainingFile()).toString() + "."
@@ -117,6 +121,7 @@ public class PythonPTestConfigurationProducer extends PythonTestConfigurationPro
     protected boolean setupConfigurationForPTestClass(@NotNull final PsiElement element,
                                                       @Nullable final PythonPTestRunConfiguration configuration) {
         try {
+            setValueForEmptyWorkingDirectory(configuration);
             final PyClass pyClass = PsiTreeUtil.getParentOfType(element, PyClass.class, false);
             configuration.setRunTest(true);
             String testTarget = QualifiedNameFinder.findShortestImportableQName(element.getContainingFile()).toString() + "."
@@ -142,6 +147,7 @@ public class PythonPTestConfigurationProducer extends PythonTestConfigurationPro
     protected boolean setupConfigurationForPTestModule(@NotNull final PsiElement element,
                                                        @Nullable final PythonPTestRunConfiguration configuration) {
         try {
+            setValueForEmptyWorkingDirectory(configuration);
             configuration.setRunTest(true);
             String testTarget = QualifiedNameFinder.findShortestImportableQName((PyFile) element).toString();
             configuration.setTestTargets(testTarget);
@@ -168,6 +174,7 @@ public class PythonPTestConfigurationProducer extends PythonTestConfigurationPro
     protected boolean setupConfigurationForPTestPackage(@NotNull final PsiElement element,
                                                         @Nullable final PythonPTestRunConfiguration configuration) {
         try {
+            setValueForEmptyWorkingDirectory(configuration);
             configuration.setRunTest(true);
             String testTarget = QualifiedNameFinder.findShortestImportableQName((PsiDirectory) element).toString();
             configuration.setTestTargets(testTarget);
@@ -190,16 +197,23 @@ public class PythonPTestConfigurationProducer extends PythonTestConfigurationPro
     protected boolean setupConfigurationForXML(@NotNull final PsiElement element,
                                                @Nullable final PythonPTestRunConfiguration configuration) {
         try {
+            setValueForEmptyWorkingDirectory(configuration);
             configuration.setRunFailed(true);
             String xml = ((PsiFile) element).getVirtualFile().getCanonicalPath();
-            configuration.setXunitXML(xml);
-            configuration.setName("ptest " + xml);
+            String xmlRelativePath = new File(configuration.getWorkingDirectory()).toURI().relativize(new File(xml).toURI()).getPath();
+            configuration.setXunitXML(xmlRelativePath);
+            configuration.setName("ptest " + xmlRelativePath);
         } catch (NullPointerException e) {
             return false;
         }
         return true;
     }
     
+    private void setValueForEmptyWorkingDirectory(@NotNull final PythonPTestRunConfiguration configuration) {
+        if (StringUtil.isEmptyOrSpaces(configuration.getWorkingDirectory())) {
+            configuration.setWorkingDirectory(configuration.getProject().getBasePath());
+        } 
+    }
 
     private boolean hasDecorator(PyDecoratable py, String name) {
         return py.getDecoratorList() != null && py.getDecoratorList().findDecorator(name) != null;
