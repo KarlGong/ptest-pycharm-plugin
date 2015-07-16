@@ -34,7 +34,6 @@ public class PythonPTestRunConfigurationEditor extends SettingsEditor<PythonPTes
 
     private JCheckBox variablesCheckBox;
     private RawCommandLineEditor variablesTextField;
-    private TextFieldWithBrowseButton workspaceTextField;
     private JCheckBox verboseCheckBox;
     private JCheckBox disableScreenshotCheckBox;
 
@@ -50,11 +49,6 @@ public class PythonPTestRunConfigurationEditor extends SettingsEditor<PythonPTes
                 .createSingleFileDescriptor("xml");
         fileChooserDescriptor.setTitle("Select XML Path");
         xunitXMLTextField.addBrowseFolderListener("Select XML Path", "Select xunit xml to run with failed/skipped tests", project, fileChooserDescriptor);
-
-        final FileChooserDescriptor folderChooserDescriptor = FileChooserDescriptorFactory
-                .createSingleFolderDescriptor();
-        folderChooserDescriptor.setTitle("Specify Workspace");
-        workspaceTextField.addBrowseFolderListener("Specify Workspace", "Specify the workspace of ptest", project, folderChooserDescriptor);
 
         runTestRadioButton.addActionListener(new ActionListener() {
             @Override
@@ -109,8 +103,6 @@ public class PythonPTestRunConfigurationEditor extends SettingsEditor<PythonPTes
         xunitXMLTextField.setEnabled(config.isRunFailed());
         xunitXMLTextField.setText(config.getXunitXML());
         
-        workspaceTextField.setText(config.getWorkSpace());
-        
         optionsCheckBox.setSelected(config.isUseOptions());
         optionsTextField.setEnabled(config.isUseOptions());
         optionsTextField.setText(config.getOptions());
@@ -131,8 +123,6 @@ public class PythonPTestRunConfigurationEditor extends SettingsEditor<PythonPTes
         
         config.setRunFailed(runFailedRadioButton.isSelected());
         config.setXunitXML(xunitXMLTextField.getText().trim());
-        
-        config.setWorkSpace(workspaceTextField.getText().trim());
         
         config.setUseOptions(optionsCheckBox.isSelected());
         config.setOptions(optionsTextField.getText().trim());

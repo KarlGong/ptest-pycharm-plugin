@@ -40,11 +40,6 @@ public class PythonPTestCommandLineState extends PythonTestCommandLineStateBase 
         if (configuration.isUseVariables() && !StringUtil.isEmptyOrSpaces(variables)) {
             script_params.addParametersString(variables);
         }
-        String workSpace = configuration.getWorkSpace();
-        if (!StringUtil.isEmptyOrSpaces(workSpace)) {
-            script_params.addParameter("-w");
-            script_params.addParameter(workSpace);
-        }
         if (configuration.isRunTest()) {
             script_params.addParameter("-t");
             script_params.addParameter(configuration.getTestTargets());

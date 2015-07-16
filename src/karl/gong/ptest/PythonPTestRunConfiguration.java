@@ -27,7 +27,6 @@ public class PythonPTestRunConfiguration extends AbstractPythonTestRunConfigurat
     private String testTargets = "";
     private boolean runFailed = false;
     private String xunitXML = "";
-    private String workSpace = "";
     private boolean useOptions = false;
     private String options = "";
     private boolean useVariables = false;
@@ -73,14 +72,6 @@ public class PythonPTestRunConfiguration extends AbstractPythonTestRunConfigurat
         this.xunitXML = xunitXML;
     }
     
-    public void setWorkSpace(String workSpace) {
-        this.workSpace = workSpace;
-    }
-    
-    public String getWorkSpace() {
-        return this.workSpace;
-    }
-
     public boolean isUseOptions() {
         return useOptions;
     }
@@ -162,7 +153,6 @@ public class PythonPTestRunConfiguration extends AbstractPythonTestRunConfigurat
         testTargets = JDOMExternalizerUtil.readField(element, "TEST_TARGETS");
         runFailed = Boolean.parseBoolean(JDOMExternalizerUtil.readField(element, "RUN_FAILED"));
         xunitXML = JDOMExternalizerUtil.readField(element, "XUNIT_XML");
-        workSpace = JDOMExternalizerUtil.readField(element, "WORKSPACE");
         useOptions = Boolean.parseBoolean(JDOMExternalizerUtil.readField(element, "USE_OPTIONS"));
         options = JDOMExternalizerUtil.readField(element, "OPTIONS");
         useVariables = Boolean.parseBoolean(JDOMExternalizerUtil.readField(element, "USE_VARIABLES"));
@@ -178,7 +168,6 @@ public class PythonPTestRunConfiguration extends AbstractPythonTestRunConfigurat
         JDOMExternalizerUtil.writeField(element, "TEST_TARGETS", testTargets);
         JDOMExternalizerUtil.writeField(element, "RUN_FAILED", String.valueOf(runFailed));
         JDOMExternalizerUtil.writeField(element, "XUNIT_XML", xunitXML);
-        JDOMExternalizerUtil.writeField(element, "WORKSPACE", workSpace);
         JDOMExternalizerUtil.writeField(element, "USE_OPTIONS", String.valueOf(useOptions));
         JDOMExternalizerUtil.writeField(element, "OPTIONS", options);
         JDOMExternalizerUtil.writeField(element, "USE_VARIABLES", String.valueOf(useVariables));
