@@ -6,6 +6,7 @@ import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.jetbrains.python.psi.*;
@@ -52,6 +53,10 @@ public class PythonPTestConfigurationProducer extends PythonTestConfigurationPro
         }
         if (isPTestPackage(element, config)) {
             return setupConfigurationForPTestPackage(element, config);
+        }
+        // is XML
+        if (isXML(element, config)) {
+            return setupConfigurationForXML(element, config);
         }
         return false;
     }
@@ -172,6 +177,29 @@ public class PythonPTestConfigurationProducer extends PythonTestConfigurationPro
         }
         return true;
     }
+
+    protected boolean isXML(@NotNull final PsiElement element,
+                            @Nullable final PythonPTestRunConfiguration configuration) {
+        if (element instanceof PsiFile) {
+            VirtualFile file = ((PsiFile) element).getVirtualFile();
+            return file.getExtension() != null && file.getExtension().equals("xml");
+        }
+        return false;
+    }
+
+    protected boolean setupConfigurationForXML(@NotNull final PsiElement element,
+                                               @Nullable final PythonPTestRunConfiguration configuration) {
+        try {
+            configuration.setRunFailed(true);
+            String xml = ((PsiFile) element).getVirtualFile().getCanonicalPath();
+            configuration.setXunitXML(xml);
+            configuration.setName("ptest " + xml);
+        } catch (NullPointerException e) {
+            return false;
+        }
+        return true;
+    }
+    
 
     private boolean hasDecorator(PyDecoratable py, String name) {
         return py.getDecoratorList() != null && py.getDecoratorList().findDecorator(name) != null;
