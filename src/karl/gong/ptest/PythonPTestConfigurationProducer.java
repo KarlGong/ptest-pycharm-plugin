@@ -58,36 +58,15 @@ public class PythonPTestConfigurationProducer extends PythonTestConfigurationPro
 
     @Override
     public boolean isConfigurationFromContext(AbstractPythonTestRunConfiguration configuration, ConfigurationContext context) {
-        // no context
-        if (context == null) return false;
-        // location is invalid
-        final Location location = context.getLocation();
-        if (location == null || !isAvailable(location)) return false;
-        // location is white space
-        PsiElement element = location.getPsiElement();
-        if (element instanceof PsiWhiteSpace) {
-            element = PyUtil.findNonWhitespaceAtOffset(element.getContainingFile(), element.getTextOffset());
-        }
-        // element is invalid
-        if (element == null) return false;
-        // is in <if __name__ = "__main__"> section
-        if (PythonUnitTestRunnableScriptFilter.isIfNameMain(location)) return false;
-        // is ptest target
         PythonPTestRunConfiguration config = (PythonPTestRunConfiguration) configuration;
         PythonPTestRunConfiguration newConfig = new PythonPTestRunConfiguration(config.getProject(), config.getFactory());
-        if (isPTestMethod(element, newConfig)) {
-            setupConfigurationForPTestMethod(element, newConfig);
-        } else if (isPTestClass(element, newConfig)) {
-            setupConfigurationForPTestClass(element, newConfig);
-        } else if (isPTestModule(element, newConfig)) {
-            setupConfigurationForPTestModule(element, newConfig);
-        } else if (isPTestPackage(element, newConfig)) {
-            setupConfigurationForPTestPackage(element, newConfig);
-        }
-        if (newConfig.isRunTest()) {
-            return config.isRunTest() && newConfig.getTestTargets().equals(config.getTestTargets());
-        } else if (newConfig.isRunFailed()) {
-            return config.isRunFailed() && newConfig.getXunitXML().equals(config.getXunitXML());
+
+        if (setupConfigurationFromContext(newConfig, context, null)) {
+            if (newConfig.isRunTest()) {
+                return config.isRunTest() && newConfig.getTestTargets().equals(config.getTestTargets());
+            } else if (newConfig.isRunFailed()) {
+                return config.isRunFailed() && newConfig.getXunitXML().equals(config.getXunitXML());
+            }
         }
         return false;
     }
