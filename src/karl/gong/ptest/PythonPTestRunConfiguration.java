@@ -27,10 +27,13 @@ public class PythonPTestRunConfiguration extends AbstractPythonTestRunConfigurat
     private String testTargets = "";
     private boolean runFailed = false;
     private String xunitXML = "";
+    private String workSpace = "";
     private boolean useOptions = false;
     private String options = "";
     private boolean useVariables = false;
     private String variables = "";
+    private boolean verbose = true;
+    private boolean disableScreenshot = false;
 
     protected PythonPTestRunConfiguration(final Project project, final ConfigurationFactory factory) {
         super(project, factory);
@@ -69,6 +72,14 @@ public class PythonPTestRunConfiguration extends AbstractPythonTestRunConfigurat
     public void setXunitXML(String xunitXML) {
         this.xunitXML = xunitXML;
     }
+    
+    public void setWorkSpace(String workSpace) {
+        this.workSpace = workSpace;
+    }
+    
+    public String getWorkSpace() {
+        return this.workSpace;
+    }
 
     public boolean isUseOptions() {
         return useOptions;
@@ -100,6 +111,22 @@ public class PythonPTestRunConfiguration extends AbstractPythonTestRunConfigurat
 
     public void setVariables(String variables) {
         this.variables = variables;
+    }
+
+    public boolean isVerbose() {
+        return verbose;
+    }
+
+    public void setVerbose(boolean verbose) {
+        this.verbose = verbose;
+    }
+
+    public boolean isDisableScreenshot() {
+        return disableScreenshot;
+    }
+
+    public void setDisableScreenshot(boolean disableScreenshot) {
+        this.disableScreenshot = disableScreenshot;
     }
 
     @Override
@@ -135,10 +162,13 @@ public class PythonPTestRunConfiguration extends AbstractPythonTestRunConfigurat
         testTargets = JDOMExternalizerUtil.readField(element, "TEST_TARGETS");
         runFailed = Boolean.parseBoolean(JDOMExternalizerUtil.readField(element, "RUN_FAILED"));
         xunitXML = JDOMExternalizerUtil.readField(element, "XUNIT_XML");
+        workSpace = JDOMExternalizerUtil.readField(element, "WORKSPACE");
         useOptions = Boolean.parseBoolean(JDOMExternalizerUtil.readField(element, "USE_OPTIONS"));
         options = JDOMExternalizerUtil.readField(element, "OPTIONS");
         useVariables = Boolean.parseBoolean(JDOMExternalizerUtil.readField(element, "USE_VARIABLES"));
         variables = JDOMExternalizerUtil.readField(element, "VARIABLES");
+        verbose = Boolean.parseBoolean(JDOMExternalizerUtil.readField(element, "VERBOSE"));
+        disableScreenshot = Boolean.parseBoolean(JDOMExternalizerUtil.readField(element, "DISABLE_SCREENSHOT"));
     }
 
     @Override
@@ -148,10 +178,13 @@ public class PythonPTestRunConfiguration extends AbstractPythonTestRunConfigurat
         JDOMExternalizerUtil.writeField(element, "TEST_TARGETS", testTargets);
         JDOMExternalizerUtil.writeField(element, "RUN_FAILED", String.valueOf(runFailed));
         JDOMExternalizerUtil.writeField(element, "XUNIT_XML", xunitXML);
+        JDOMExternalizerUtil.writeField(element, "WORKSPACE", workSpace);
         JDOMExternalizerUtil.writeField(element, "USE_OPTIONS", String.valueOf(useOptions));
         JDOMExternalizerUtil.writeField(element, "OPTIONS", options);
         JDOMExternalizerUtil.writeField(element, "USE_VARIABLES", String.valueOf(useVariables));
         JDOMExternalizerUtil.writeField(element, "VARIABLES", variables);
+        JDOMExternalizerUtil.writeField(element, "VERBOSE", String.valueOf(verbose));
+        JDOMExternalizerUtil.writeField(element, "DISABLE_SCREENSHOT", String.valueOf(disableScreenshot));
     }
 
     @Override

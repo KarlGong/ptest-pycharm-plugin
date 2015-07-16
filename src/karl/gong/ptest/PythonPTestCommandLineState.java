@@ -25,15 +25,7 @@ public class PythonPTestCommandLineState extends PythonTestCommandLineStateBase 
 
     @Override
     protected List<String> getTestSpecs() {
-        List<String> specs = new ArrayList<String>();
-        if (configuration.isRunTest()) {
-            specs.add("-t");
-            specs.add(configuration.getTestTargets());
-        } else if (configuration.isRunFailed()) {
-            specs.add("-R");
-            specs.add(configuration.getXunitXML());
-        }
-        return specs;
+        return new ArrayList<String>();
     }
 
     @Override
@@ -47,6 +39,24 @@ public class PythonPTestCommandLineState extends PythonTestCommandLineStateBase 
         String variables = configuration.getVariables();
         if (configuration.isUseVariables() && !StringUtil.isEmptyOrSpaces(variables)) {
             script_params.addParametersString(variables);
+        }
+        String workSpace = configuration.getWorkSpace();
+        if (!StringUtil.isEmptyOrSpaces(workSpace)) {
+            script_params.addParameter("-w");
+            script_params.addParameter(workSpace);
+        }
+        if (configuration.isRunTest()) {
+            script_params.addParameter("-t");
+            script_params.addParameter(configuration.getTestTargets());
+        } else if (configuration.isRunFailed()) {
+            script_params.addParameter("-R");
+            script_params.addParameter(configuration.getXunitXML());
+        }
+        if (configuration.isVerbose()) {
+            script_params.addParameter("-v");
+        }
+        if (configuration.isDisableScreenshot()) {
+            script_params.addParameter("--disablescreenshot");
         }
     }
 }
