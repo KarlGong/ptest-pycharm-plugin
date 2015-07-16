@@ -1,13 +1,10 @@
 package karl.gong.ptest;
 
-import com.intellij.execution.configuration.EnvironmentVariablesComponent;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.JBMenuItem;
-import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.ui.PanelWithAnchor;
 import com.intellij.ui.RawCommandLineEditor;

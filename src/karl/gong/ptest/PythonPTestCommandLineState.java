@@ -1,16 +1,11 @@
 package karl.gong.ptest;
 
 import com.intellij.execution.ExecutionException;
-import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.execution.configurations.ParamsGroup;
-import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.execution.ui.ConsoleView;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.jetbrains.python.testing.PythonTestCommandLineStateBase;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
