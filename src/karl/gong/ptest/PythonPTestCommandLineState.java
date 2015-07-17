@@ -38,7 +38,15 @@ public class PythonPTestCommandLineState extends PythonTestCommandLineStateBase 
 
     @Override
     protected List<String> getTestSpecs() {
-        return new ArrayList<String>();
+        List<String> specs =  new ArrayList<String>();
+        if (configuration.isRunTest()) {
+            specs.add("-t");
+            specs.add(configuration.getTestTargets());
+        } else if (configuration.isRunFailed()) {
+            specs.add("-R");
+            specs.add(configuration.getXunitXML());
+        }
+        return specs;
     }
 
     @Override
@@ -52,13 +60,6 @@ public class PythonPTestCommandLineState extends PythonTestCommandLineStateBase 
         String variables = configuration.getVariables();
         if (configuration.isUseVariables() && !StringUtil.isEmptyOrSpaces(variables)) {
             script_params.addParametersString(variables);
-        }
-        if (configuration.isRunTest()) {
-            script_params.addParameter("-t");
-            script_params.addParameter(configuration.getTestTargets());
-        } else if (configuration.isRunFailed()) {
-            script_params.addParameter("-R");
-            script_params.addParameter(configuration.getXunitXML());
         }
         if (configuration.isVerbose()) {
             script_params.addParameter("-v");
