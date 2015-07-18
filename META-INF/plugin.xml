@@ -1,15 +1,20 @@
 <idea-plugin version="2">
   <id>karl.gong.plugin.ptest</id>
   <name>ptest</name>
-  <version>1.0</version>
-  <vendor email="karl.gong@outlook.com" url="https://pypi.python.org/pypi/ptest">Karl Gong</vendor>
+  <version>2.0</version>
+  <vendor email="karl.gong@outlook.com" url="https://github.com/KarlGong/ptest-pycharm-plugin">Karl Gong</vendor>
 
   <description><![CDATA[
       <p>PyCharm plugin for running ptest.</p>
-      <p>Currently, the only feature is that easily to run/debug ptest within the IDE using the standard run configuration.</p>
+      <p>Easily to run/debug ptest using the standard run configuration.</p>
+      <>
     ]]></description>
 
   <change-notes><![CDATA[
+      <p>2.0</p>
+      <ul>
+      <li>Support rerunning the failed/skipped tests in last run.</li>
+      </ul>
       <p>1.0</p>
       <ul>
       <li>Support running/debugging ptest using the standard run configuration.</li>
