@@ -123,6 +123,12 @@ public class PythonPTestCommandLineState extends PythonTestCommandLineStateBase 
         if (realPath.endsWith("!")) {
             realPath = realPath.substring(0, realPath.lastIndexOf("/"));
         }
+        // decode
+        try {
+            realPath = java.net.URLDecoder.decode(realPath, "utf-8");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         return new File(realPath);
     }
 }
