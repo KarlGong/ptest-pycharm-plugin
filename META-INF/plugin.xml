@@ -2,7 +2,7 @@
   <id>karl.gong.plugin.ptest</id>
   <name>ptest</name>
   <version>2.0</version>
-  <vendor email="karl.gong@outlook.com" url="https://github.com/KarlGong/ptest-pycharm-plugin">Karl Gong</vendor>
+  <vendor email="karl.gong@outlook.com" url="https://github.com/KarlGong">Karl Gong</vendor>
 
   <description><![CDATA[
       <p>PyCharm plugin for <a href="https://pypi.python.org/pypi/ptest">ptest</a></p>
