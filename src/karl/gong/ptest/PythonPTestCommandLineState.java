@@ -20,6 +20,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.jetbrains.python.run.CommandLinePatcher;
 import com.jetbrains.python.testing.PythonTestCommandLineStateBase;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,12 +34,12 @@ public class PythonPTestCommandLineState extends PythonTestCommandLineStateBase 
 
     @Override
     protected String getRunner() {
-        return "pycharm/ptestrunner.py";
+        return "ptestrunner.py";
     }
 
     @Override
     protected List<String> getTestSpecs() {
-        List<String> specs =  new ArrayList<String>();
+        List<String> specs = new ArrayList<String>();
         if (configuration.isRunTest()) {
             specs.add("-t");
             specs.add(configuration.getTestTargets());
@@ -70,6 +71,16 @@ public class PythonPTestCommandLineState extends PythonTestCommandLineStateBase 
     }
 
     @Override
+    protected void addTestRunnerParameters(GeneralCommandLine cmd) throws ExecutionException {
+        ParamsGroup script_params = cmd.getParametersList().getParamsGroup(GROUP_SCRIPT);
+        assert script_params != null;
+        script_params.addParameter(new File(getJarDir(getClass()), getRunner()).getAbsolutePath());
+        addBeforeParameters(cmd);
+        script_params.addParameters(getTestSpecs());
+        addAfterParameters(cmd);
+    }
+
+    @Override
     public ExecutionResult execute(Executor executor, CommandLinePatcher... patchers) throws ExecutionException {
         final ProcessHandler processHandler = startProcess(patchers);
         final ConsoleView console = createAndAttachConsole(configuration.getProject(), processHandler, executor);
@@ -82,16 +93,36 @@ public class PythonPTestCommandLineState extends PythonTestCommandLineStateBase 
 
         PythonPTestRerunFailedTestsAction rerunFailedTestsAction = new PythonPTestRerunFailedTestsAction(console);
         if (console instanceof SMTRunnerConsoleView) {
-            rerunFailedTestsAction.init(((BaseTestsOutputConsoleView)console).getProperties());
+            rerunFailedTestsAction.init(((BaseTestsOutputConsoleView) console).getProperties());
             rerunFailedTestsAction.setModelProvider(new Getter<TestFrameworkRunningModel>() {
                 @Override
                 public TestFrameworkRunningModel get() {
-                    return ((SMTRunnerConsoleView)console).getResultsViewer();
+                    return ((SMTRunnerConsoleView) console).getResultsViewer();
                 }
             });
         }
 
         executionResult.setRestartActions(rerunFailedTestsAction, new ToggleAutoTestAction());
         return executionResult;
+    }
+
+    private static File getJarDir(Class<?> cls) {
+        ClassLoader loader = cls.getClassLoader();
+        String clsName = cls.getName();
+        // convert class name to path
+        String clsPath = clsName.replace(".", "/") + ".class";
+        java.net.URL url = loader.getResource(clsPath);
+        String realPath = url.getPath();
+        int pos = realPath.indexOf("file:");
+        if (pos > -1) {
+            realPath = realPath.substring(pos + 5);
+        }
+        pos = realPath.indexOf(clsPath);
+        realPath = realPath.substring(0, pos - 1);
+        // it is a jar file
+        if (realPath.endsWith("!")) {
+            realPath = realPath.substring(0, realPath.lastIndexOf("/"));
+        }
+        return new File(realPath);
     }
 }
