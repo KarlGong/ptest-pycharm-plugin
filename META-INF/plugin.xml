@@ -5,7 +5,7 @@
   <vendor email="karl.gong@outlook.com" url="https://github.com/KarlGong/ptest-pycharm-plugin">Karl Gong</vendor>
 
   <description><![CDATA[
-      <p>PyCharm plugin for running ptest.</p>
+      <p>PyCharm plugin for <a href="https://pypi.python.org/pypi/ptest">ptest</a></p>
       <p>Easily to run/debug ptest using the standard run configuration.</p>
     ]]></description>
 
