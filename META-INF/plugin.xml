@@ -7,7 +7,6 @@
   <description><![CDATA[
       <p>PyCharm plugin for running ptest.</p>
       <p>Easily to run/debug ptest using the standard run configuration.</p>
-      <>
     ]]></description>
 
   <change-notes><![CDATA[
