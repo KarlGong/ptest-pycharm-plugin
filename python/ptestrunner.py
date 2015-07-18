@@ -22,7 +22,7 @@ class TeamcityTestListener(object):
         self.messages.testSuiteFinished(suiteName="Default Suite")
 
     def on_test_case_start(self, test_case):
-        self.messages.testStarted(testName=test_case.full_name)
+        self.messages.testStarted(testName=test_case.full_name, location=test_case.location)
 
     def on_test_case_finish(self, test_case):
         from ptest.enumeration import TestCaseStatus
