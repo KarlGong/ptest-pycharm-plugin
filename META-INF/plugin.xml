@@ -32,6 +32,7 @@
     <!-- Add your extensions here -->
       <configurationType implementation="karl.gong.ptest.PythonPTestConfigurationType" order="FIRST"/>
       <runConfigurationProducer implementation="karl.gong.ptest.PythonPTestConfigurationProducer" order="FIRST"/>
+      <inspectionToolProvider implementation="karl.gong.ptest.PTestRedeclarationProvider"/>
   </extensions>
 
   <application-components>
