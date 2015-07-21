@@ -1,4 +1,4 @@
-package karl.gong.ptest;
+package karl.gong.ptest.runconfiguration;
 
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
@@ -17,7 +17,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class PythonPTestRunConfigurationEditor extends SettingsEditor<PythonPTestRunConfiguration> implements PanelWithAnchor {
+public class PTestRunConfigurationEditor extends SettingsEditor<PTestRunConfiguration> implements PanelWithAnchor {
     private JPanel rootPanel;
     private JPanel mainPanel;
     private JPanel commonOptionsPlaceholder;
@@ -40,7 +40,7 @@ public class PythonPTestRunConfigurationEditor extends SettingsEditor<PythonPTes
     private final Project project;
     private JComponent anchor;
 
-    public PythonPTestRunConfigurationEditor(final Project project, PythonPTestRunConfiguration configuration) {
+    public PTestRunConfigurationEditor(final Project project, PTestRunConfiguration configuration) {
         this.project = project;
         commonOptionsForm = PyCommonOptionsFormFactory.getInstance().createForm(configuration.getCommonOptionsFormData());
         commonOptionsPlaceholder.add(commonOptionsForm.getMainPanel());
@@ -93,7 +93,7 @@ public class PythonPTestRunConfigurationEditor extends SettingsEditor<PythonPTes
     }
 
     @Override
-    protected void resetEditorFrom(PythonPTestRunConfiguration config) {
+    protected void resetEditorFrom(PTestRunConfiguration config) {
         AbstractPythonRunConfiguration.copyParams(config, commonOptionsForm);
         runTestRadioButton.setSelected(config.isRunTest());
         testTargetsTextField.setEnabled(config.isRunTest());
@@ -116,7 +116,7 @@ public class PythonPTestRunConfigurationEditor extends SettingsEditor<PythonPTes
     }
 
     @Override
-    protected void applyEditorTo(PythonPTestRunConfiguration config) throws ConfigurationException {
+    protected void applyEditorTo(PTestRunConfiguration config) throws ConfigurationException {
         AbstractPythonRunConfiguration.copyParams(commonOptionsForm, config);
         config.setRunTest(runTestRadioButton.isSelected());
         config.setTestTargets(testTargetsTextField.getText().trim());

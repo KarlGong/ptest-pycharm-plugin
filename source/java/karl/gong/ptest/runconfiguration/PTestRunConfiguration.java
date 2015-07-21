@@ -1,4 +1,4 @@
-package karl.gong.ptest;
+package karl.gong.ptest.runconfiguration;
 
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.Executor;
@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 
-public class PythonPTestRunConfiguration extends AbstractPythonTestRunConfiguration {
+public class PTestRunConfiguration extends AbstractPythonTestRunConfiguration {
     protected String title = "ptest";
     protected String pluralTitle = "ptest";
 
@@ -36,7 +36,7 @@ public class PythonPTestRunConfiguration extends AbstractPythonTestRunConfigurat
     private boolean verbose = true;
     private boolean disableScreenshot = false;
 
-    protected PythonPTestRunConfiguration(final Project project, final ConfigurationFactory factory) {
+    protected PTestRunConfiguration(final Project project, final ConfigurationFactory factory) {
         super(project, factory);
     }
 
@@ -139,12 +139,12 @@ public class PythonPTestRunConfiguration extends AbstractPythonTestRunConfigurat
 
     @Override
     protected SettingsEditor<? extends RunConfiguration> createConfigurationEditor() {
-        return new PythonPTestRunConfigurationEditor(getProject(), this);
+        return new PTestRunConfigurationEditor(getProject(), this);
     }
 
     @Override
     public RunProfileState getState(@NotNull Executor executor, @NotNull ExecutionEnvironment env) throws ExecutionException {
-        return new PythonPTestCommandLineState(this, env);
+        return new PTestCommandLineState(this, env);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package karl.gong.ptest;
+package karl.gong.ptest.runconfiguration;
 
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.Executor;
@@ -19,8 +19,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 
-public class PythonPTestRerunFailedTestsAction extends AbstractRerunFailedTestsAction {
-    protected PythonPTestRerunFailedTestsAction(@NotNull ComponentContainer componentContainer) {
+public class PTestRerunFailedTestsAction extends AbstractRerunFailedTestsAction {
+    protected PTestRerunFailedTestsAction(@NotNull ComponentContainer componentContainer) {
         super(componentContainer);
     }
 
@@ -51,20 +51,20 @@ public class PythonPTestRerunFailedTestsAction extends AbstractRerunFailedTestsA
         public RunProfileState getState(@NotNull Executor executor, @NotNull ExecutionEnvironment env) throws ExecutionException {
             final AbstractPythonRunConfiguration configuration = ((AbstractPythonRunConfiguration) getPeer());
 
-            return new FailedPythonTestCommandLineState((PythonPTestRunConfiguration) configuration, env,
-                    (PythonPTestCommandLineState) configuration.getState(executor, env));
+            return new FailedPTestCommandLineState((PTestRunConfiguration) configuration, env,
+                    (PTestCommandLineState) configuration.getState(executor, env));
         }
     }
 
-    private class FailedPythonTestCommandLineState extends PythonPTestCommandLineState {
+    private class FailedPTestCommandLineState extends PTestCommandLineState {
 
-        private final PythonPTestCommandLineState state;
-        private final PythonPTestRunConfiguration configuration;
+        private final PTestCommandLineState state;
+        private final PTestRunConfiguration configuration;
         private final Project project;
 
-        public FailedPythonTestCommandLineState(PythonPTestRunConfiguration configuration,
-                                                ExecutionEnvironment env,
-                                                PythonPTestCommandLineState state) {
+        public FailedPTestCommandLineState(PTestRunConfiguration configuration,
+                                           ExecutionEnvironment env,
+                                           PTestCommandLineState state) {
             super(configuration, env);
             this.state = state;
             this.configuration = configuration;

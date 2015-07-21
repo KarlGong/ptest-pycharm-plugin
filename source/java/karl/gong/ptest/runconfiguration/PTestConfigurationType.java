@@ -1,4 +1,4 @@
-package karl.gong.ptest;
+package karl.gong.ptest.runconfiguration;
 
 import com.intellij.execution.configurations.*;
 import com.jetbrains.python.run.PythonConfigurationFactoryBase;
@@ -7,22 +7,22 @@ import com.intellij.openapi.project.Project;
 
 import javax.swing.*;
 
-public class PythonPTestConfigurationType extends ConfigurationTypeBase {
+public class PTestConfigurationType extends ConfigurationTypeBase {
     
     public final PythonPTestConfigurationFactory PY_PTEST_FACTORY = new PythonPTestConfigurationFactory(this);
 
-    public PythonPTestConfigurationType() {
+    public PTestConfigurationType() {
         super("ptest", "ptest", "run ptest", PythonIcons.Python.PythonTests);
         addFactory(new PythonPTestConfigurationFactory(this) {
             @Override
             public RunConfiguration createTemplateConfiguration(Project project) {
-                return new PythonPTestRunConfiguration(project, this);
+                return new PTestRunConfiguration(project, this);
             }
         });
     }
 
-    public static PythonPTestConfigurationType getInstance() {
-        return ConfigurationTypeUtil.findConfigurationType(PythonPTestConfigurationType.class);
+    public static PTestConfigurationType getInstance() {
+        return ConfigurationTypeUtil.findConfigurationType(PTestConfigurationType.class);
     }
 
 
@@ -33,7 +33,7 @@ public class PythonPTestConfigurationType extends ConfigurationTypeBase {
 
         @Override
         public RunConfiguration createTemplateConfiguration(Project project) {
-            return new PythonPTestRunConfiguration(project, this);
+            return new PTestRunConfiguration(project, this);
         }
 
         @Override

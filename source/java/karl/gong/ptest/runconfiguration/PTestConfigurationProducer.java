@@ -1,4 +1,4 @@
-package karl.gong.ptest;
+package karl.gong.ptest.runconfiguration;
 
 import com.intellij.execution.Location;
 import com.intellij.execution.actions.ConfigurationContext;
@@ -18,10 +18,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 
-public class PythonPTestConfigurationProducer extends PythonTestConfigurationProducer {
+public class PTestConfigurationProducer extends PythonTestConfigurationProducer {
 
-    public PythonPTestConfigurationProducer() {
-        super(PythonPTestConfigurationType.getInstance().PY_PTEST_FACTORY);
+    public PTestConfigurationProducer() {
+        super(PTestConfigurationType.getInstance().PY_PTEST_FACTORY);
     }
 
     @Override
@@ -44,7 +44,7 @@ public class PythonPTestConfigurationProducer extends PythonTestConfigurationPro
         // is in <if __name__ = "__main__"> section
         if (PythonUnitTestRunnableScriptFilter.isIfNameMain(location)) return false;
         // is ptest target
-        PythonPTestRunConfiguration config = (PythonPTestRunConfiguration) configuration;
+        PTestRunConfiguration config = (PTestRunConfiguration) configuration;
         if (isPTestMethod(element, config)) {
             return setupConfigurationForPTestMethod(element, config);
         }
@@ -66,8 +66,8 @@ public class PythonPTestConfigurationProducer extends PythonTestConfigurationPro
 
     @Override
     public boolean isConfigurationFromContext(AbstractPythonTestRunConfiguration configuration, ConfigurationContext context) {
-        PythonPTestRunConfiguration config = (PythonPTestRunConfiguration) configuration;
-        PythonPTestRunConfiguration newConfig = new PythonPTestRunConfiguration(config.getProject(), config.getFactory());
+        PTestRunConfiguration config = (PTestRunConfiguration) configuration;
+        PTestRunConfiguration newConfig = new PTestRunConfiguration(config.getProject(), config.getFactory());
 
         if (setupConfigurationFromContext(newConfig, context, null)) {
             if (newConfig.isRunTest()) {
@@ -84,7 +84,7 @@ public class PythonPTestConfigurationProducer extends PythonTestConfigurationPro
     }
 
     protected boolean isPTestMethod(@NotNull final PsiElement element,
-                                    @Nullable final PythonPTestRunConfiguration configuration) {
+                                    @Nullable final PTestRunConfiguration configuration) {
         final PyFunction pyFunction = PsiTreeUtil.getParentOfType(element, PyFunction.class, false);
         if (pyFunction == null) return false;
 
@@ -95,7 +95,7 @@ public class PythonPTestConfigurationProducer extends PythonTestConfigurationPro
     }
 
     protected boolean setupConfigurationForPTestMethod(@NotNull final PsiElement element,
-                                                       @Nullable final PythonPTestRunConfiguration configuration) {
+                                                       @Nullable final PTestRunConfiguration configuration) {
         try {
             setValueForEmptyWorkingDirectory(configuration);
             final PyFunction pyFunction = PsiTreeUtil.getParentOfType(element, PyFunction.class, false);
@@ -111,7 +111,7 @@ public class PythonPTestConfigurationProducer extends PythonTestConfigurationPro
     }
 
     protected boolean isPTestClass(@NotNull final PsiElement element,
-                                   @Nullable final PythonPTestRunConfiguration configuration) {
+                                   @Nullable final PTestRunConfiguration configuration) {
         final PyClass pyClass = PsiTreeUtil.getParentOfType(element, PyClass.class, false);
         if (pyClass == null) return false;
 
@@ -119,7 +119,7 @@ public class PythonPTestConfigurationProducer extends PythonTestConfigurationPro
     }
 
     protected boolean setupConfigurationForPTestClass(@NotNull final PsiElement element,
-                                                      @Nullable final PythonPTestRunConfiguration configuration) {
+                                                      @Nullable final PTestRunConfiguration configuration) {
         try {
             setValueForEmptyWorkingDirectory(configuration);
             final PyClass pyClass = PsiTreeUtil.getParentOfType(element, PyClass.class, false);
@@ -135,7 +135,7 @@ public class PythonPTestConfigurationProducer extends PythonTestConfigurationPro
     }
 
     protected boolean isPTestModule(@NotNull final PsiElement element,
-                                    @Nullable final PythonPTestRunConfiguration configuration) {
+                                    @Nullable final PTestRunConfiguration configuration) {
         if (element instanceof PyFile) {
             VirtualFile file = ((PyFile) element).getVirtualFile();
             if (file.getName().equals("__init__.py")) return false;
@@ -145,7 +145,7 @@ public class PythonPTestConfigurationProducer extends PythonTestConfigurationPro
     }
 
     protected boolean setupConfigurationForPTestModule(@NotNull final PsiElement element,
-                                                       @Nullable final PythonPTestRunConfiguration configuration) {
+                                                       @Nullable final PTestRunConfiguration configuration) {
         try {
             setValueForEmptyWorkingDirectory(configuration);
             configuration.setRunTest(true);
@@ -159,7 +159,7 @@ public class PythonPTestConfigurationProducer extends PythonTestConfigurationPro
     }
 
     protected boolean isPTestPackage(@NotNull final PsiElement element,
-                                     @Nullable final PythonPTestRunConfiguration configuration) {
+                                     @Nullable final PTestRunConfiguration configuration) {
         if (element instanceof PsiDirectory) {
             boolean isPackage = false;
             for (VirtualFile file : ((PsiDirectory) element).getVirtualFile().getChildren()) {
@@ -172,7 +172,7 @@ public class PythonPTestConfigurationProducer extends PythonTestConfigurationPro
     }
 
     protected boolean setupConfigurationForPTestPackage(@NotNull final PsiElement element,
-                                                        @Nullable final PythonPTestRunConfiguration configuration) {
+                                                        @Nullable final PTestRunConfiguration configuration) {
         try {
             setValueForEmptyWorkingDirectory(configuration);
             configuration.setRunTest(true);
@@ -186,7 +186,7 @@ public class PythonPTestConfigurationProducer extends PythonTestConfigurationPro
     }
 
     protected boolean isXML(@NotNull final PsiElement element,
-                            @Nullable final PythonPTestRunConfiguration configuration) {
+                            @Nullable final PTestRunConfiguration configuration) {
         if (element instanceof PsiFile) {
             VirtualFile file = ((PsiFile) element).getVirtualFile();
             return file.getExtension() != null && file.getExtension().equals("xml");
@@ -195,7 +195,7 @@ public class PythonPTestConfigurationProducer extends PythonTestConfigurationPro
     }
 
     protected boolean setupConfigurationForXML(@NotNull final PsiElement element,
-                                               @Nullable final PythonPTestRunConfiguration configuration) {
+                                               @Nullable final PTestRunConfiguration configuration) {
         try {
             setValueForEmptyWorkingDirectory(configuration);
             configuration.setRunFailed(true);
@@ -209,7 +209,7 @@ public class PythonPTestConfigurationProducer extends PythonTestConfigurationPro
         return true;
     }
     
-    private void setValueForEmptyWorkingDirectory(@NotNull final PythonPTestRunConfiguration configuration) {
+    private void setValueForEmptyWorkingDirectory(@NotNull final PTestRunConfiguration configuration) {
         if (StringUtil.isEmptyOrSpaces(configuration.getWorkingDirectory())) {
             configuration.setWorkingDirectory(configuration.getProject().getBasePath());
         } 

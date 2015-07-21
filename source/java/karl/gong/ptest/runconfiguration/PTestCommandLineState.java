@@ -1,4 +1,4 @@
-package karl.gong.ptest;
+package karl.gong.ptest.runconfiguration;
 
 import com.google.common.collect.Lists;
 import com.intellij.execution.DefaultExecutionResult;
@@ -24,10 +24,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PythonPTestCommandLineState extends PythonTestCommandLineStateBase {
-    private final PythonPTestRunConfiguration configuration;
+public class PTestCommandLineState extends PythonTestCommandLineStateBase {
+    private final PTestRunConfiguration configuration;
 
-    public PythonPTestCommandLineState(PythonPTestRunConfiguration configuration, ExecutionEnvironment env) {
+    public PTestCommandLineState(PTestRunConfiguration configuration, ExecutionEnvironment env) {
         super(configuration, env);
         this.configuration = configuration;
     }
@@ -91,7 +91,7 @@ public class PythonPTestCommandLineState extends PythonTestCommandLineStateBase 
         DefaultExecutionResult executionResult =
                 new DefaultExecutionResult(console, processHandler, actions.toArray(new AnAction[actions.size()]));
 
-        PythonPTestRerunFailedTestsAction rerunFailedTestsAction = new PythonPTestRerunFailedTestsAction(console);
+        PTestRerunFailedTestsAction rerunFailedTestsAction = new PTestRerunFailedTestsAction(console);
         if (console instanceof SMTRunnerConsoleView) {
             rerunFailedTestsAction.init(((BaseTestsOutputConsoleView) console).getProperties());
             rerunFailedTestsAction.setModelProvider(new Getter<TestFrameworkRunningModel>() {

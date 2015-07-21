@@ -1,4 +1,4 @@
-package karl.gong.ptest;
+package karl.gong.ptest.inspection;
 
 import com.intellij.codeInsight.controlflow.ControlFlowUtil;
 import com.intellij.codeInsight.controlflow.Instruction;
