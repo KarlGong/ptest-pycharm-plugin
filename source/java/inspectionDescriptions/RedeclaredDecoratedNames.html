@@ -1,0 +1,17 @@
+<html>
+<body>
+<span style="font-family: verdana,serif;">
+This inspection detects unconditional redeclarations of decorated names, like this:<br/>
+<pre>
+@TestClass()
+class PTestClass:
+   @Test()
+   def test(self): pass
+
+   @Test()
+   def <span style="background-color: #BE9117; ">test</span>(self): pass
+</pre>
+It applies to decorated classmethod and class declarations.<br/>
+</span>
+</body>
+</html>

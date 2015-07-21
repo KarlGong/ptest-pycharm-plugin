@@ -34,17 +34,17 @@ public class PTestRedeclarationInspection extends PyInspection {
     @Nls
     @NotNull
     public String getDisplayName() {
-        return "Redeclared ptest names without usage";
+        return "Redeclared decorated names";
     }
 
     @NotNull
     public String getGroupDisplayName() {
-        return GroupNames.BUGS_GROUP_NAME;
+        return "PTest";
     }
 
     @NotNull
     public String getShortName() {
-        return "RedeclaredPTestNames";
+        return "RedeclaredDecoratedNames";
     }
 
     @NotNull
@@ -62,15 +62,15 @@ public class PTestRedeclarationInspection extends PyInspection {
 
         @Override
         public void visitPyFunction(final PyFunction node) {
-            if (isDecorated(node)) {
-                processElement(node);
+            if (node.getContainingClass() != null && isDecorated(node)) {
+                processElement(node, PyNames.CLASSMETHOD);
             }
         }
 
         @Override
         public void visitPyClass(final PyClass node) {
             if (isDecorated(node)) {
-                processElement(node);
+                processElement(node, PyNames.CLASS);
             }
         }
 
@@ -90,7 +90,7 @@ public class PTestRedeclarationInspection extends PyInspection {
             return isDecorated;
         }
 
-        private void processElement(@NotNull final PsiNameIdentifierOwner element) {
+        private void processElement(@NotNull final PsiNameIdentifierOwner element, @NotNull final String elementType) {
             if (isConditional(element)) {
                 return;
             }
@@ -142,7 +142,7 @@ public class PTestRedeclarationInspection extends PyInspection {
                     }
                     final PsiElement identifier = element.getNameIdentifier();
                     registerProblem(identifier != null ? identifier : element,
-                            String.format("Redeclared ptest ''%s'' defined above without usage", name),
+                            String.format("Redeclared decorated %s ''%s'' defined above", elementType, name),
                             ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
                             null,
                             quickFixes.toArray(new LocalQuickFix[quickFixes.size()]));

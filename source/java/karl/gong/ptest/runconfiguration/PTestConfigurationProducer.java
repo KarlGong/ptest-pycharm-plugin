@@ -10,6 +10,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.util.PsiTreeUtil;
+import com.jetbrains.python.PyNames;
 import com.jetbrains.python.psi.*;
 import com.jetbrains.python.psi.resolve.QualifiedNameFinder;
 import com.jetbrains.python.testing.*;
@@ -138,7 +139,7 @@ public class PTestConfigurationProducer extends PythonTestConfigurationProducer 
                                     @Nullable final PTestRunConfiguration configuration) {
         if (element instanceof PyFile) {
             VirtualFile file = ((PyFile) element).getVirtualFile();
-            if (file.getName().equals("__init__.py")) return false;
+            if (file.getName().equals(PyNames.INIT_DOT_PY)) return false;
             return true;
         }
         return false;
@@ -163,7 +164,7 @@ public class PTestConfigurationProducer extends PythonTestConfigurationProducer 
         if (element instanceof PsiDirectory) {
             boolean isPackage = false;
             for (VirtualFile file : ((PsiDirectory) element).getVirtualFile().getChildren()) {
-                if (file.getName().equals("__init__.py"))
+                if (file.getName().equals(PyNames.INIT_DOT_PY))
                     isPackage = true;
             }
             return isPackage;
