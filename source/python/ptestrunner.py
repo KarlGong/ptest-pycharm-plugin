@@ -18,7 +18,7 @@ class TeamcityTestListener(TestListener):
 
     def on_test_suite_start(self, test_suite):
         self.messages.testMatrixEntered()
-        self.messages.testCount(len(test_suite.test_case_names))
+        self.messages.testCount(len(test_suite.test_cases))
 
     def on_test_suite_finish(self, test_suite):
         pass
