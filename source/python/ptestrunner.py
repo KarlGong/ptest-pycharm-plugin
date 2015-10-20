@@ -29,6 +29,12 @@ class TeamcityTestListener(TestListener):
     def on_test_class_finish(self, test_class):
         self.messages.testSuiteFinished(suiteName=test_class.full_name)
 
+    def on_test_group_start(self, test_group):
+        self.messages.testSuiteStarted(suiteName=test_group.name)
+
+    def on_test_group_finish(self, test_group):
+        self.messages.testSuiteFinished(suiteName=test_group.name)
+
     def on_test_case_start(self, test_case):
         self.messages.testStarted(testName=test_case.name, location=test_case.location)
 
