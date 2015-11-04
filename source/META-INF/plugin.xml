@@ -1,7 +1,7 @@
 <idea-plugin version="2">
   <id>karl.gong.plugin.ptest</id>
   <name>ptest</name>
-  <version>3.4</version>
+  <version>3.5</version>
   <vendor email="karl.gong@outlook.com" url="https://github.com/KarlGong">Karl Gong</vendor>
 
   <description><![CDATA[
@@ -10,6 +10,10 @@
     ]]></description>
 
   <change-notes><![CDATA[
+      <p>3.5</p>
+      <ul>
+      <li>Support pycharm 5.0.</li>
+      </ul>
       <p>3.4</p>
       <ul>
       <li>Support group in run/debug panel.</li>
@@ -34,7 +38,7 @@
   </change-notes>
 
   <!-- please see http://confluence.jetbrains.com/display/IDEADEV/Build+Number+Ranges for description -->
-  <idea-version since-build="141.1899"/>
+  <idea-version since-build="143.589"/>
 
   <!-- please see http://confluence.jetbrains.com/display/IDEADEV/Plugin+Compatibility+with+IntelliJ+Platform+Products
        on how to target different products -->

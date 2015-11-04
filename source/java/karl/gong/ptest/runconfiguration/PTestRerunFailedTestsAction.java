@@ -72,11 +72,6 @@ public class PTestRerunFailedTestsAction extends AbstractRerunFailedTestsAction 
         }
 
         @Override
-        protected String getRunner() {
-            return state.getRunner();
-        }
-
-        @Override
         protected List<String> getTestSpecs() {
             List<String> specs = new ArrayList<String>();
             List<String> rerunTestTargets = new ArrayList<String>();

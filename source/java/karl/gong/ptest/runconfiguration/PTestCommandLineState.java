@@ -17,6 +17,7 @@ import com.intellij.execution.ui.ConsoleView;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.util.text.StringUtil;
+import com.jetbrains.python.HelperPackage;
 import com.jetbrains.python.run.CommandLinePatcher;
 import com.jetbrains.python.testing.PythonTestCommandLineStateBase;
 
@@ -33,8 +34,8 @@ public class PTestCommandLineState extends PythonTestCommandLineStateBase {
     }
 
     @Override
-    protected String getRunner() {
-        return "ptestrunner.py";
+    protected HelperPackage getRunner() {
+        return null;
     }
 
     @Override
@@ -51,7 +52,7 @@ public class PTestCommandLineState extends PythonTestCommandLineStateBase {
     }
 
     @Override
-    protected void addAfterParameters(GeneralCommandLine cmd) throws ExecutionException {
+    protected void addAfterParameters(GeneralCommandLine cmd) {
         ParamsGroup script_params = cmd.getParametersList().getParamsGroup(GROUP_SCRIPT);
         assert script_params != null;
         String options = configuration.getOptions();
@@ -71,10 +72,10 @@ public class PTestCommandLineState extends PythonTestCommandLineStateBase {
     }
 
     @Override
-    protected void addTestRunnerParameters(GeneralCommandLine cmd) throws ExecutionException {
+    protected void addTestRunnerParameters(GeneralCommandLine cmd) {
         ParamsGroup script_params = cmd.getParametersList().getParamsGroup(GROUP_SCRIPT);
         assert script_params != null;
-        script_params.addParameter(new File(getJarDir(getClass()), getRunner()).getAbsolutePath());
+        script_params.addParameter(new File(getJarDir(getClass()), "ptestrunner.py").getAbsolutePath());
         addBeforeParameters(cmd);
         script_params.addParameters(getTestSpecs());
         addAfterParameters(cmd);
