@@ -77,7 +77,11 @@ public class PTestRerunFailedTestsAction extends AbstractRerunFailedTestsAction 
             List<String> rerunTestTargets = new ArrayList<String>();
             for (AbstractTestProxy failedTest : getFailedTests(project)) {
                 if (failedTest.isLeaf()) {
-                    rerunTestTargets.add(failedTest.getParent().getParent().getName() + "." +failedTest.getName());
+                    if (failedTest.getParent().getParent().getName().equals("[root]")) {
+                        rerunTestTargets.add(failedTest.getParent().getName() + "." + failedTest.getName());
+                    } else {
+                        rerunTestTargets.add(failedTest.getParent().getParent().getName() + "." + failedTest.getName());
+                    }
                 }
             }
             specs.add("-t");
