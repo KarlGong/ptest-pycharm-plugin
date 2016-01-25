@@ -30,11 +30,11 @@ class TeamcityTestListener(TestListener):
         self.messages.testSuiteFinished(suiteName=test_class.full_name)
 
     def on_test_group_start(self, test_group):
-        if test_group.test_class.is_group_feature_used:
+        if not hasattr(test_group.test_class, "is_group_feature_used") or test_group.test_class.is_group_feature_used:
             self.messages.testSuiteStarted(suiteName=test_group.name)
 
     def on_test_group_finish(self, test_group):
-        if test_group.test_class.is_group_feature_used:
+        if not hasattr(test_group.test_class, "is_group_feature_used") or test_group.test_class.is_group_feature_used:
             self.messages.testSuiteFinished(suiteName=test_group.name)
 
     def on_test_case_start(self, test_case):
