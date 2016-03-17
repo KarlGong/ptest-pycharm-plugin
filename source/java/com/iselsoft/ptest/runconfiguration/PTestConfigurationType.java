@@ -1,4 +1,4 @@
-package karl.gong.ptest.runconfiguration;
+package com.iselsoft.ptest.runconfiguration;
 
 import com.intellij.execution.configurations.*;
 import com.jetbrains.python.run.PythonConfigurationFactoryBase;

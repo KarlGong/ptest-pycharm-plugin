@@ -1,4 +1,4 @@
-package karl.gong.ptest.inspection;
+package com.iselsoft.ptest.inspection;
 
 import com.intellij.codeInspection.InspectionToolProvider;
 

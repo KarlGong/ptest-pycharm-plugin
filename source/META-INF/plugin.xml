@@ -50,9 +50,9 @@
     
   <extensions defaultExtensionNs="com.intellij">
     <!-- Add your extensions here -->
-      <configurationType implementation="karl.gong.ptest.runconfiguration.PTestConfigurationType" order="FIRST"/>
-      <runConfigurationProducer implementation="karl.gong.ptest.runconfiguration.PTestConfigurationProducer" order="FIRST"/>
-      <inspectionToolProvider implementation="karl.gong.ptest.inspection.PTestRedeclarationProvider"/>
+      <configurationType implementation="com.iselsoft.ptest.runconfiguration.PTestConfigurationType" order="FIRST"/>
+      <runConfigurationProducer implementation="com.iselsoft.ptest.runconfiguration.PTestConfigurationProducer" order="FIRST"/>
+      <inspectionToolProvider implementation="com.iselsoft.ptest.inspection.PTestRedeclarationProvider"/>
   </extensions>
 
   <application-components>
