@@ -1,7 +1,7 @@
 <idea-plugin version="2">
   <id>karl.gong.plugin.ptest</id>
   <name>ptest</name>
-  <version>3.6</version>
+  <version>3.7</version>
   <vendor email="karl.gong@outlook.com" url="https://github.com/KarlGong">Karl Gong</vendor>
 
   <description><![CDATA[
@@ -10,6 +10,10 @@
     ]]></description>
 
   <change-notes><![CDATA[
+        <p>3.7</p>
+        <ul>
+        <li>Shorten run configuration name.</li>
+        </ul>
         <p>3.6</p>
         <ul>
         <li>Support ptest 1.5.1.</li>
