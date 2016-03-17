@@ -23,7 +23,9 @@ import java.io.File;
 
 public class PTestRunConfiguration extends AbstractPythonTestRunConfiguration {
     protected String title = "ptest";
-    protected String pluralTitle = "ptest";
+    protected String pluralTitle = "ptests";
+    protected String suggestedName = "";
+    protected String actionName = "";
 
     private boolean runTest = true;
     private String testTargets = "";
@@ -124,7 +126,24 @@ public class PTestRunConfiguration extends AbstractPythonTestRunConfiguration {
 
     @Override
     public String suggestedName() {
-        return null;
+        return suggestedName;
+    }
+
+    public void setSuggestedName(String suggestedName) {
+        this.suggestedName = suggestedName;
+        setGeneratedName(); // use the suggested name as name
+    }
+
+    @Override
+    public String getActionName() {
+        if (!StringUtil.isEmptyOrSpaces(actionName)) {
+            return actionName;
+        }
+        return suggestedName();
+    }
+
+    public void setActionName(String actionName) {
+        this.actionName = actionName;
     }
 
     @Override
@@ -206,6 +225,6 @@ public class PTestRunConfiguration extends AbstractPythonTestRunConfiguration {
             return;
         }
         if (ptest == null)
-            throw new RuntimeConfigurationWarning("No ptest runner found in selected interpreter");
+            throw new RuntimeConfigurationWarning("No ptest module found in selected interpreter");
     }
 }

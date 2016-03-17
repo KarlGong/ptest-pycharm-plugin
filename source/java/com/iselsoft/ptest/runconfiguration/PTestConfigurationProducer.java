@@ -104,7 +104,8 @@ public class PTestConfigurationProducer extends PythonTestConfigurationProducer 
             String testTarget = QualifiedNameFinder.findShortestImportableQName(element.getContainingFile()).toString() + "."
                     + pyFunction.getContainingClass().getName() + "." + pyFunction.getName();
             configuration.setTestTargets(testTarget);
-            configuration.setName("ptest " + testTarget);
+            configuration.setSuggestedName("ptest " + pyFunction.getContainingClass().getName() + "." + pyFunction.getName());
+            configuration.setActionName("ptest " + pyFunction.getName());
         } catch (NullPointerException e) {
             return false;
         }
@@ -128,7 +129,7 @@ public class PTestConfigurationProducer extends PythonTestConfigurationProducer 
             String testTarget = QualifiedNameFinder.findShortestImportableQName(element.getContainingFile()).toString() + "."
                     + pyClass.getName();
             configuration.setTestTargets(testTarget);
-            configuration.setName("ptest " + testTarget);
+            configuration.setSuggestedName("ptests in " + pyClass.getName());
         } catch (NullPointerException e) {
             return false;
         }
@@ -152,7 +153,7 @@ public class PTestConfigurationProducer extends PythonTestConfigurationProducer 
             configuration.setRunTest(true);
             String testTarget = QualifiedNameFinder.findShortestImportableQName((PyFile) element).toString();
             configuration.setTestTargets(testTarget);
-            configuration.setName("ptest " + testTarget);
+            configuration.setSuggestedName("ptests in " + testTarget);
         } catch (NullPointerException e) {
             return false;
         }
@@ -179,7 +180,7 @@ public class PTestConfigurationProducer extends PythonTestConfigurationProducer 
             configuration.setRunTest(true);
             String testTarget = QualifiedNameFinder.findShortestImportableQName((PsiDirectory) element).toString();
             configuration.setTestTargets(testTarget);
-            configuration.setName("ptest " + testTarget);
+            configuration.setSuggestedName("ptests in " + testTarget);
         } catch (NullPointerException e) {
             return false;
         }
@@ -203,7 +204,7 @@ public class PTestConfigurationProducer extends PythonTestConfigurationProducer 
             String xml = ((PsiFile) element).getVirtualFile().getCanonicalPath();
             String xmlRelativePath = new File(configuration.getWorkingDirectory()).toURI().relativize(new File(xml).toURI()).getPath();
             configuration.setXunitXML(xmlRelativePath);
-            configuration.setName("ptest " + xmlRelativePath);
+            configuration.setSuggestedName("ptests in " + xmlRelativePath);
         } catch (NullPointerException e) {
             return false;
         }
