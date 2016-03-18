@@ -4,7 +4,6 @@ import com.intellij.execution.ExecutionException;
 import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.*;
 import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.openapi.components.PathMacroManager;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
@@ -24,8 +23,9 @@ import java.io.File;
 public class PTestRunConfiguration extends AbstractPythonTestRunConfiguration {
     protected String title = "ptest";
     protected String pluralTitle = "ptests";
-    protected String suggestedName = "";
-    protected String actionName = "";
+    
+    private String suggestedName = "";
+    private String actionName = "";
 
     private boolean runTest = true;
     private String testTargets = "";
@@ -168,8 +168,10 @@ public class PTestRunConfiguration extends AbstractPythonTestRunConfiguration {
 
     @Override
     public void readExternal(Element element) throws InvalidDataException {
-        PathMacroManager.getInstance(getProject()).expandPaths(element);
         super.readExternal(element);
+        suggestedName = JDOMExternalizerUtil.readField(element, "SUGGESTED_NAME");
+        actionName = JDOMExternalizerUtil.readField(element, "ACTION_NAME");
+        
         runTest = Boolean.parseBoolean(JDOMExternalizerUtil.readField(element, "RUN_TEST"));
         testTargets = JDOMExternalizerUtil.readField(element, "TEST_TARGETS");
         runFailed = Boolean.parseBoolean(JDOMExternalizerUtil.readField(element, "RUN_FAILED"));
@@ -185,6 +187,9 @@ public class PTestRunConfiguration extends AbstractPythonTestRunConfiguration {
     @Override
     public void writeExternal(Element element) throws WriteExternalException {
         super.writeExternal(element);
+        JDOMExternalizerUtil.writeField(element, "SUGGESTED_NAME", suggestedName);
+        JDOMExternalizerUtil.writeField(element, "ACTION_NAME", actionName);
+        
         JDOMExternalizerUtil.writeField(element, "RUN_TEST", String.valueOf(runTest));
         JDOMExternalizerUtil.writeField(element, "TEST_TARGETS", testTargets);
         JDOMExternalizerUtil.writeField(element, "RUN_FAILED", String.valueOf(runFailed));
