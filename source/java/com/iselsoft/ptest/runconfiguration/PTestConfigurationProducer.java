@@ -38,7 +38,15 @@ public class PTestConfigurationProducer extends PythonTestConfigurationProducer 
         // location is white space
         PsiElement element = location.getPsiElement();
         if (element instanceof PsiWhiteSpace) {
-            element = PyUtil.findNonWhitespaceAtOffset(element.getContainingFile(), element.getTextOffset());
+            PsiFile containingFile = element.getContainingFile();
+            int textOffset = element.getTextOffset();
+            element = PyUtil.findNonWhitespaceAtOffset(containingFile, textOffset);
+            if (element == null) {
+                element = PyUtil.findNonWhitespaceAtOffset(containingFile, textOffset - 1);
+                if (element == null) {
+                    element = PyUtil.findNonWhitespaceAtOffset(containingFile, textOffset + 1);
+                }
+            }
         }
         // element is invalid
         if (element == null) return false;
