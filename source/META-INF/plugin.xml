@@ -1,7 +1,7 @@
 <idea-plugin version="2">
   <id>karl.gong.plugin.ptest</id>
   <name>ptest</name>
-  <version>3.7</version>
+  <version>3.8</version>
   <vendor email="karl.gong@outlook.com" url="https://github.com/KarlGong">Karl Gong</vendor>
 
   <description><![CDATA[
@@ -10,6 +10,10 @@
     ]]></description>
 
   <change-notes><![CDATA[
+        <p>3.8</p>
+        <ul>
+        <li>Fix no ptest menu shown when right click dict.</li>
+        </ul>
         <p>3.7</p>
         <ul>
         <li>Shorten run configuration name.</li>
