@@ -124,8 +124,14 @@ public class PTestConfigurationProducer extends PythonTestConfigurationProducer 
                                    @Nullable final PTestRunConfiguration configuration) {
         final PyClass pyClass = PsiTreeUtil.getParentOfType(element, PyClass.class, false);
         if (pyClass == null) return false;
-
-        return hasDecorator(pyClass, "TestClass");
+        
+        if (hasDecorator(pyClass, "TestClass")) return true;
+        for (PyClass superClass : pyClass.getAncestorClasses(null)) {
+            if (hasDecorator(superClass, "TestClass")) {
+                return true;
+            }
+        }
+        return false;
     }
 
     protected boolean setupConfigurationForPTestClass(@NotNull final PsiElement element,
