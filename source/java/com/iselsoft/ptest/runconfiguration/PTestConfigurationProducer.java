@@ -126,8 +126,8 @@ public class PTestConfigurationProducer extends PythonTestConfigurationProducer 
         if (pyClass == null) return false;
         
         if (hasDecorator(pyClass, "TestClass")) return true;
-        for (PyClass superClass : pyClass.getAncestorClasses(null)) {
-            if (hasDecorator(superClass, "TestClass")) {
+        for (PyClass ancestorClass : pyClass.getAncestorClasses(null)) {
+            if (hasDecorator(ancestorClass, "TestClass")) {
                 return true;
             }
         }
