@@ -33,7 +33,7 @@ public class PTestRunLineMarkerAction extends AnAction {
 
     @NotNull
     public static AnAction[] getActions() {
-        List<AnAction> actions = new ArrayList<>();
+        List<AnAction> actions = new ArrayList<AnAction>();
         for (Executor executor : ExecutorRegistry.getInstance().getRegisteredExecutors()) {
             actions.add(new PTestRunLineMarkerAction(executor));
         }
