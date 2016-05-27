@@ -222,7 +222,14 @@ public class PTestRunConfiguration extends AbstractPythonTestRunConfiguration {
         } else {
             throw new RuntimeConfigurationWarning("Please specify working directory");
         }
+        String interpreterPath = getInterpreterPath();
+        if (interpreterPath == null) {
+            throw new RuntimeConfigurationWarning("No interpreter is specified.");
+        }
         Sdk sdkPath = PythonSdkType.findSdkByPath(getInterpreterPath());
+        if (sdkPath == null) {
+            throw new RuntimeConfigurationWarning("No sdk found.");
+        }
         PyPackage ptest = null;
         try {
             ptest = PyPackageManager.getInstance(sdkPath).findPackage("ptest", false);
