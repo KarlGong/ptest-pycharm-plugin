@@ -26,7 +26,7 @@ public class PTestConfigurationProducer extends PythonTestConfigurationProducer 
     }
 
     @Override
-    protected boolean setupConfigurationFromContext(
+    public boolean setupConfigurationFromContext(
             AbstractPythonTestRunConfiguration configuration,
             ConfigurationContext context,
             Ref<PsiElement> sourceElement) {
@@ -88,11 +88,11 @@ public class PTestConfigurationProducer extends PythonTestConfigurationProducer 
         return false;
     }
 
-    protected boolean isAvailable(@NotNull final Location location) {
+    public boolean isAvailable(@NotNull final Location location) {
         return true;
     }
 
-    protected boolean isPTestMethod(@NotNull final PsiElement element,
+    public boolean isPTestMethod(@NotNull final PsiElement element,
                                     @Nullable final PTestRunConfiguration configuration) {
         final PyFunction pyFunction = PsiTreeUtil.getParentOfType(element, PyFunction.class, false);
         if (pyFunction == null) return false;
@@ -103,7 +103,7 @@ public class PTestConfigurationProducer extends PythonTestConfigurationProducer 
         return hasDecorator(pyFunction, "Test") && isPTestClass(containingClass, configuration);
     }
 
-    protected boolean setupConfigurationForPTestMethod(@NotNull final PsiElement element,
+    public boolean setupConfigurationForPTestMethod(@NotNull final PsiElement element,
                                                        @Nullable final PTestRunConfiguration configuration) {
         try {
             setValueForEmptyWorkingDirectory(configuration);
@@ -120,7 +120,7 @@ public class PTestConfigurationProducer extends PythonTestConfigurationProducer 
         return true;
     }
 
-    protected boolean isPTestClass(@NotNull final PsiElement element,
+    public boolean isPTestClass(@NotNull final PsiElement element,
                                    @Nullable final PTestRunConfiguration configuration) {
         final PyClass pyClass = PsiTreeUtil.getParentOfType(element, PyClass.class, false);
         if (pyClass == null) return false;
@@ -134,7 +134,7 @@ public class PTestConfigurationProducer extends PythonTestConfigurationProducer 
         return false;
     }
 
-    protected boolean setupConfigurationForPTestClass(@NotNull final PsiElement element,
+    public boolean setupConfigurationForPTestClass(@NotNull final PsiElement element,
                                                       @Nullable final PTestRunConfiguration configuration) {
         try {
             setValueForEmptyWorkingDirectory(configuration);
@@ -150,7 +150,7 @@ public class PTestConfigurationProducer extends PythonTestConfigurationProducer 
         return true;
     }
 
-    protected boolean isPTestModule(@NotNull final PsiElement element,
+    public boolean isPTestModule(@NotNull final PsiElement element,
                                     @Nullable final PTestRunConfiguration configuration) {
         if (element instanceof PyFile) {
             VirtualFile file = ((PyFile) element).getVirtualFile();
@@ -160,7 +160,7 @@ public class PTestConfigurationProducer extends PythonTestConfigurationProducer 
         return false;
     }
 
-    protected boolean setupConfigurationForPTestModule(@NotNull final PsiElement element,
+    public boolean setupConfigurationForPTestModule(@NotNull final PsiElement element,
                                                        @Nullable final PTestRunConfiguration configuration) {
         try {
             setValueForEmptyWorkingDirectory(configuration);
@@ -174,7 +174,7 @@ public class PTestConfigurationProducer extends PythonTestConfigurationProducer 
         return true;
     }
 
-    protected boolean isPTestPackage(@NotNull final PsiElement element,
+    public boolean isPTestPackage(@NotNull final PsiElement element,
                                      @Nullable final PTestRunConfiguration configuration) {
         if (element instanceof PsiDirectory) {
             boolean isPackage = false;
@@ -187,7 +187,7 @@ public class PTestConfigurationProducer extends PythonTestConfigurationProducer 
         return false;
     }
 
-    protected boolean setupConfigurationForPTestPackage(@NotNull final PsiElement element,
+    public boolean setupConfigurationForPTestPackage(@NotNull final PsiElement element,
                                                         @Nullable final PTestRunConfiguration configuration) {
         try {
             setValueForEmptyWorkingDirectory(configuration);
@@ -201,7 +201,7 @@ public class PTestConfigurationProducer extends PythonTestConfigurationProducer 
         return true;
     }
 
-    protected boolean isXML(@NotNull final PsiElement element,
+    public boolean isXML(@NotNull final PsiElement element,
                             @Nullable final PTestRunConfiguration configuration) {
         if (element instanceof PsiFile) {
             VirtualFile file = ((PsiFile) element).getVirtualFile();
@@ -210,7 +210,7 @@ public class PTestConfigurationProducer extends PythonTestConfigurationProducer 
         return false;
     }
 
-    protected boolean setupConfigurationForXML(@NotNull final PsiElement element,
+    public boolean setupConfigurationForXML(@NotNull final PsiElement element,
                                                @Nullable final PTestRunConfiguration configuration) {
         try {
             setValueForEmptyWorkingDirectory(configuration);

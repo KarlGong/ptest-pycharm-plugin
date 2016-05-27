@@ -65,6 +65,7 @@
       <configurationType implementation="com.iselsoft.ptest.runconfiguration.PTestConfigurationType" order="FIRST"/>
       <runConfigurationProducer implementation="com.iselsoft.ptest.runconfiguration.PTestConfigurationProducer" order="FIRST"/>
       <inspectionToolProvider implementation="com.iselsoft.ptest.inspection.PTestRedeclarationProvider"/>
+      <runLineMarkerContributor implementationClass="com.iselsoft.ptest.runLineMarker.PTestRunLineMarkerContributor" language="Python"/>
   </extensions>
 
   <application-components>
