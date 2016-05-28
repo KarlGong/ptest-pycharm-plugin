@@ -13,18 +13,16 @@ public class PTestConfigurationType extends ConfigurationTypeBase {
 
     public PTestConfigurationType() {
         super("ptest", "ptest", "run ptest", PythonIcons.Python.PythonTests);
-        addFactory(new PythonPTestConfigurationFactory(this) {
-            @Override
-            public RunConfiguration createTemplateConfiguration(Project project) {
-                return new PTestRunConfiguration(project, this);
-            }
-        });
     }
 
     public static PTestConfigurationType getInstance() {
         return ConfigurationTypeUtil.findConfigurationType(PTestConfigurationType.class);
     }
 
+    @Override
+    public ConfigurationFactory[] getConfigurationFactories() {
+        return new ConfigurationFactory[]{PY_PTEST_FACTORY};
+    }
 
     public class PythonPTestConfigurationFactory extends PythonConfigurationFactoryBase {
         protected PythonPTestConfigurationFactory(ConfigurationType configurationType) {
@@ -45,10 +43,5 @@ public class PTestConfigurationType extends ConfigurationTypeBase {
         public Icon getIcon() {
             return PythonIcons.Python.PythonTests;
         }
-    }
-
-    @Override
-    public ConfigurationFactory[] getConfigurationFactories() {
-        return new ConfigurationFactory[]{PY_PTEST_FACTORY};
     }
 }
