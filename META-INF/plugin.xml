@@ -1,7 +1,7 @@
 <idea-plugin version="2">
   <id>karl.gong.plugin.ptest</id>
   <name>ptest</name>
-  <version>3.9</version>
+  <version>4.0</version>
   <vendor email="karl.gong@outlook.com" url="https://github.com/KarlGong">Karl Gong</vendor>
 
   <description><![CDATA[
@@ -10,6 +10,10 @@
     ]]></description>
 
   <change-notes><![CDATA[
+        <p>4.0</p>
+        <ul>
+        <li>Add gutter marker for test and test class of ptest.</li>
+        </ul>
         <p>3.9</p>
         <ul>
         <li>Fix no ptest menu shown when right click a class which inherit @TestClass.</li>
