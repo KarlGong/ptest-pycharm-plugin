@@ -1,4 +1,4 @@
-package com.iselsoft.ptest.runconfiguration;
+package com.iselsoft.ptest.runConfiguration;
 
 import com.intellij.execution.Location;
 import com.intellij.execution.actions.ConfigurationContext;

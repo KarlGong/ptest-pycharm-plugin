@@ -1,4 +1,4 @@
-package com.iselsoft.ptest.runconfiguration;
+package com.iselsoft.ptest.runConfiguration;
 
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;

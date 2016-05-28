@@ -16,7 +16,7 @@ import com.intellij.execution.runners.ExecutionUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.iselsoft.ptest.runconfiguration.PTestConfigurationProducer;
+import com.iselsoft.ptest.runConfiguration.PTestConfigurationProducer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;

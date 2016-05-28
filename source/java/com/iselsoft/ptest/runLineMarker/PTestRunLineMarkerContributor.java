@@ -4,7 +4,7 @@ import com.intellij.execution.lineMarker.RunLineMarkerContributor;
 import com.intellij.icons.AllIcons;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.Function;
-import com.iselsoft.ptest.runconfiguration.PTestConfigurationProducer;
+import com.iselsoft.ptest.runConfiguration.PTestConfigurationProducer;
 import com.jetbrains.python.psi.PyClass;
 import com.jetbrains.python.psi.PyFunction;
 import org.jetbrains.annotations.Nullable;

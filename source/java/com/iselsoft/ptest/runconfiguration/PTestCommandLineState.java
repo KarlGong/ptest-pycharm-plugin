@@ -1,4 +1,4 @@
-package com.iselsoft.ptest.runconfiguration;
+package com.iselsoft.ptest.runConfiguration;
 
 import com.google.common.collect.Lists;
 import com.intellij.execution.DefaultExecutionResult;

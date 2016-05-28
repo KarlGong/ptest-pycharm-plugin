@@ -62,8 +62,8 @@
     
   <extensions defaultExtensionNs="com.intellij">
     <!-- Add your extensions here -->
-      <configurationType implementation="com.iselsoft.ptest.runconfiguration.PTestConfigurationType" order="FIRST"/>
-      <runConfigurationProducer implementation="com.iselsoft.ptest.runconfiguration.PTestConfigurationProducer" order="FIRST"/>
+      <configurationType implementation="com.iselsoft.ptest.runConfiguration.PTestConfigurationType" order="FIRST"/>
+      <runConfigurationProducer implementation="com.iselsoft.ptest.runConfiguration.PTestConfigurationProducer" order="FIRST"/>
       <inspectionToolProvider implementation="com.iselsoft.ptest.inspection.PTestRedeclarationProvider"/>
       <runLineMarkerContributor implementationClass="com.iselsoft.ptest.runLineMarker.PTestRunLineMarkerContributor" language="Python"/>
   </extensions>
