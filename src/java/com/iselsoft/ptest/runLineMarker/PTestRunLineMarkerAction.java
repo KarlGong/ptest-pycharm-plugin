@@ -5,6 +5,7 @@ import com.intellij.execution.ExecutorRegistry;
 import com.intellij.execution.RunManagerEx;
 import com.intellij.execution.RunnerAndConfigurationSettings;
 import com.intellij.execution.actions.ConfigurationContext;
+import com.intellij.execution.actions.ConfigurationFromContext;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.runners.ExecutionUtil;
 import com.intellij.openapi.actionSystem.AnAction;
@@ -51,10 +52,9 @@ public class PTestRunLineMarkerAction extends AnAction {
         final RunManagerEx runManager = (RunManagerEx) context.getRunManager();
         RunnerAndConfigurationSettings setting = context.getConfiguration();
         if (setting == null || setting.getConfiguration() == null || !(setting.getConfiguration() instanceof PTestRunConfiguration)) {
-            RunConfiguration config = CONFIG_PRODUCER.createLightConfiguration(context);
+            ConfigurationFromContext config = CONFIG_PRODUCER.createConfigurationFromContext(context);
             if (config == null) return;
-            setting = runManager.createConfiguration(config, config.getFactory());
-            runManager.setTemporaryConfiguration(setting);
+            runManager.setTemporaryConfiguration(config.getConfigurationSettings());
         } else {
             boolean hasExistingSetting = false;
             for (RunnerAndConfigurationSettings existingSetting : runManager.getConfigurationSettingsList(new PTestConfigurationType())) {
