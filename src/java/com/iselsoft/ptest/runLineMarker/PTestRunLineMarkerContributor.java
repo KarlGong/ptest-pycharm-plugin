@@ -10,14 +10,13 @@ import com.jetbrains.python.psi.PyFunction;
 import org.jetbrains.annotations.Nullable;
 
 public class PTestRunLineMarkerContributor extends RunLineMarkerContributor {
-
+    private static final PTestConfigurationProducer CONFIG_PRODUCER = new PTestConfigurationProducer();
     private static final Function<PsiElement, String> TOOLTIP_PROVIDER = new Function<PsiElement, String>() {
         @Override
         public String fun(PsiElement psiElement) {
             return "Run ptest";
         }
     };
-    private static final PTestConfigurationProducer CONFIG_PRODUCER = new PTestConfigurationProducer();
 
     @Nullable
     @Override

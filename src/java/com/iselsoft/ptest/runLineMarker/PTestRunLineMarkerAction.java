@@ -4,19 +4,15 @@ import com.intellij.execution.Executor;
 import com.intellij.execution.ExecutorRegistry;
 import com.intellij.execution.RunManagerEx;
 import com.intellij.execution.RunnerAndConfigurationSettings;
-import com.intellij.execution.actions.BaseRunConfigurationAction;
 import com.intellij.execution.actions.ConfigurationContext;
-import com.intellij.execution.actions.ConfigurationFromContext;
-import com.intellij.execution.actions.ConfigurationFromContextImpl;
-import com.intellij.execution.configurations.LocatableConfiguration;
 import com.intellij.execution.configurations.RunConfiguration;
-import com.intellij.execution.impl.RunManagerImpl;
-import com.intellij.execution.impl.RunnerAndConfigurationSettingsImpl;
 import com.intellij.execution.runners.ExecutionUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.iselsoft.ptest.runConfiguration.PTestConfigurationProducer;
+import com.iselsoft.ptest.runConfiguration.PTestConfigurationType;
+import com.iselsoft.ptest.runConfiguration.PTestRunConfiguration;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -53,28 +49,42 @@ public class PTestRunLineMarkerAction extends AnAction {
         final ConfigurationContext context = ConfigurationContext.getFromContext(dataContext);
         if (context.getLocation() == null) return;
         final RunManagerEx runManager = (RunManagerEx) context.getRunManager();
-        RunnerAndConfigurationSettings configuration = context.findExisting();
-        if (configuration == null) {
-            configuration = context.getConfiguration();
-            if (configuration == null) {
-                return;
+        RunnerAndConfigurationSettings setting = context.getConfiguration();
+        if (setting == null || setting.getConfiguration() == null || !(setting.getConfiguration() instanceof PTestRunConfiguration)) {
+            RunConfiguration config = CONFIG_PRODUCER.createLightConfiguration(context);
+            if (config == null) return;
+            setting = runManager.createConfiguration(config, config.getFactory());
+            runManager.setTemporaryConfiguration(setting);
+        } else {
+            boolean hasExistingSetting = false;
+            for (RunnerAndConfigurationSettings existingSetting : runManager.getConfigurationSettingsList(new PTestConfigurationType())) {
+                if (existingSetting.equals(setting)) {
+                    hasExistingSetting = true;
+                    break;
+                }
             }
-            runManager.setTemporaryConfiguration(configuration);
+            if (!hasExistingSetting) {
+                runManager.addConfiguration(setting, runManager.isConfigurationShared(setting));
+                runManager.setTemporaryConfiguration(setting);
+            }
         }
-        runManager.setSelectedConfiguration(configuration);
+        runManager.setSelectedConfiguration(setting);
 
-        ExecutionUtil.runConfiguration(configuration, myExecutor);
+        ExecutionUtil.runConfiguration(setting, myExecutor);
     }
 
     private String getActionName(DataContext dataContext, @NotNull Executor executor) {
         final ConfigurationContext context = ConfigurationContext.getFromContext(dataContext);
         if (context.getLocation() == null) return null;
-        RunConfiguration configuration = CONFIG_PRODUCER.createLightConfiguration(context);
-        if (configuration == null) return null;
-        RunnerAndConfigurationSettingsImpl
-                settings = new RunnerAndConfigurationSettingsImpl(RunManagerImpl.getInstanceImpl(context.getProject()), configuration, false);
-        ConfigurationFromContext config = new ConfigurationFromContextImpl(CONFIG_PRODUCER, settings, context.getPsiLocation());
-        String actionName = BaseRunConfigurationAction.suggestRunActionName((LocatableConfiguration) config.getConfiguration());
-        return executor.getStartActionText(actionName);
+        RunnerAndConfigurationSettings setting = context.getConfiguration();
+        if (setting == null || setting.getConfiguration() == null || !(setting.getConfiguration() instanceof PTestRunConfiguration)) {
+            RunConfiguration runConfiguration = CONFIG_PRODUCER.createLightConfiguration(context);
+            if (runConfiguration == null) return null;
+            PTestRunConfiguration config = (PTestRunConfiguration) runConfiguration;
+            return executor.getStartActionText(config.getActionName());
+        } else {
+            PTestRunConfiguration config = (PTestRunConfiguration) setting.getConfiguration();
+            return executor.getStartActionText(config.getActionName());
+        }
     }
 }
