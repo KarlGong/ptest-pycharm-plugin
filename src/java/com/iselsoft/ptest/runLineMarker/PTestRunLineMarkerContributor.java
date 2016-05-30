@@ -24,7 +24,11 @@ public class PTestRunLineMarkerContributor extends RunLineMarkerContributor {
         if (psiElement instanceof PyFunction && CONFIG_PRODUCER.isPTestMethod(psiElement, null)) {
             return new Info(AllIcons.RunConfigurations.TestState.Run, TOOLTIP_PROVIDER, PTestRunLineMarkerAction.getActions());
         } else if (psiElement instanceof PyClass && CONFIG_PRODUCER.isPTestClass(psiElement, null)) {
-            return new Info(AllIcons.RunConfigurations.TestState.Run_run, TOOLTIP_PROVIDER, PTestRunLineMarkerAction.getActions());
+            try {
+                return new Info(AllIcons.RunConfigurations.TestState.Run_run, TOOLTIP_PROVIDER, PTestRunLineMarkerAction.getActions());
+            } catch (NoSuchFieldError e) {
+                return new Info(AllIcons.RunConfigurations.TestState.Run, TOOLTIP_PROVIDER, PTestRunLineMarkerAction.getActions());
+            }
         }
         return null;
     }
