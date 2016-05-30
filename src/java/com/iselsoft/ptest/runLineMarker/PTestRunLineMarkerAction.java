@@ -53,7 +53,6 @@ public class PTestRunLineMarkerAction extends AnAction {
         if (setting == null || setting.getConfiguration() == null || !(setting.getConfiguration() instanceof PTestRunConfiguration)) {
             RunConfiguration config = CONFIG_PRODUCER.createLightConfiguration(context);
             if (config == null) return;
-            removeOldTemporaryConfigurations(runManager);
             setting = runManager.createConfiguration(config, config.getFactory());
             runManager.setTemporaryConfiguration(setting);
         } else {
@@ -65,8 +64,6 @@ public class PTestRunLineMarkerAction extends AnAction {
                 }
             }
             if (!hasExistingSetting) {
-                removeOldTemporaryConfigurations(runManager);
-                runManager.addConfiguration(setting, runManager.isConfigurationShared(setting));
                 runManager.setTemporaryConfiguration(setting);
             }
         }
@@ -74,19 +71,7 @@ public class PTestRunLineMarkerAction extends AnAction {
 
         ExecutionUtil.runConfiguration(setting, myExecutor);
     }
-    
-    private void removeOldTemporaryConfigurations(RunManagerEx runManager) {
-        int tempSettingsLimit = runManager.getConfig().getRecentsLimit();
-        while (true) {
-            List<RunnerAndConfigurationSettings> tempSettings = runManager.getTempConfigurationsList();
-            if (tempSettings.size() >= tempSettingsLimit) {
-                runManager.removeConfiguration(tempSettings.get(0));
-            } else {
-                break;
-            }
-        } 
-    }
-    
+
     private String getActionName(DataContext dataContext, @NotNull Executor executor) {
         final ConfigurationContext context = ConfigurationContext.getFromContext(dataContext);
         if (context.getLocation() == null) return null;
