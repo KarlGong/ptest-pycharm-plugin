@@ -54,7 +54,8 @@ public class PTestRunLineMarkerAction extends AnAction {
         if (setting == null || setting.getConfiguration() == null || !(setting.getConfiguration() instanceof PTestRunConfiguration)) {
             ConfigurationFromContext config = CONFIG_PRODUCER.createConfigurationFromContext(context);
             if (config == null) return;
-            runManager.setTemporaryConfiguration(config.getConfigurationSettings());
+            setting = config.getConfigurationSettings();
+            runManager.setTemporaryConfiguration(setting);
         } else {
             boolean hasExistingSetting = false;
             for (RunnerAndConfigurationSettings existingSetting : runManager.getConfigurationSettingsList(new PTestConfigurationType())) {
