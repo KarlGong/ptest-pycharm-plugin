@@ -2,6 +2,8 @@ package com.iselsoft.ptest.runConfiguration;
 
 import com.intellij.execution.Location;
 import com.intellij.execution.actions.ConfigurationContext;
+import com.intellij.execution.testframework.sm.runner.ui.SMTRunnerTestTreeView;
+import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -55,7 +57,7 @@ public class PTestConfigurationProducer extends PythonTestConfigurationProducer 
         // is ptest target
         PTestRunConfiguration config = (PTestRunConfiguration) configuration;
         if (isPTestMethod(element, config)) {
-            return setupConfigurationForPTestMethod(element, config);
+            return setupConfigurationForPTestMethod(context, element, config);
         }
         if (isPTestClass(element, config)) {
             return setupConfigurationForPTestClass(element, config);
@@ -103,17 +105,28 @@ public class PTestConfigurationProducer extends PythonTestConfigurationProducer 
         return hasDecorator(pyFunction, "Test") && isPTestClass(containingClass, configuration);
     }
 
-    public boolean setupConfigurationForPTestMethod(@NotNull final PsiElement element,
+    public boolean setupConfigurationForPTestMethod(@NotNull ConfigurationContext context, @NotNull final PsiElement element,
                                                        @Nullable final PTestRunConfiguration configuration) {
         try {
             setValueForEmptyWorkingDirectory(configuration);
             final PyFunction pyFunction = PsiTreeUtil.getParentOfType(element, PyFunction.class, false);
             configuration.setRunTest(true);
+            
+            String methodName = pyFunction.getName();
+            try {
+                // right click the test in test runner tree view 
+                String testName = ((SMTRunnerTestTreeView) PlatformDataKeys.CONTEXT_COMPONENT.getData(context.getDataContext())).getSelectedTest().getName();
+                if (testName != null) {
+                    methodName = testName;
+                }
+            } catch (Exception ignored) {
+            }
+            
             String testTarget = QualifiedNameFinder.findShortestImportableQName(element.getContainingFile()).toString() + "."
-                    + pyFunction.getContainingClass().getName() + "." + pyFunction.getName();
+                    + pyFunction.getContainingClass().getName() + "." + methodName;
             configuration.setTestTargets(testTarget);
-            configuration.setSuggestedName("ptest " + pyFunction.getContainingClass().getName() + "." + pyFunction.getName());
-            configuration.setActionName("ptest " + pyFunction.getName());
+            configuration.setSuggestedName("ptest " + pyFunction.getContainingClass().getName() + "." + methodName);
+            configuration.setActionName("ptest " + methodName);
         } catch (NullPointerException e) {
             return false;
         }
