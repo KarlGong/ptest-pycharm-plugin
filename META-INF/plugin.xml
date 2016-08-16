@@ -1,7 +1,7 @@
 <idea-plugin version="2">
   <id>karl.gong.plugin.ptest</id>
   <name>ptest</name>
-  <version>4.0</version>
+  <version>4.1</version>
   <vendor email="karl.gong@outlook.com" url="https://github.com/KarlGong">Karl Gong</vendor>
 
   <description><![CDATA[
@@ -10,50 +10,27 @@
     ]]></description>
 
   <change-notes><![CDATA[
-        <p>4.0</p>
-        <ul>
+      <p>4.1</p>
+      <ul>
+        <li>Support right click data provided test case in run/debug panel.</li>
+      </ul>
+      <p>4.0</p>
+      <ul>
         <li>Add gutter marker for test and test class of ptest.</li>
-        </ul>
-        <p>3.9</p>
-        <ul>
+      </ul>
+      <p>1.0 - 3.9</p>
+      <ul>
         <li>Fix no ptest menu shown when right click a class which inherit @TestClass.</li>
-        </ul>
-        <p>3.8</p>
-        <ul>
         <li>Fix no ptest menu shown when right click dict.</li>
-        </ul>
-        <p>3.7</p>
-        <ul>
         <li>Shorten run configuration name.</li>
-        </ul>
-        <p>3.6</p>
-        <ul>
         <li>Support ptest 1.5.1.</li>
-        </ul>
-        <p>3.5</p>
-        <ul>
         <li>Support pycharm 5.0.</li>
-        </ul>
-        <p>3.4</p>
-        <ul>
         <li>Support group in run/debug panel.</li>
-        </ul>
-        <p>3.2</p>
-        <ul>
         <li>Support ptest 1.4.</li>
-        </ul>
-        <p>3.0</p>
-        <ul>
         <li>Support inspecting redeclared decorated names.</li>
-        </ul>
-        <p>2.0</p>
-        <ul>
         <li>Support rerunning the failed/skipped tests in last run.</li>
-        </ul>
-        <p>1.0</p>
-        <ul>
         <li>Support running/debugging ptest using the standard run configuration.</li>
-        </ul>
+      </ul>
     ]]>
   </change-notes>
 
