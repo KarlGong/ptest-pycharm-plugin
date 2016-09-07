@@ -1,7 +1,7 @@
 <idea-plugin version="2">
   <id>karl.gong.plugin.ptest</id>
   <name>ptest</name>
-  <version>4.1</version>
+  <version>4.2</version>
   <vendor email="karl.gong@outlook.com" url="https://github.com/KarlGong">Karl Gong</vendor>
 
   <description><![CDATA[
@@ -10,6 +10,10 @@
     ]]></description>
 
   <change-notes><![CDATA[
+      <p>4.2</p>
+      <ul>
+        <li>Fix bug in pycharm 2016.2.2</li>
+      </ul>
       <p>4.1</p>
       <ul>
         <li>Support right click data provided test case in run/debug panel.</li>

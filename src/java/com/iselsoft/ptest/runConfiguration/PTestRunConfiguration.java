@@ -11,8 +11,6 @@ import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.JDOMExternalizerUtil;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.util.text.StringUtil;
-import com.jetbrains.python.packaging.PyPackage;
-import com.jetbrains.python.packaging.PyPackageManager;
 import com.jetbrains.python.sdk.PythonSdkType;
 import com.jetbrains.python.testing.AbstractPythonTestRunConfiguration;
 import org.jdom.Element;
@@ -23,7 +21,7 @@ import java.io.File;
 public class PTestRunConfiguration extends AbstractPythonTestRunConfiguration {
     protected String title = "ptest";
     protected String pluralTitle = "ptests";
-    
+
     private String suggestedName = "";
     private String actionName = "";
 
@@ -171,7 +169,7 @@ public class PTestRunConfiguration extends AbstractPythonTestRunConfiguration {
         super.readExternal(element);
         suggestedName = JDOMExternalizerUtil.readField(element, "SUGGESTED_NAME");
         actionName = JDOMExternalizerUtil.readField(element, "ACTION_NAME");
-        
+
         runTest = Boolean.parseBoolean(JDOMExternalizerUtil.readField(element, "RUN_TEST"));
         testTargets = JDOMExternalizerUtil.readField(element, "TEST_TARGETS");
         runFailed = Boolean.parseBoolean(JDOMExternalizerUtil.readField(element, "RUN_FAILED"));
@@ -189,7 +187,7 @@ public class PTestRunConfiguration extends AbstractPythonTestRunConfiguration {
         super.writeExternal(element);
         JDOMExternalizerUtil.writeField(element, "SUGGESTED_NAME", suggestedName);
         JDOMExternalizerUtil.writeField(element, "ACTION_NAME", actionName);
-        
+
         JDOMExternalizerUtil.writeField(element, "RUN_TEST", String.valueOf(runTest));
         JDOMExternalizerUtil.writeField(element, "TEST_TARGETS", testTargets);
         JDOMExternalizerUtil.writeField(element, "RUN_FAILED", String.valueOf(runFailed));
@@ -213,6 +211,7 @@ public class PTestRunConfiguration extends AbstractPythonTestRunConfiguration {
                 throw new RuntimeConfigurationError("Please specify xunit XML");
             }
         }
+
         String workingDirectory = getWorkingDirectory();
         if (!StringUtil.isEmptyOrSpaces(workingDirectory)) {
             File workingDirectoryFile = new File(workingDirectory);
@@ -222,21 +221,15 @@ public class PTestRunConfiguration extends AbstractPythonTestRunConfiguration {
         } else {
             throw new RuntimeConfigurationWarning("Please specify working directory");
         }
+
         String interpreterPath = getInterpreterPath();
         if (interpreterPath == null) {
             throw new RuntimeConfigurationWarning("No interpreter specified");
         }
-        Sdk sdkPath = PythonSdkType.findSdkByPath(getInterpreterPath());
+
+        Sdk sdkPath = PythonSdkType.findSdkByPath(interpreterPath);
         if (sdkPath == null) {
             throw new RuntimeConfigurationWarning("No sdk found");
         }
-        PyPackage ptest = null;
-        try {
-            ptest = PyPackageManager.getInstance(sdkPath).findPackage("ptest", false);
-        } catch (ExecutionException e) {
-            return;
-        }
-        if (ptest == null)
-            throw new RuntimeConfigurationWarning("No ptest module found in selected interpreter");
     }
 }
