@@ -1,7 +1,7 @@
 <idea-plugin version="2">
   <id>karl.gong.plugin.ptest</id>
   <name>ptest</name>
-  <version>4.2</version>
+  <version>4.3</version>
   <vendor email="karl.gong@outlook.com" url="https://github.com/KarlGong">Karl Gong</vendor>
 
   <description><![CDATA[
@@ -10,20 +10,15 @@
     ]]></description>
 
   <change-notes><![CDATA[
-      <p>4.2</p>
+      <p>4.3</p>
+      <ul>
+        <li>Fix bug: group in run/debug panel is missed.</li>
+      </ul>
+      <p>1.0 - 4.2</p>
       <ul>
         <li>Fix bug in pycharm 2016.2.2</li>
-      </ul>
-      <p>4.1</p>
-      <ul>
         <li>Support right click data provided test case in run/debug panel.</li>
-      </ul>
-      <p>4.0</p>
-      <ul>
         <li>Add gutter marker for test and test class of ptest.</li>
-      </ul>
-      <p>1.0 - 3.9</p>
-      <ul>
         <li>Fix no ptest menu shown when right click a class which inherit @TestClass.</li>
         <li>Fix no ptest menu shown when right click dict.</li>
         <li>Shorten run configuration name.</li>
@@ -39,7 +34,7 @@
   </change-notes>
 
   <!-- please see http://confluence.jetbrains.com/display/IDEADEV/Build+Number+Ranges for description -->
-  <idea-version since-build="143.589"/>
+  <idea-version since-build="145"/>
 
   <!-- please see http://confluence.jetbrains.com/display/IDEADEV/Plugin+Compatibility+with+IntelliJ+Platform+Products
        on how to target different products -->
