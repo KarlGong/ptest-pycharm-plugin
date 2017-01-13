@@ -2,6 +2,7 @@ package com.iselsoft.ptest.runConfiguration;
 
 import com.intellij.execution.Location;
 import com.intellij.execution.actions.ConfigurationContext;
+import com.intellij.execution.testframework.AbstractTestProxy;
 import com.intellij.execution.testframework.sm.runner.ui.SMTRunnerTestTreeView;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.util.Ref;
@@ -109,24 +110,30 @@ public class PTestConfigurationProducer extends PythonTestConfigurationProducer 
                                                        @Nullable final PTestRunConfiguration configuration) {
         try {
             setValueForEmptyWorkingDirectory(configuration);
-            final PyFunction pyFunction = PsiTreeUtil.getParentOfType(element, PyFunction.class, false);
             configuration.setRunTest(true);
-            
-            String methodName = pyFunction.getName();
             try {
                 // right click the test in test runner tree view 
-                String testName = ((SMTRunnerTestTreeView) PlatformDataKeys.CONTEXT_COMPONENT.getData(context.getDataContext())).getSelectedTest().getName();
-                if (testName != null) {
-                    methodName = testName;
+                AbstractTestProxy testCase = ((SMTRunnerTestTreeView) PlatformDataKeys.CONTEXT_COMPONENT.getData(context.getDataContext())).getSelectedTest();
+                AbstractTestProxy testClass;
+                if (testCase.getParent().getParent().getName().equals("[root]")) {
+                    testClass = testCase.getParent();                    
+                } else {
+                    testClass = testCase.getParent().getParent();
                 }
+                String testName = testCase.getName();
+                configuration.setTestTargets(testClass.getName() + "." + testName);
+                String[] splittedNames = testCase.getParent().getParent().getName().split(".");
+                configuration.setSuggestedName("ptest " + splittedNames[splittedNames.length - 1] + "." + testName);
+                configuration.setActionName("ptest" + testName);
             } catch (Exception ignored) {
+                final PyFunction pyFunction = PsiTreeUtil.getParentOfType(element, PyFunction.class, false);
+                String testName = pyFunction.getName();
+                String testTarget = QualifiedNameFinder.findShortestImportableQName(element.getContainingFile()).toString() + "."
+                        + pyFunction.getContainingClass().getName() + "." + testName;
+                configuration.setTestTargets(testTarget);
+                configuration.setSuggestedName("ptest " + pyFunction.getContainingClass().getName() + "." + testName);
+                configuration.setActionName("ptest " + testName);
             }
-            
-            String testTarget = QualifiedNameFinder.findShortestImportableQName(element.getContainingFile()).toString() + "."
-                    + pyFunction.getContainingClass().getName() + "." + methodName;
-            configuration.setTestTargets(testTarget);
-            configuration.setSuggestedName("ptest " + pyFunction.getContainingClass().getName() + "." + methodName);
-            configuration.setActionName("ptest " + methodName);
         } catch (NullPointerException e) {
             return false;
         }
