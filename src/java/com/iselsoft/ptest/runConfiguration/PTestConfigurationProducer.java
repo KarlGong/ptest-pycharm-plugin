@@ -16,7 +16,9 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.jetbrains.python.PyNames;
 import com.jetbrains.python.psi.*;
 import com.jetbrains.python.psi.resolve.QualifiedNameFinder;
-import com.jetbrains.python.testing.*;
+import com.jetbrains.python.testing.AbstractPythonTestRunConfiguration;
+import com.jetbrains.python.testing.PythonTestConfigurationProducer;
+import com.jetbrains.python.testing.PythonUnitTestRunnableScriptFilter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -57,20 +59,26 @@ public class PTestConfigurationProducer extends PythonTestConfigurationProducer 
         if (PythonUnitTestRunnableScriptFilter.isIfNameMain(location)) return false;
         // is ptest target
         PTestRunConfiguration config = (PTestRunConfiguration) configuration;
-        if (isPTestMethod(element, config)) {
-            return setupConfigurationForPTestMethod(context, element, config);
+        // is in SMT 
+        AbstractTestProxy test = getSelectedTestInSMT(context);
+        if (test != null) {
+            return setupConfigurationForPTestMethodInSMT(test, config);
         }
-        if (isPTestClass(element, config)) {
+        // is in view
+        if (isPTestMethod(element)) {
+            return setupConfigurationForPTestMethod(element, config);
+        }
+        if (isPTestClass(element)) {
             return setupConfigurationForPTestClass(element, config);
         }
-        if (isPTestModule(element, config)) {
+        if (isPTestModule(element)) {
             return setupConfigurationForPTestModule(element, config);
         }
-        if (isPTestPackage(element, config)) {
+        if (isPTestPackage(element)) {
             return setupConfigurationForPTestPackage(element, config);
         }
         // is XML
-        if (isXML(element, config)) {
+        if (isXML(element)) {
             return setupConfigurationForXML(element, config);
         }
         return false;
@@ -94,54 +102,65 @@ public class PTestConfigurationProducer extends PythonTestConfigurationProducer 
     public boolean isAvailable(@NotNull final Location location) {
         return true;
     }
-
-    public boolean isPTestMethod(@NotNull final PsiElement element,
-                                    @Nullable final PTestRunConfiguration configuration) {
-        final PyFunction pyFunction = PsiTreeUtil.getParentOfType(element, PyFunction.class, false);
-        if (pyFunction == null) return false;
-
-        final PyClass containingClass = pyFunction.getContainingClass();
-        if (containingClass == null) return false;
-
-        return hasDecorator(pyFunction, "Test") && isPTestClass(containingClass, configuration);
+    
+    public AbstractTestProxy getSelectedTestInSMT(@NotNull ConfigurationContext context) {
+        try {
+            return ((SMTRunnerTestTreeView) PlatformDataKeys.CONTEXT_COMPONENT.getData(context.getDataContext())).getSelectedTest();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
-    public boolean setupConfigurationForPTestMethod(@NotNull ConfigurationContext context, @NotNull final PsiElement element,
-                                                       @Nullable final PTestRunConfiguration configuration) {
+    public boolean setupConfigurationForPTestMethodInSMT(AbstractTestProxy test, @Nullable final PTestRunConfiguration configuration) {
         try {
             setValueForEmptyWorkingDirectory(configuration);
             configuration.setRunTest(true);
-            try {
-                // right click the test in test runner tree view 
-                AbstractTestProxy testCase = ((SMTRunnerTestTreeView) PlatformDataKeys.CONTEXT_COMPONENT.getData(context.getDataContext())).getSelectedTest();
-                AbstractTestProxy testClass;
-                if (testCase.getParent().getParent().getName().equals("[root]")) {
-                    testClass = testCase.getParent();                    
-                } else {
-                    testClass = testCase.getParent().getParent();
-                }
-                String testName = testCase.getName();
-                configuration.setTestTargets(testClass.getName() + "." + testName);
-                String[] splittedNames = testCase.getParent().getParent().getName().split(".");
-                configuration.setSuggestedName("ptest " + splittedNames[splittedNames.length - 1] + "." + testName);
-                configuration.setActionName("ptest" + testName);
-            } catch (Exception ignored) {
-                final PyFunction pyFunction = PsiTreeUtil.getParentOfType(element, PyFunction.class, false);
-                String testName = pyFunction.getName();
-                String testTarget = QualifiedNameFinder.findShortestImportableQName(element.getContainingFile()).toString() + "."
-                        + pyFunction.getContainingClass().getName() + "." + testName;
-                configuration.setTestTargets(testTarget);
-                configuration.setSuggestedName("ptest " + pyFunction.getContainingClass().getName() + "." + testName);
-                configuration.setActionName("ptest " + testName);
+            AbstractTestProxy testClass;
+            if (test.getParent().getParent().getName().equals("[root]")) {
+                testClass = test.getParent();
+            } else {
+                testClass = test.getParent().getParent();
             }
+            String testName = test.getName();
+            configuration.setTestTargets(testClass.getName() + "." + testName);
+            String[] splittedNames = testClass.getName().split("\\.");
+            configuration.setSuggestedName("ptest " + splittedNames[splittedNames.length - 1] + "." + testName);
+            configuration.setActionName("ptest " + testName);
         } catch (NullPointerException e) {
             return false;
         }
         return true;
     }
 
-    public boolean isPTestClass(@NotNull final PsiElement element,
-                                   @Nullable final PTestRunConfiguration configuration) {
+    public boolean isPTestMethod(@NotNull final PsiElement element) {
+        final PyFunction pyFunction = PsiTreeUtil.getParentOfType(element, PyFunction.class, false);
+        if (pyFunction == null) return false;
+
+        final PyClass containingClass = pyFunction.getContainingClass();
+        if (containingClass == null) return false;
+
+        return hasDecorator(pyFunction, "Test") && isPTestClass(containingClass);
+    }
+    
+    public boolean setupConfigurationForPTestMethod(@NotNull final PsiElement element,
+                                                    @Nullable final PTestRunConfiguration configuration) {
+        try {
+            setValueForEmptyWorkingDirectory(configuration);
+            final PyFunction pyFunction = PsiTreeUtil.getParentOfType(element, PyFunction.class, false);
+            configuration.setRunTest(true);
+            String testName = pyFunction.getName();
+            String testTarget = QualifiedNameFinder.findShortestImportableQName(element.getContainingFile()).toString() + "."
+                    + pyFunction.getContainingClass().getName() + "." + testName;
+            configuration.setTestTargets(testTarget);
+            configuration.setSuggestedName("ptest " + pyFunction.getContainingClass().getName() + "." + testName);
+            configuration.setActionName("ptest " + testName);
+        } catch (NullPointerException e) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean isPTestClass(@NotNull final PsiElement element) {
         final PyClass pyClass = PsiTreeUtil.getParentOfType(element, PyClass.class, false);
         if (pyClass == null) return false;
         
@@ -170,8 +189,7 @@ public class PTestConfigurationProducer extends PythonTestConfigurationProducer 
         return true;
     }
 
-    public boolean isPTestModule(@NotNull final PsiElement element,
-                                    @Nullable final PTestRunConfiguration configuration) {
+    public boolean isPTestModule(@NotNull final PsiElement element) {
         if (element instanceof PyFile) {
             VirtualFile file = ((PyFile) element).getVirtualFile();
             if (file.getName().equals(PyNames.INIT_DOT_PY)) return false;
@@ -194,8 +212,7 @@ public class PTestConfigurationProducer extends PythonTestConfigurationProducer 
         return true;
     }
 
-    public boolean isPTestPackage(@NotNull final PsiElement element,
-                                     @Nullable final PTestRunConfiguration configuration) {
+    public boolean isPTestPackage(@NotNull final PsiElement element) {
         if (element instanceof PsiDirectory) {
             boolean isPackage = false;
             for (VirtualFile file : ((PsiDirectory) element).getVirtualFile().getChildren()) {
@@ -221,8 +238,7 @@ public class PTestConfigurationProducer extends PythonTestConfigurationProducer 
         return true;
     }
 
-    public boolean isXML(@NotNull final PsiElement element,
-                            @Nullable final PTestRunConfiguration configuration) {
+    public boolean isXML(@NotNull final PsiElement element) {
         if (element instanceof PsiFile) {
             VirtualFile file = ((PsiFile) element).getVirtualFile();
             return file.getExtension() != null && file.getExtension().equals("xml");
