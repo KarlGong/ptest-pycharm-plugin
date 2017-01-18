@@ -46,7 +46,7 @@
       <runConfigurationProducer implementation="com.iselsoft.ptest.runConfiguration.PTestConfigurationProducer" order="FIRST"/>
       <inspectionToolProvider implementation="com.iselsoft.ptest.inspection.PTestRedeclarationProvider"/>
       <runLineMarkerContributor implementationClass="com.iselsoft.ptest.runLineMarker.PTestRunLineMarkerContributor" language="Python"/>
-      <toolWindow id="PTest View" factoryClass="com.intellij.ide.structureView.impl.StructureViewToolWindowFactory" anchor="right" />
+      <toolWindow id="PTest View" factoryClass="com.iselsoft.ptest.toolWindow.PTestViewToolWindowFactory" anchor="right" icon="/icons/com/jetbrains/python/pythonTests.png"/>
   </extensions>
 
   <application-components>

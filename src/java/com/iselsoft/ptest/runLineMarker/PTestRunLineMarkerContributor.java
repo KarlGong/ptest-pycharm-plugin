@@ -11,19 +11,14 @@ import org.jetbrains.annotations.Nullable;
 
 public class PTestRunLineMarkerContributor extends RunLineMarkerContributor {
     private static final PTestConfigurationProducer CONFIG_PRODUCER = new PTestConfigurationProducer();
-    private static final Function<PsiElement, String> TOOLTIP_PROVIDER = new Function<PsiElement, String>() {
-        @Override
-        public String fun(PsiElement psiElement) {
-            return "Run ptest";
-        }
-    };
+    private static final Function<PsiElement, String> TOOLTIP_PROVIDER = psiElement -> "Run ptest";
 
     @Nullable
     @Override
     public Info getInfo(PsiElement psiElement) {
-        if (psiElement instanceof PyFunction && CONFIG_PRODUCER.isPTestMethod(psiElement)) {
+        if (psiElement instanceof PyFunction && CONFIG_PRODUCER.getPTestMethod(psiElement) != null && CONFIG_PRODUCER.getPTestClass(psiElement) != null) {
             return new Info(AllIcons.RunConfigurations.TestState.Run, TOOLTIP_PROVIDER, PTestRunLineMarkerAction.getActions());
-        } else if (psiElement instanceof PyClass && CONFIG_PRODUCER.isPTestClass(psiElement)) {
+        } else if (psiElement instanceof PyClass && CONFIG_PRODUCER.getPTestClass(psiElement) != null) {
             return new Info(AllIcons.RunConfigurations.TestState.Run_run, TOOLTIP_PROVIDER, PTestRunLineMarkerAction.getActions());
         }
         return null;
