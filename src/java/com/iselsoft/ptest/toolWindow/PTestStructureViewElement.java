@@ -5,6 +5,7 @@ import com.intellij.navigation.ColoredItemPresentation;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElement;
+import com.iselsoft.ptest.PTestUtil;
 import com.iselsoft.ptest.runConfiguration.PTestConfigurationProducer;
 import com.jetbrains.python.PyNames;
 import com.jetbrains.python.psi.PyClass;
@@ -19,8 +20,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class PTestStructureViewElement implements StructureViewTreeElement {
-    private static final PTestConfigurationProducer CONFIG_PRODUCER = new PTestConfigurationProducer();
-
     private PTestStructureViewElement myParent;
     private PyElement myElement;
 
@@ -89,16 +88,16 @@ public class PTestStructureViewElement implements StructureViewTreeElement {
 
         if (element instanceof PyFile) {
             for (PsiElement psiElement : element.getChildren()) {
-                PyClass pTestClass = CONFIG_PRODUCER.getPTestClass(psiElement);
+                PyClass pTestClass = PTestUtil.getPTestClass(psiElement);
                 StructureViewTreeElement child = createChild(pTestClass);
                 if (pTestClass != null && !children.contains(child)) {
                     children.add(child);
                 }
             }
         } else if (element instanceof PyClass) {
-            PyClass pTestClass = CONFIG_PRODUCER.getPTestClass(element);
+            PyClass pTestClass = PTestUtil.getPTestClass(element);
             pTestClass.visitMethods(pyFunction -> {
-                PyFunction pTestMethod = CONFIG_PRODUCER.getPTestMethod(pyFunction);
+                PyFunction pTestMethod = PTestUtil.getPTestMethod(pyFunction);
                 StructureViewTreeElement child = createChild(pTestMethod);
                 if (pTestMethod != null && !children.contains(child)) {
                     children.add(child);

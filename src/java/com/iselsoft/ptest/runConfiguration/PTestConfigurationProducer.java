@@ -3,20 +3,14 @@ package com.iselsoft.ptest.runConfiguration;
 import com.intellij.execution.Location;
 import com.intellij.execution.actions.ConfigurationContext;
 import com.intellij.execution.testframework.AbstractTestProxy;
-import com.intellij.execution.testframework.sm.runner.ui.SMTRunnerTestTreeView;
-import com.intellij.ide.util.treeView.smartTree.TreeElementWrapper;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiWhiteSpace;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.ui.treeStructure.Tree;
+import com.iselsoft.ptest.PTestUtil;
 import com.iselsoft.ptest.toolWindow.PTestStructureViewElement;
-import com.jetbrains.python.PyNames;
 import com.jetbrains.python.psi.*;
 import com.jetbrains.python.psi.resolve.QualifiedNameFinder;
 import com.jetbrains.python.testing.AbstractPythonTestRunConfiguration;
@@ -25,8 +19,6 @@ import com.jetbrains.python.testing.PythonUnitTestRunnableScriptFilter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreePath;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +59,7 @@ public class PTestConfigurationProducer extends PythonTestConfigurationProducer 
         // is ptest target
         PTestRunConfiguration config = (PTestRunConfiguration) configuration;
         // is in tool window
-        List<PTestStructureViewElement> testTargets = getSelectedPTestTargetsInTW(context);
+        List<PTestStructureViewElement> testTargets = PTestUtil.getSelectedPTestTargetsInTW(context);
         if (!testTargets.isEmpty()) {
             if (testTargets.size() == 1) {
                 return setupConfigurationForPTestTargetInTW(testTargets.get(0), config);
@@ -76,29 +68,29 @@ public class PTestConfigurationProducer extends PythonTestConfigurationProducer 
             }
         }
         // is in test runner 
-        AbstractTestProxy smtPTestMethod = getSelectedPTestMethodInSMT(context);
+        AbstractTestProxy smtPTestMethod = PTestUtil.getSelectedPTestMethodInSMT(context);
         if (smtPTestMethod != null) {
             return setupConfigurationForPTestMethodInSMT(smtPTestMethod, config);
         }
         // is in editor
-        PyFunction pTestMethod = getPTestMethod(element);
-        if (pTestMethod != null && getPTestClass(element) != null) {
+        PyFunction pTestMethod = PTestUtil.getPTestMethod(element);
+        if (pTestMethod != null && PTestUtil.getPTestClass(element) != null) {
             return setupConfigurationForPTestMethod(pTestMethod, config);
         }
-        PyClass pTestClass = getPTestClass(element);
+        PyClass pTestClass = PTestUtil.getPTestClass(element);
         if (pTestClass != null) {
             return setupConfigurationForPTestClass(pTestClass, config);
         }
-        PyFile pTestModule = getPTestModule(element);
+        PyFile pTestModule = PTestUtil.getPTestModule(element);
         if (pTestModule != null) {
             return setupConfigurationForPTestModule(pTestModule, config);
         }
-        PsiDirectory pTestPackage = getPTestPackage(element);
+        PsiDirectory pTestPackage = PTestUtil.getPTestPackage(element);
         if (pTestPackage != null) {
             return setupConfigurationForPTestPackage(pTestPackage, config);
         }
         // is XML
-        PsiFile pTestXML = getPTestXML(element);
+        PsiFile pTestXML = PTestUtil.getPTestXML(element);
         if (pTestXML != null) {
             return setupConfigurationForPTestXML(pTestXML, config);
         }
@@ -124,22 +116,10 @@ public class PTestConfigurationProducer extends PythonTestConfigurationProducer 
         return true;
     }
 
-    public List<PTestStructureViewElement> getSelectedPTestTargetsInTW(@NotNull ConfigurationContext context) {
-        List<PTestStructureViewElement> pTestTargets = new ArrayList<>();
-        try {
-            TreePath[] treePaths = ((Tree) PlatformDataKeys.CONTEXT_COMPONENT.getData(context.getDataContext())).getSelectionPaths();
-            for (TreePath treePath : treePaths) {
-                PTestStructureViewElement element = (PTestStructureViewElement) ((TreeElementWrapper) ((DefaultMutableTreeNode) treePath.getLastPathComponent()).getUserObject()).getValue();
-                pTestTargets.add(element);
-            }
-        } catch (Exception ignored) { }
-        return pTestTargets;
-    }
-
     public boolean setupConfigurationForPTestTargetInTW(@NotNull final PTestStructureViewElement testTarget, @Nullable final PTestRunConfiguration configuration) {
         try {
             PyElement pyElement = testTarget.getValue();
-            PyFunction pTestMethod = getPTestMethod(pyElement);
+            PyFunction pTestMethod = PTestUtil.getPTestMethod(pyElement);
             if (pTestMethod != null) {
                 setValueForEmptyWorkingDirectory(configuration);
                 configuration.setRunTest(true);
@@ -151,11 +131,11 @@ public class PTestConfigurationProducer extends PythonTestConfigurationProducer 
                 configuration.setActionName("ptest " + testName);
                 return true;
             }
-            PyClass pTestClass = getPTestClass(pyElement);
+            PyClass pTestClass = PTestUtil.getPTestClass(pyElement);
             if (pTestClass != null) {
                 return setupConfigurationForPTestClass(pTestClass, configuration);
             }
-            PyFile pTestModule = getPTestModule(pyElement);
+            PyFile pTestModule = PTestUtil.getPTestModule(pyElement);
             if (pTestModule != null) {
                 return setupConfigurationForPTestModule(pTestModule, configuration);
             }
@@ -184,14 +164,6 @@ public class PTestConfigurationProducer extends PythonTestConfigurationProducer 
         }
     }
 
-    public AbstractTestProxy getSelectedPTestMethodInSMT(@NotNull ConfigurationContext context) {
-        try {
-            return ((SMTRunnerTestTreeView) PlatformDataKeys.CONTEXT_COMPONENT.getData(context.getDataContext())).getSelectedTest();
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
     public boolean setupConfigurationForPTestMethodInSMT(@NotNull final AbstractTestProxy test, @Nullable final PTestRunConfiguration configuration) {
         try {
             setValueForEmptyWorkingDirectory(configuration);
@@ -213,16 +185,6 @@ public class PTestConfigurationProducer extends PythonTestConfigurationProducer 
         }
     }
 
-    public PyFunction getPTestMethod(@NotNull final PsiElement element) {
-        final PyFunction pyFunction = PsiTreeUtil.getParentOfType(element, PyFunction.class, false);
-        if (pyFunction == null) return null;
-
-        final PyClass containingClass = pyFunction.getContainingClass();
-        if (containingClass == null) return null;
-
-        return hasDecorator(pyFunction, "Test") ? pyFunction : null;
-    }
-
     public boolean setupConfigurationForPTestMethod(@NotNull final PyFunction pyFunction,
                                                     @Nullable final PTestRunConfiguration configuration) {
         try {
@@ -240,19 +202,6 @@ public class PTestConfigurationProducer extends PythonTestConfigurationProducer 
         }
     }
 
-    public PyClass getPTestClass(@NotNull final PsiElement element) {
-        final PyClass pyClass = PsiTreeUtil.getParentOfType(element, PyClass.class, false);
-        if (pyClass == null) return null;
-
-        if (hasDecorator(pyClass, "TestClass")) return pyClass;
-        for (PyClass ancestorClass : pyClass.getAncestorClasses(null)) {
-            if (hasDecorator(ancestorClass, "TestClass")) {
-                return pyClass;
-            }
-        }
-        return null;
-    }
-
     public boolean setupConfigurationForPTestClass(@NotNull final PyClass pyClass,
                                                    @Nullable final PTestRunConfiguration configuration) {
         try {
@@ -266,18 +215,6 @@ public class PTestConfigurationProducer extends PythonTestConfigurationProducer 
         } catch (Exception e) {
             return false;
         }
-    }
-
-    public PyFile getPTestModule(@NotNull final PsiElement element) {
-        if (element instanceof PyFile) {
-            PyFile pyFile = (PyFile) element;
-            VirtualFile file = pyFile.getVirtualFile();
-            if (file.getName().equals(PyNames.INIT_DOT_PY)) {
-                return null;
-            }
-            return pyFile;
-        }
-        return null;
     }
 
     public boolean setupConfigurationForPTestModule(@NotNull final PyFile pyModule,
@@ -294,19 +231,6 @@ public class PTestConfigurationProducer extends PythonTestConfigurationProducer 
         }
     }
 
-    public PsiDirectory getPTestPackage(@NotNull final PsiElement element) {
-        if (element instanceof PsiDirectory) {
-            PsiDirectory pyDirectory = (PsiDirectory) element;
-            for (VirtualFile file : (pyDirectory).getVirtualFile().getChildren()) {
-                if (file.getName().equals(PyNames.INIT_DOT_PY)) {
-                    return pyDirectory;
-                }
-            }
-            return null;
-        }
-        return null;
-    }
-
     public boolean setupConfigurationForPTestPackage(@NotNull final PsiDirectory pyPackage,
                                                      @Nullable final PTestRunConfiguration configuration) {
         try {
@@ -319,15 +243,6 @@ public class PTestConfigurationProducer extends PythonTestConfigurationProducer 
         } catch (Exception e) {
             return false;
         }
-    }
-
-    public PsiFile getPTestXML(@NotNull final PsiElement element) {
-        if (element instanceof PsiFile) {
-            PsiFile xmlFile = (PsiFile) element;
-            VirtualFile file = xmlFile.getVirtualFile();
-            return file.getExtension() != null && file.getExtension().equalsIgnoreCase("xml") ? xmlFile : null;
-        }
-        return null;
     }
 
     public boolean setupConfigurationForPTestXML(@NotNull final PsiFile xmlFile,
@@ -351,7 +266,4 @@ public class PTestConfigurationProducer extends PythonTestConfigurationProducer 
         }
     }
 
-    private boolean hasDecorator(PyDecoratable py, String name) {
-        return py.getDecoratorList() != null && py.getDecoratorList().findDecorator(name) != null;
-    }
 }
