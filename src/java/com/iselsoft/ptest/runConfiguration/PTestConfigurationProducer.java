@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class PTestConfigurationProducer extends PythonTestConfigurationProducer {
@@ -155,6 +156,7 @@ public class PTestConfigurationProducer extends PythonTestConfigurationProducer 
                 setupConfigurationForPTestTargetInTW(testTarget, tempConfig);
                 testTargetTexts.add(tempConfig.getTestTargets());
             }
+            Collections.sort(testTargetTexts);
             configuration.setTestTargets(String.join(",", testTargetTexts));
             configuration.setSuggestedName("ptests selected tests");
             configuration.setActionName("ptests selected tests");
