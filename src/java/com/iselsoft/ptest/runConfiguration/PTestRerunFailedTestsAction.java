@@ -6,6 +6,7 @@ import com.intellij.execution.configurations.RunConfigurationBase;
 import com.intellij.execution.configurations.RunProfileState;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.testframework.AbstractTestProxy;
+import com.intellij.execution.testframework.Filter;
 import com.intellij.execution.testframework.TestFrameworkRunningModel;
 import com.intellij.execution.testframework.actions.AbstractRerunFailedTestsAction;
 import com.intellij.openapi.module.Module;
@@ -20,10 +21,21 @@ import java.util.*;
 
 
 public class PTestRerunFailedTestsAction extends AbstractRerunFailedTestsAction {
+    private static final Filter NOT_PASSED_FILTER = new Filter() {
+        @Override
+        public boolean shouldAccept(final AbstractTestProxy test) {
+            return test.isInProgress() || test.isDefect() || test.isInterrupted() || test.isIgnored();
+        }
+    }; 
+    
     protected PTestRerunFailedTestsAction(@NotNull ComponentContainer componentContainer) {
         super(componentContainer);
     }
 
+    protected Filter<?> getFailuresFilter() {
+        return NOT_PASSED_FILTER;
+    }
+    
     @Override
     @Nullable
     protected MyRunProfile getRunProfile(@NotNull ExecutionEnvironment environment) {
