@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class PTestStructureViewModel extends StructureViewModelBase implements StructureViewModel.ElementInfoProvider, StructureViewModel.ExpandInfoProvider {
   public PTestStructureViewModel(@NotNull PsiFile psiFile, @Nullable Editor editor) {
-    this(psiFile, editor, new PTestStructureViewElement(null, (PyElement) psiFile));
+    this(psiFile, editor, new PTestStructureViewElement(null, (PyElement) psiFile, null, null));
     withSorters(Sorter.ALPHA_SORTER);
     withSuitableClasses(PyFunction.class, PyClass.class);
   }

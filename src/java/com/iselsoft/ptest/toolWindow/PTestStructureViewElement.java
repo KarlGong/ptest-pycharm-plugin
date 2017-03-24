@@ -1,17 +1,19 @@
 package com.iselsoft.ptest.toolWindow;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.structureView.StructureViewTreeElement;
 import com.intellij.navigation.ColoredItemPresentation;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElement;
+import com.intellij.ui.LayeredIcon;
 import com.iselsoft.ptest.PTestUtil;
-import com.iselsoft.ptest.runConfiguration.PTestConfigurationProducer;
 import com.jetbrains.python.PyNames;
 import com.jetbrains.python.psi.PyClass;
 import com.jetbrains.python.psi.PyElement;
 import com.jetbrains.python.psi.PyFile;
 import com.jetbrains.python.psi.PyFunction;
+import icons.RemoteServersIcons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,14 +24,18 @@ import java.util.Collection;
 public class PTestStructureViewElement implements StructureViewTreeElement {
     private PTestStructureViewElement myParent;
     private PyElement myElement;
+    private Boolean myInherited;
+    private Boolean myDataProvided;
 
-    public PTestStructureViewElement(PTestStructureViewElement parent, PyElement element) {
+    public PTestStructureViewElement(PTestStructureViewElement parent, PyElement element, Boolean isInherited, Boolean isDataProvided) {
         myParent = parent;
         myElement = element;
+        myInherited = isInherited;
+        myDataProvided = isDataProvided;
     }
 
-    protected StructureViewTreeElement createChild(PyElement element) {
-        return new PTestStructureViewElement(this, element);
+    protected StructureViewTreeElement createChild(PyElement element, Boolean isInherited, Boolean isDataProvided) {
+        return new PTestStructureViewElement(this, element, isInherited, isDataProvided);
     }
     
     public PTestStructureViewElement getParent() {
@@ -89,7 +95,7 @@ public class PTestStructureViewElement implements StructureViewTreeElement {
         if (element instanceof PyFile) {
             for (PsiElement psiElement : element.getChildren()) {
                 PyClass pTestClass = PTestUtil.getPTestClass(psiElement);
-                StructureViewTreeElement child = createChild(pTestClass);
+                StructureViewTreeElement child = createChild(pTestClass, null, null);
                 if (pTestClass != null && !children.contains(child)) {
                     children.add(child);
                 }
@@ -98,7 +104,9 @@ public class PTestStructureViewElement implements StructureViewTreeElement {
             PyClass pTestClass = PTestUtil.getPTestClass(element);
             pTestClass.visitMethods(pyFunction -> {
                 PyFunction pTestMethod = PTestUtil.getPTestMethod(pyFunction);
-                StructureViewTreeElement child = createChild(pTestMethod);
+                boolean isInherited = pyFunction.getContainingClass() != pTestClass;
+                boolean isDataProvided = PTestUtil.hasDecoratorWithParam(pyFunction, "Test", "data_provider");
+                StructureViewTreeElement child = createChild(pTestMethod, isInherited, isDataProvided);
                 if (pTestMethod != null && !children.contains(child)) {
                     children.add(child);
                 }
@@ -133,6 +141,7 @@ public class PTestStructureViewElement implements StructureViewTreeElement {
             @Nullable
             @Override
             public TextAttributesKey getTextAttributesKey() {
+                // the text effect
                 return null;
             }
 
@@ -145,7 +154,21 @@ public class PTestStructureViewElement implements StructureViewTreeElement {
             @Nullable
             @Override
             public Icon getIcon(boolean open) {
-                return element != null ? element.getIcon(0) : null;
+                if (element == null) return null;
+                
+                Icon normalIcon = element.getIcon(0);
+                if (element instanceof PyFunction) {
+                    if (myInherited) {
+                        normalIcon = AllIcons.Nodes.MethodReference;
+                    }
+                    if (myDataProvided) {
+                        LayeredIcon icon = new LayeredIcon(2);
+                        icon.setIcon(normalIcon, 0);
+                        icon.setIcon(RemoteServersIcons.ResumeScaled ,1);
+                        return icon;
+                    }
+                }
+                return normalIcon;
             }
         };
     }

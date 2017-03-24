@@ -40,7 +40,7 @@ public class PTestCommandLineState extends PythonTestCommandLineStateBase {
 
     @Override
     protected List<String> getTestSpecs() {
-        List<String> specs = new ArrayList<String>();
+        List<String> specs = new ArrayList<>();
         if (configuration.isRunTest()) {
             specs.add("-t");
             specs.add(configuration.getTestTargets());

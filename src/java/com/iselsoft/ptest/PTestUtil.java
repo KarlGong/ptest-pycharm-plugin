@@ -102,7 +102,14 @@ public class PTestUtil {
         return null;
     }
 
-    private static boolean hasDecorator(PyDecoratable py, String name) {
-        return py.getDecoratorList() != null && py.getDecoratorList().findDecorator(name) != null;
+    public static boolean hasDecorator(PyDecoratable py, String name) {
+        return py.getDecoratorList() != null
+                && py.getDecoratorList().findDecorator(name) != null;
+    }
+
+    public static boolean hasDecoratorWithParam(PyDecoratable py, String decoratorName, String paramName) {
+        return py.getDecoratorList() != null
+                && py.getDecoratorList().findDecorator(decoratorName) != null
+                && py.getDecoratorList().findDecorator(decoratorName).getKeywordArgument(paramName) != null;
     }
 }

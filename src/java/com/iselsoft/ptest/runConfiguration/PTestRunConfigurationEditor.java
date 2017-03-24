@@ -50,34 +50,18 @@ public class PTestRunConfigurationEditor extends SettingsEditor<PTestRunConfigur
         fileChooserDescriptor.setTitle("Select XML Path");
         xunitXMLTextField.addBrowseFolderListener("Select XML Path", "Select xunit xml to run with failed/skipped tests", project, fileChooserDescriptor);
 
-        runTestRadioButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                testTargetsTextField.setEnabled(runTestRadioButton.isSelected());
-                xunitXMLTextField.setEnabled(!runTestRadioButton.isSelected());
-            }
+        runTestRadioButton.addActionListener(e -> {
+            testTargetsTextField.setEnabled(runTestRadioButton.isSelected());
+            xunitXMLTextField.setEnabled(!runTestRadioButton.isSelected());
         });
         
-        runFailedRadioButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                xunitXMLTextField.setEnabled(runFailedRadioButton.isSelected());
-                testTargetsTextField.setEnabled(!runFailedRadioButton.isSelected());
-            }
+        runFailedRadioButton.addActionListener(e -> {
+            xunitXMLTextField.setEnabled(runFailedRadioButton.isSelected());
+            testTargetsTextField.setEnabled(!runFailedRadioButton.isSelected());
         });
 
-        optionsCheckBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                optionsTextField.setEnabled(optionsCheckBox.isSelected());
-            }
-        });
-        variablesCheckBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                variablesTextField.setEnabled(variablesCheckBox.isSelected());
-            }
-        });
+        optionsCheckBox.addActionListener(e -> optionsTextField.setEnabled(optionsCheckBox.isSelected()));
+        variablesCheckBox.addActionListener(e -> variablesTextField.setEnabled(variablesCheckBox.isSelected()));
         
     }
     
