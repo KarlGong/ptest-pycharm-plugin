@@ -1,7 +1,7 @@
 <idea-plugin version="2">
   <id>karl.gong.plugin.ptest</id>
   <name>ptest</name>
-  <version>5.0</version>
+  <version>5.1</version>
   <vendor email="karl.gong@outlook.com" url="https://github.com/KarlGong">Karl Gong</vendor>
 
   <description><![CDATA[
@@ -10,12 +10,13 @@
     ]]></description>
 
   <change-notes><![CDATA[
-      <p>5.0</p>
+      <p>5.1</p>
+      <ul>
+        <li>Change icon for inherited and data provided tests in PTest View.</li>
+      </ul>
+      <p>1.0 - 5.0</p>
       <ul>
         <li>Add tool window - PTest View.</li>
-      </ul>
-      <p>1.0 - 4.3</p>
-      <ul>
         <li>Fix bug: group in run/debug panel is missed.</li>
         <li>Fix bug in pycharm 2016.2.2</li>
         <li>Support right click data provided test case in run/debug panel.</li>
