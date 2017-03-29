@@ -12,13 +12,13 @@ import com.intellij.openapi.util.JDOMExternalizerUtil;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.util.text.StringUtil;
 import com.jetbrains.python.sdk.PythonSdkType;
-import com.jetbrains.python.testing.AbstractPythonTestRunConfiguration;
+import com.jetbrains.python.testing.AbstractPythonLegacyTestRunConfiguration;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 
-public class PTestRunConfiguration extends AbstractPythonTestRunConfiguration {
+public class PTestRunConfiguration extends AbstractPythonLegacyTestRunConfiguration<PTestRunConfiguration> {
     protected String title = "ptest";
     protected String pluralTitle = "ptests";
 
@@ -155,7 +155,7 @@ public class PTestRunConfiguration extends AbstractPythonTestRunConfiguration {
     }
 
     @Override
-    protected SettingsEditor<? extends RunConfiguration> createConfigurationEditor() {
+    protected SettingsEditor<PTestRunConfiguration> createConfigurationEditor() {
         return new PTestRunConfigurationEditor(getProject(), this);
     }
 

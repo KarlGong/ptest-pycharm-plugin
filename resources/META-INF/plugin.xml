@@ -1,7 +1,7 @@
 <idea-plugin version="2">
   <id>karl.gong.plugin.ptest</id>
   <name>ptest</name>
-  <version>5.1</version>
+  <version>5.2</version>
   <vendor email="karl.gong@outlook.com" url="https://github.com/KarlGong">Karl Gong</vendor>
 
   <description><![CDATA[
@@ -10,12 +10,13 @@
     ]]></description>
 
   <change-notes><![CDATA[
-      <p>5.1</p>
+      <p>5.2</p>
+      <ul>
+        <li>Support pycharm 2017.1</li>
+      </ul>
+      <p>1.0 - 5.1</p>
       <ul>
         <li>Change icon for inherited and data provided tests in PTest View.</li>
-      </ul>
-      <p>1.0 - 5.0</p>
-      <ul>
         <li>Add tool window - PTest View.</li>
         <li>Fix bug: group in run/debug panel is missed.</li>
         <li>Fix bug in pycharm 2016.2.2</li>
@@ -36,7 +37,7 @@
   </change-notes>
 
   <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
-  <idea-version since-build="145"/>
+  <idea-version since-build="171"/>
 
   <!-- please see http://confluence.jetbrains.com/display/IDEADEV/Plugin+Compatibility+with+IntelliJ+Platform+Products
        on how to target different products -->
@@ -44,11 +45,11 @@
     
   <extensions defaultExtensionNs="com.intellij">
     <!-- Add your extensions here -->
-      <configurationType implementation="com.iselsoft.ptest.runConfiguration.PTestConfigurationType" order="FIRST"/>
-      <runConfigurationProducer implementation="com.iselsoft.ptest.runConfiguration.PTestConfigurationProducer" order="FIRST"/>
-      <inspectionToolProvider implementation="com.iselsoft.ptest.inspection.PTestRedeclarationProvider"/>
-      <runLineMarkerContributor implementationClass="com.iselsoft.ptest.runLineMarker.PTestRunLineMarkerContributor" language="Python"/>
-      <toolWindow id="PTest View" factoryClass="com.iselsoft.ptest.toolWindow.PTestViewToolWindowFactory" anchor="right" icon="/icons/com/jetbrains/python/pythonTests.png"/>
+    <configurationType implementation="com.iselsoft.ptest.runConfiguration.PTestConfigurationType" order="FIRST"/>
+    <runConfigurationProducer implementation="com.iselsoft.ptest.runConfiguration.PTestConfigurationProducer" order="FIRST"/>
+    <inspectionToolProvider implementation="com.iselsoft.ptest.inspection.PTestRedeclarationProvider"/>
+    <runLineMarkerContributor implementationClass="com.iselsoft.ptest.runLineMarker.PTestRunLineMarkerContributor" language="Python"/>
+    <toolWindow id="PTest View" factoryClass="com.iselsoft.ptest.toolWindow.PTestViewToolWindowFactory" anchor="right" icon="/icons/com/jetbrains/python/pythonTests.png"/>
   </extensions>
 
   <application-components>

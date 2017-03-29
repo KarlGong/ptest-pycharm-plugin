@@ -1,6 +1,5 @@
 package com.iselsoft.ptest.runConfiguration;
 
-import com.google.common.collect.Lists;
 import com.intellij.execution.DefaultExecutionResult;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.ExecutionResult;
@@ -9,13 +8,10 @@ import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.execution.configurations.ParamsGroup;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.execution.testframework.TestFrameworkRunningModel;
 import com.intellij.execution.testframework.autotest.ToggleAutoTestAction;
 import com.intellij.execution.testframework.sm.runner.ui.SMTRunnerConsoleView;
 import com.intellij.execution.testframework.ui.BaseTestsOutputConsoleView;
 import com.intellij.execution.ui.ConsoleView;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.util.text.StringUtil;
 import com.jetbrains.python.HelperPackage;
 import com.jetbrains.python.run.CommandLinePatcher;
@@ -25,7 +21,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PTestCommandLineState extends PythonTestCommandLineStateBase {
+public class PTestCommandLineState extends PythonTestCommandLineStateBase<PTestRunConfiguration> {
     private final PTestRunConfiguration configuration;
 
     public PTestCommandLineState(PTestRunConfiguration configuration, ExecutionEnvironment env) {
@@ -83,24 +79,15 @@ public class PTestCommandLineState extends PythonTestCommandLineStateBase {
 
     @Override
     public ExecutionResult execute(Executor executor, CommandLinePatcher... patchers) throws ExecutionException {
-        final ProcessHandler processHandler = startProcess(patchers);
+        final ProcessHandler processHandler = startProcess(getDefaultPythonProcessStarter(), patchers);
         final ConsoleView console = createAndAttachConsole(configuration.getProject(), processHandler, executor);
 
-        List<AnAction> actions = Lists
-                .newArrayList(createActions(console, processHandler));
-
-        DefaultExecutionResult executionResult =
-                new DefaultExecutionResult(console, processHandler, actions.toArray(new AnAction[actions.size()]));
+        DefaultExecutionResult executionResult = new DefaultExecutionResult(console, processHandler, createActions(console, processHandler));
 
         PTestRerunFailedTestsAction rerunFailedTestsAction = new PTestRerunFailedTestsAction(console);
         if (console instanceof SMTRunnerConsoleView) {
             rerunFailedTestsAction.init(((BaseTestsOutputConsoleView) console).getProperties());
-            rerunFailedTestsAction.setModelProvider(new Getter<TestFrameworkRunningModel>() {
-                @Override
-                public TestFrameworkRunningModel get() {
-                    return ((SMTRunnerConsoleView) console).getResultsViewer();
-                }
-            });
+            rerunFailedTestsAction.setModelProvider(() -> ((SMTRunnerConsoleView) console).getResultsViewer());
         }
 
         executionResult.setRestartActions(rerunFailedTestsAction, new ToggleAutoTestAction());

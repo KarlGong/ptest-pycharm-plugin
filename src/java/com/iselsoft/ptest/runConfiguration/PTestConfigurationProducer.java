@@ -13,8 +13,8 @@ import com.iselsoft.ptest.PTestUtil;
 import com.iselsoft.ptest.toolWindow.PTestStructureViewElement;
 import com.jetbrains.python.psi.*;
 import com.jetbrains.python.psi.resolve.QualifiedNameFinder;
-import com.jetbrains.python.testing.AbstractPythonTestRunConfiguration;
-import com.jetbrains.python.testing.PythonTestConfigurationProducer;
+import com.jetbrains.python.testing.AbstractPythonLegacyTestRunConfiguration;
+import com.jetbrains.python.testing.PythonTestLegacyConfigurationProducer;
 import com.jetbrains.python.testing.PythonUnitTestRunnableScriptFilter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class PTestConfigurationProducer extends PythonTestConfigurationProducer {
+public class PTestConfigurationProducer extends PythonTestLegacyConfigurationProducer<PTestRunConfiguration> {
 
     public PTestConfigurationProducer() {
         super(PTestConfigurationType.getInstance().PY_PTEST_FACTORY);
@@ -32,7 +32,7 @@ public class PTestConfigurationProducer extends PythonTestConfigurationProducer 
 
     @Override
     public boolean setupConfigurationFromContext(
-            AbstractPythonTestRunConfiguration configuration,
+            AbstractPythonLegacyTestRunConfiguration<PTestRunConfiguration> configuration,
             ConfigurationContext context,
             Ref<PsiElement> sourceElement) {
         // no context
@@ -99,7 +99,7 @@ public class PTestConfigurationProducer extends PythonTestConfigurationProducer 
     }
 
     @Override
-    public boolean isConfigurationFromContext(AbstractPythonTestRunConfiguration configuration, ConfigurationContext context) {
+    public boolean isConfigurationFromContext(AbstractPythonLegacyTestRunConfiguration configuration, ConfigurationContext context) {
         PTestRunConfiguration config = (PTestRunConfiguration) configuration;
         PTestRunConfiguration newConfig = new PTestRunConfiguration(config.getProject(), config.getFactory());
 
