@@ -1,5 +1,5 @@
 <idea-plugin version="2">
-  <id>karl.gong.plugin.ptest</id>
+  <id>com.iselsoft.plugin.ptest</id>
   <name>ptest</name>
   <version>5.2</version>
   <vendor email="karl.gong@outlook.com" url="https://github.com/KarlGong">Karl Gong</vendor>
