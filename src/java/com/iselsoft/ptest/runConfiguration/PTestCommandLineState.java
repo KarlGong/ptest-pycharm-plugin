@@ -19,7 +19,7 @@ import com.jetbrains.python.HelperPackage;
 import com.jetbrains.python.run.CommandLinePatcher;
 import com.jetbrains.python.testing.PythonTestCommandLineStateBase;
 
-import java.io.File;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,8 +73,8 @@ public class PTestCommandLineState extends PythonTestCommandLineStateBase<PTestR
     protected void addTestRunnerParameters(GeneralCommandLine cmd) {
         ParamsGroup script_params = cmd.getParametersList().getParamsGroup(GROUP_SCRIPT);
         assert script_params != null;
-        File ptestPluginPath = PluginManager.getPlugin(PluginId.getId("com.iselsoft.plugin.ptest")).getPath();
-        script_params.addParameter(new File(ptestPluginPath, "ptestrunner.py").getAbsolutePath());
+        String ptestPluginPath = PluginManager.getPlugin(PluginId.getId("com.iselsoft.plugin.ptest")).getPath().getAbsolutePath();
+        script_params.addParameter(Paths.get(ptestPluginPath, "lib", "ptestrunner.py").toAbsolutePath().toString());
         addBeforeParameters(cmd);
         script_params.addParameters(getTestSpecs());
         addAfterParameters(cmd);
