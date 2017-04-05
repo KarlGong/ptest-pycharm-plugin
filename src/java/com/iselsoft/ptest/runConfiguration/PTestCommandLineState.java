@@ -12,6 +12,8 @@ import com.intellij.execution.testframework.autotest.ToggleAutoTestAction;
 import com.intellij.execution.testframework.sm.runner.ui.SMTRunnerConsoleView;
 import com.intellij.execution.testframework.ui.BaseTestsOutputConsoleView;
 import com.intellij.execution.ui.ConsoleView;
+import com.intellij.ide.plugins.PluginManager;
+import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.util.text.StringUtil;
 import com.jetbrains.python.HelperPackage;
 import com.jetbrains.python.run.CommandLinePatcher;
@@ -71,7 +73,8 @@ public class PTestCommandLineState extends PythonTestCommandLineStateBase<PTestR
     protected void addTestRunnerParameters(GeneralCommandLine cmd) {
         ParamsGroup script_params = cmd.getParametersList().getParamsGroup(GROUP_SCRIPT);
         assert script_params != null;
-        script_params.addParameter(new File(getJarDir(getClass()), "ptestrunner.py").getAbsolutePath());
+        File ptestPluginPath = PluginManager.getPlugin(PluginId.getId("com.iselsoft.plugin.ptest")).getPath();
+        script_params.addParameter(new File(ptestPluginPath, "ptestrunner.py").getAbsolutePath());
         addBeforeParameters(cmd);
         script_params.addParameters(getTestSpecs());
         addAfterParameters(cmd);
@@ -92,31 +95,5 @@ public class PTestCommandLineState extends PythonTestCommandLineStateBase<PTestR
 
         executionResult.setRestartActions(rerunFailedTestsAction, new ToggleAutoTestAction());
         return executionResult;
-    }
-
-    private static File getJarDir(Class<?> cls) {
-        ClassLoader loader = cls.getClassLoader();
-        String clsName = cls.getName();
-        // convert class name to path
-        String clsPath = clsName.replace(".", "/") + ".class";
-        java.net.URL url = loader.getResource(clsPath);
-        String realPath = url.getPath();
-        int pos = realPath.indexOf("file:");
-        if (pos > -1) {
-            realPath = realPath.substring(pos + 5);
-        }
-        pos = realPath.indexOf(clsPath);
-        realPath = realPath.substring(0, pos - 1);
-        // it is a jar file
-        if (realPath.endsWith("!")) {
-            realPath = realPath.substring(0, realPath.lastIndexOf("/"));
-        }
-        // decode
-        try {
-            realPath = java.net.URLDecoder.decode(realPath, "utf-8");
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        return new File(realPath);
     }
 }
