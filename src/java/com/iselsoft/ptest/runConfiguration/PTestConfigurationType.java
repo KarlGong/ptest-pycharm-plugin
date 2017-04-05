@@ -9,7 +9,7 @@ import javax.swing.*;
 
 public class PTestConfigurationType extends ConfigurationTypeBase {
     
-    public final PythonPTestConfigurationFactory PY_PTEST_FACTORY = new PythonPTestConfigurationFactory(this);
+    public final PTestConfigurationFactory PTEST_FACTORY = new PTestConfigurationFactory(this);
 
     public PTestConfigurationType() {
         super("ptest", "ptest", "run ptest", PythonIcons.Python.PythonTests);
@@ -21,11 +21,11 @@ public class PTestConfigurationType extends ConfigurationTypeBase {
 
     @Override
     public ConfigurationFactory[] getConfigurationFactories() {
-        return new ConfigurationFactory[]{PY_PTEST_FACTORY};
+        return new ConfigurationFactory[]{PTEST_FACTORY};
     }
 
-    public class PythonPTestConfigurationFactory extends PythonConfigurationFactoryBase {
-        protected PythonPTestConfigurationFactory(ConfigurationType configurationType) {
+    public class PTestConfigurationFactory extends PythonConfigurationFactoryBase {
+        protected PTestConfigurationFactory(ConfigurationType configurationType) {
             super(configurationType);
         }
 

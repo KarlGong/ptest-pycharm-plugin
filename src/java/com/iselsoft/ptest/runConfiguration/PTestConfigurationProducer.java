@@ -27,7 +27,7 @@ import java.util.List;
 public class PTestConfigurationProducer extends PythonTestLegacyConfigurationProducer<PTestRunConfiguration> {
 
     public PTestConfigurationProducer() {
-        super(PTestConfigurationType.getInstance().PY_PTEST_FACTORY);
+        super(PTestConfigurationType.getInstance().PTEST_FACTORY);
     }
 
     @Override

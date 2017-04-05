@@ -63,20 +63,20 @@ public class PTestRerunFailedTestsAction extends AbstractRerunFailedTestsAction 
         public RunProfileState getState(@NotNull Executor executor, @NotNull ExecutionEnvironment env) throws ExecutionException {
             final AbstractPythonRunConfiguration configuration = ((AbstractPythonRunConfiguration) getPeer());
 
-            return new FailedPTestCommandLineState((PTestRunConfiguration) configuration, env,
+            return new PTestRerunFailedCommandLineState((PTestRunConfiguration) configuration, env,
                     (PTestCommandLineState) configuration.getState(executor, env));
         }
     }
 
-    private class FailedPTestCommandLineState extends PTestCommandLineState {
+    private class PTestRerunFailedCommandLineState extends PTestCommandLineState {
 
         private final PTestCommandLineState state;
         private final PTestRunConfiguration configuration;
         private final Project project;
 
-        public FailedPTestCommandLineState(PTestRunConfiguration configuration,
-                                           ExecutionEnvironment env,
-                                           PTestCommandLineState state) {
+        public PTestRerunFailedCommandLineState(PTestRunConfiguration configuration,
+                                                ExecutionEnvironment env,
+                                                PTestCommandLineState state) {
             super(configuration, env);
             this.state = state;
             this.configuration = configuration;
