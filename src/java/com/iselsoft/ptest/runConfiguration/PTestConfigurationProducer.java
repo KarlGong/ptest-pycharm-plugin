@@ -13,33 +13,34 @@ import com.iselsoft.ptest.PTestUtil;
 import com.iselsoft.ptest.toolWindow.PTestStructureViewElement;
 import com.jetbrains.python.psi.*;
 import com.jetbrains.python.psi.resolve.QualifiedNameFinder;
-import com.jetbrains.python.testing.AbstractPythonLegacyTestRunConfiguration;
-import com.jetbrains.python.testing.PythonTestLegacyConfigurationProducer;
+import com.jetbrains.python.testing.AbstractPythonTestConfigurationProducer;
 import com.jetbrains.python.testing.PythonUnitTestRunnableScriptFilter;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class PTestConfigurationProducer extends PythonTestLegacyConfigurationProducer<PTestRunConfiguration> {
+public class PTestConfigurationProducer extends AbstractPythonTestConfigurationProducer<PTestRunConfiguration> {
 
     public PTestConfigurationProducer() {
         super(PTestConfigurationType.getInstance().PTEST_FACTORY);
     }
 
+    @NotNull
     @Override
-    public boolean setupConfigurationFromContext(
-            AbstractPythonLegacyTestRunConfiguration<PTestRunConfiguration> configuration,
-            ConfigurationContext context,
-            Ref<PsiElement> sourceElement) {
+    public Class<? super PTestRunConfiguration> getConfigurationClass() {
+        return PTestRunConfiguration.class;
+    }
+
+    @Override
+    public boolean setupConfigurationFromContext(PTestRunConfiguration config, ConfigurationContext context, Ref<PsiElement> sourceElement) {
         // no context
         if (context == null) return false;
         // location is invalid
         final Location location = context.getLocation();
-        if (location == null || !isAvailable(location)) return false;
+        if (location == null) return false;
         // location is white space
         PsiElement element = location.getPsiElement();
         if (element instanceof PsiWhiteSpace) {
@@ -57,8 +58,6 @@ public class PTestConfigurationProducer extends PythonTestLegacyConfigurationPro
         if (element == null) return false;
         // is in <if __name__ = "__main__"> section
         if (PythonUnitTestRunnableScriptFilter.isIfNameMain(location)) return false;
-        // is ptest target
-        PTestRunConfiguration config = (PTestRunConfiguration) configuration;
         // is in tool window
         List<PTestStructureViewElement> testTargets = PTestUtil.getSelectedPTestTargetsInTW(context);
         if (!testTargets.isEmpty()) {
@@ -99,8 +98,7 @@ public class PTestConfigurationProducer extends PythonTestLegacyConfigurationPro
     }
 
     @Override
-    public boolean isConfigurationFromContext(AbstractPythonLegacyTestRunConfiguration configuration, ConfigurationContext context) {
-        PTestRunConfiguration config = (PTestRunConfiguration) configuration;
+    public boolean isConfigurationFromContext(PTestRunConfiguration config, ConfigurationContext context) {
         PTestRunConfiguration newConfig = new PTestRunConfiguration(config.getProject(), config.getFactory());
 
         if (setupConfigurationFromContext(newConfig, context, null)) {
@@ -113,11 +111,7 @@ public class PTestConfigurationProducer extends PythonTestLegacyConfigurationPro
         return false;
     }
 
-    public boolean isAvailable(@NotNull final Location location) {
-        return true;
-    }
-
-    public boolean setupConfigurationForPTestTargetInTW(@NotNull final PTestStructureViewElement testTarget, @Nullable final PTestRunConfiguration configuration) {
+    public boolean setupConfigurationForPTestTargetInTW(@NotNull PTestStructureViewElement testTarget, @NotNull PTestRunConfiguration configuration) {
         try {
             PyElement pyElement = testTarget.getValue();
             PyFunction pTestMethod = PTestUtil.getPTestMethod(pyElement);
@@ -146,7 +140,7 @@ public class PTestConfigurationProducer extends PythonTestLegacyConfigurationPro
         }
     }
 
-    public boolean setupConfigurationForPTestTargetsInTW(@NotNull final List<PTestStructureViewElement> testTargets, @Nullable final PTestRunConfiguration configuration) {
+    public boolean setupConfigurationForPTestTargetsInTW(@NotNull List<PTestStructureViewElement> testTargets, @NotNull PTestRunConfiguration configuration) {
         try {
             setValueForEmptyWorkingDirectory(configuration);
             configuration.setRunTest(true);
@@ -159,14 +153,13 @@ public class PTestConfigurationProducer extends PythonTestLegacyConfigurationPro
             Collections.sort(testTargetTexts);
             configuration.setTestTargets(String.join(",", testTargetTexts));
             configuration.setSuggestedName("ptests selected tests");
-            configuration.setActionName("ptests selected tests");
             return true;
         } catch (Exception e) {
             return false;
         }
     }
 
-    public boolean setupConfigurationForPTestMethodInSMT(@NotNull final AbstractTestProxy test, @Nullable final PTestRunConfiguration configuration) {
+    public boolean setupConfigurationForPTestMethodInSMT(@NotNull AbstractTestProxy test, @NotNull PTestRunConfiguration configuration) {
         try {
             setValueForEmptyWorkingDirectory(configuration);
             configuration.setRunTest(true);
@@ -187,8 +180,7 @@ public class PTestConfigurationProducer extends PythonTestLegacyConfigurationPro
         }
     }
 
-    public boolean setupConfigurationForPTestMethod(@NotNull final PyFunction pyFunction,
-                                                    @Nullable final PTestRunConfiguration configuration) {
+    public boolean setupConfigurationForPTestMethod(@NotNull PyFunction pyFunction, @NotNull PTestRunConfiguration configuration) {
         try {
             setValueForEmptyWorkingDirectory(configuration);
             configuration.setRunTest(true);
@@ -204,8 +196,7 @@ public class PTestConfigurationProducer extends PythonTestLegacyConfigurationPro
         }
     }
 
-    public boolean setupConfigurationForPTestClass(@NotNull final PyClass pyClass,
-                                                   @Nullable final PTestRunConfiguration configuration) {
+    public boolean setupConfigurationForPTestClass(@NotNull PyClass pyClass, @NotNull PTestRunConfiguration configuration) {
         try {
             setValueForEmptyWorkingDirectory(configuration);
             configuration.setRunTest(true);
@@ -219,8 +210,7 @@ public class PTestConfigurationProducer extends PythonTestLegacyConfigurationPro
         }
     }
 
-    public boolean setupConfigurationForPTestModule(@NotNull final PyFile pyModule,
-                                                    @Nullable final PTestRunConfiguration configuration) {
+    public boolean setupConfigurationForPTestModule(@NotNull PyFile pyModule, @NotNull PTestRunConfiguration configuration) {
         try {
             setValueForEmptyWorkingDirectory(configuration);
             configuration.setRunTest(true);
@@ -233,8 +223,7 @@ public class PTestConfigurationProducer extends PythonTestLegacyConfigurationPro
         }
     }
 
-    public boolean setupConfigurationForPTestPackage(@NotNull final PsiDirectory pyPackage,
-                                                     @Nullable final PTestRunConfiguration configuration) {
+    public boolean setupConfigurationForPTestPackage(@NotNull PsiDirectory pyPackage, @NotNull PTestRunConfiguration configuration) {
         try {
             setValueForEmptyWorkingDirectory(configuration);
             configuration.setRunTest(true);
@@ -247,8 +236,7 @@ public class PTestConfigurationProducer extends PythonTestLegacyConfigurationPro
         }
     }
 
-    public boolean setupConfigurationForPTestXML(@NotNull final PsiFile xmlFile,
-                                                 @Nullable final PTestRunConfiguration configuration) {
+    public boolean setupConfigurationForPTestXML(@NotNull PsiFile xmlFile, @NotNull PTestRunConfiguration configuration) {
         try {
             setValueForEmptyWorkingDirectory(configuration);
             configuration.setRunFailed(true);
@@ -262,10 +250,9 @@ public class PTestConfigurationProducer extends PythonTestLegacyConfigurationPro
         }
     }
 
-    private void setValueForEmptyWorkingDirectory(@NotNull final PTestRunConfiguration configuration) {
+    private void setValueForEmptyWorkingDirectory(@NotNull PTestRunConfiguration configuration) {
         if (StringUtil.isEmptyOrSpaces(configuration.getWorkingDirectory())) {
             configuration.setWorkingDirectory(configuration.getProject().getBasePath());
         }
     }
-
 }

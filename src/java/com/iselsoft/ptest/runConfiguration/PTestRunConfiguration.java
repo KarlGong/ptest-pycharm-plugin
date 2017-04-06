@@ -12,16 +12,13 @@ import com.intellij.openapi.util.JDOMExternalizerUtil;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.util.text.StringUtil;
 import com.jetbrains.python.sdk.PythonSdkType;
-import com.jetbrains.python.testing.AbstractPythonLegacyTestRunConfiguration;
+import com.jetbrains.python.testing.AbstractPythonTestRunConfiguration;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 
-public class PTestRunConfiguration extends AbstractPythonLegacyTestRunConfiguration<PTestRunConfiguration> {
-    protected String title = "ptest";
-    protected String pluralTitle = "ptests";
-
+public class PTestRunConfiguration extends AbstractPythonTestRunConfiguration<PTestRunConfiguration> {
     private String suggestedName = "";
     private String actionName = "";
 
@@ -145,16 +142,6 @@ public class PTestRunConfiguration extends AbstractPythonLegacyTestRunConfigurat
     }
 
     @Override
-    protected String getTitle() {
-        return title;
-    }
-
-    @Override
-    protected String getPluralTitle() {
-        return pluralTitle;
-    }
-
-    @Override
     protected SettingsEditor<PTestRunConfiguration> createConfigurationEditor() {
         return new PTestRunConfigurationEditor(getProject(), this);
     }
@@ -165,7 +152,7 @@ public class PTestRunConfiguration extends AbstractPythonLegacyTestRunConfigurat
     }
 
     @Override
-    public void readExternal(Element element) throws InvalidDataException {
+    public void readExternal(@NotNull Element element) throws InvalidDataException {
         super.readExternal(element);
         suggestedName = JDOMExternalizerUtil.readField(element, "SUGGESTED_NAME");
         actionName = JDOMExternalizerUtil.readField(element, "ACTION_NAME");
@@ -183,7 +170,7 @@ public class PTestRunConfiguration extends AbstractPythonLegacyTestRunConfigurat
     }
 
     @Override
-    public void writeExternal(Element element) throws WriteExternalException {
+    public void writeExternal(@NotNull Element element) throws WriteExternalException {
         super.writeExternal(element);
         JDOMExternalizerUtil.writeField(element, "SUGGESTED_NAME", suggestedName);
         JDOMExternalizerUtil.writeField(element, "ACTION_NAME", actionName);
