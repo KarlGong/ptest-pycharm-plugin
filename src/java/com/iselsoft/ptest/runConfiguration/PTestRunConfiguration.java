@@ -134,7 +134,10 @@ public class PTestRunConfiguration extends AbstractPythonTestRunConfiguration<PT
         if (!StringUtil.isEmptyOrSpaces(actionName)) {
             return actionName;
         }
-        return suggestedName();
+        if (!StringUtil.isEmptyOrSpaces(suggestedName())) {
+            return suggestedName();
+        }
+        return getName();
     }
 
     public void setActionName(String actionName) {
