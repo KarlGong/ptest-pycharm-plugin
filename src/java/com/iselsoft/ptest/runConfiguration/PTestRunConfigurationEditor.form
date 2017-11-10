@@ -36,7 +36,7 @@
               <horizontalAlignment value="2"/>
               <selected value="false"/>
               <text value="&amp;Run failed:"/>
-              <toolTipText value="Specify xunit xml to run with failed/skipped tests.&#10;-R command line option in ptest"/>
+              <toolTipText value="Specify xunit xml to run with failed/skipped tests.&#10;-R command line option in ptest."/>
             </properties>
           </component>
           <component id="618ee" class="javax.swing.JRadioButton" binding="runTestRadioButton">
@@ -48,7 +48,7 @@
               <horizontalTextPosition value="11"/>
               <selected value="true"/>
               <text value="&amp;Test targets:"/>
-              <toolTipText value="Specify test targets, separated by comma.&#10;-t command line option in ptest"/>
+              <toolTipText value="Specify test targets, separated by comma.&#10;-t command line option in ptest."/>
             </properties>
           </component>
           <component id="dd454" class="javax.swing.JCheckBox" binding="optionsCheckBox">
@@ -116,7 +116,7 @@
             <properties>
               <selected value="true"/>
               <text value="Verbose &amp;mode"/>
-              <toolTipText value="Set console to verbose mode.&#10;-v command line option in ptest"/>
+              <toolTipText value="Set console to verbose mode.&#10;-v command line option in ptest."/>
             </properties>
           </component>
           <component id="72ad8" class="javax.swing.JCheckBox" binding="disableScreenshotCheckBox">
@@ -125,7 +125,7 @@
             </constraints>
             <properties>
               <text value="&amp;Disable screenshot"/>
-              <toolTipText value="Disable taking screenshot for failed test fixtures.&#10;--disablescreenshot command line option in ptest"/>
+              <toolTipText value="Disable taking screenshot for preporter.&#10;--disablescreenshot command line option in ptest."/>
             </properties>
           </component>
         </children>
