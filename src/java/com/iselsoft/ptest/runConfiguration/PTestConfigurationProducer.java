@@ -12,9 +12,8 @@ import com.intellij.psi.PsiWhiteSpace;
 import com.iselsoft.ptest.PTestUtil;
 import com.iselsoft.ptest.toolWindow.PTestStructureViewElement;
 import com.jetbrains.python.psi.*;
-import com.jetbrains.python.psi.resolve.QualifiedNameFinder;
+import com.jetbrains.python.run.RunnableScriptFilter;
 import com.jetbrains.python.testing.AbstractPythonTestConfigurationProducer;
-import com.jetbrains.python.testing.PythonUnitTestRunnableScriptFilter;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -57,7 +56,7 @@ public class PTestConfigurationProducer extends AbstractPythonTestConfigurationP
         // element is invalid
         if (element == null) return false;
         // is in <if __name__ = "__main__"> section
-        if (PythonUnitTestRunnableScriptFilter.isIfNameMain(location)) return false;
+        if (RunnableScriptFilter.isIfNameMain(location)) return false;
         // is in tool window
         List<PTestStructureViewElement> testTargets = PTestUtil.getSelectedPTestTargetsInTW(context);
         if (!testTargets.isEmpty()) {
@@ -119,7 +118,7 @@ public class PTestConfigurationProducer extends AbstractPythonTestConfigurationP
                 setValueForEmptyWorkingDirectory(configuration);
                 configuration.setRunTest(true);
                 String testName = pTestMethod.getName();
-                String testTargetText = QualifiedNameFinder.findShortestImportableQName((PsiFile) testTarget.getParent().getParent().getValue()).toString() + "."
+                String testTargetText = PTestUtil.findShortestImportableName((PsiFile) testTarget.getParent().getParent().getValue()) + "."
                         + testTarget.getParent().getValue().getName() + "." + testName;
                 configuration.setTestTargets(testTargetText);
                 configuration.setSuggestedName("ptest " + testTarget.getParent().getValue().getName() + "." + testName);
@@ -185,7 +184,7 @@ public class PTestConfigurationProducer extends AbstractPythonTestConfigurationP
             setValueForEmptyWorkingDirectory(configuration);
             configuration.setRunTest(true);
             String testName = pyFunction.getName();
-            String testTarget = QualifiedNameFinder.findShortestImportableQName(pyFunction.getContainingFile()).toString() + "."
+            String testTarget = PTestUtil.findShortestImportableName(pyFunction.getContainingFile()) + "."
                     + pyFunction.getContainingClass().getName() + "." + testName;
             configuration.setTestTargets(testTarget);
             configuration.setSuggestedName("ptest " + pyFunction.getContainingClass().getName() + "." + testName);
@@ -200,7 +199,7 @@ public class PTestConfigurationProducer extends AbstractPythonTestConfigurationP
         try {
             setValueForEmptyWorkingDirectory(configuration);
             configuration.setRunTest(true);
-            String testTarget = QualifiedNameFinder.findShortestImportableQName(pyClass.getContainingFile()).toString() + "."
+            String testTarget = PTestUtil.findShortestImportableName(pyClass.getContainingFile()) + "."
                     + pyClass.getName();
             configuration.setTestTargets(testTarget);
             configuration.setSuggestedName("ptests in " + pyClass.getName());
@@ -214,7 +213,7 @@ public class PTestConfigurationProducer extends AbstractPythonTestConfigurationP
         try {
             setValueForEmptyWorkingDirectory(configuration);
             configuration.setRunTest(true);
-            String testTarget = QualifiedNameFinder.findShortestImportableQName(pyModule).toString();
+            String testTarget = PTestUtil.findShortestImportableName(pyModule);
             configuration.setTestTargets(testTarget);
             configuration.setSuggestedName("ptests in " + testTarget);
             return true;
@@ -227,7 +226,7 @@ public class PTestConfigurationProducer extends AbstractPythonTestConfigurationP
         try {
             setValueForEmptyWorkingDirectory(configuration);
             configuration.setRunTest(true);
-            String testTarget = QualifiedNameFinder.findShortestImportableQName(pyPackage).toString();
+            String testTarget = PTestUtil.findShortestImportableName(pyPackage);
             configuration.setTestTargets(testTarget);
             configuration.setSuggestedName("ptests in " + testTarget);
             return true;

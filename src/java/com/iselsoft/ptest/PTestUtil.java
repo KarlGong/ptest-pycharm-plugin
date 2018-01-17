@@ -9,14 +9,14 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiFileSystemItem;
 import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.psi.util.QualifiedName;
 import com.intellij.ui.treeStructure.Tree;
 import com.iselsoft.ptest.toolWindow.PTestStructureViewElement;
 import com.jetbrains.python.PyNames;
-import com.jetbrains.python.psi.PyClass;
-import com.jetbrains.python.psi.PyDecoratable;
-import com.jetbrains.python.psi.PyFile;
-import com.jetbrains.python.psi.PyFunction;
+import com.jetbrains.python.psi.*;
+import com.jetbrains.python.psi.resolve.QualifiedNameFinder;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -72,10 +72,7 @@ public class PTestUtil {
         if (element instanceof PyFile) {
             PyFile pyFile = (PyFile) element;
             VirtualFile file = pyFile.getVirtualFile();
-            if (file.getName().equals(PyNames.INIT_DOT_PY)) {
-                return null;
-            }
-            return pyFile;
+            return !file.getName().equals(PyNames.INIT_DOT_PY) ? pyFile : null;
         }
         return null;
     }
@@ -83,12 +80,7 @@ public class PTestUtil {
     public static PsiDirectory getPTestPackage(@NotNull final PsiElement element) {
         if (element instanceof PsiDirectory) {
             PsiDirectory pyDirectory = (PsiDirectory) element;
-            for (VirtualFile file : (pyDirectory).getVirtualFile().getChildren()) {
-                if (file.getName().equals(PyNames.INIT_DOT_PY)) {
-                    return pyDirectory;
-                }
-            }
-            return null;
+            return hasAnyPyFile(pyDirectory) ? pyDirectory : null;
         }
         return null;
     }
@@ -111,5 +103,37 @@ public class PTestUtil {
         return py.getDecoratorList() != null
                 && py.getDecoratorList().findDecorator(decoratorName) != null
                 && py.getDecoratorList().findDecorator(decoratorName).getKeywordArgument(paramName) != null;
+    }
+
+    public static String findShortestImportableName(PsiFileSystemItem file) {
+        QualifiedName qName = QualifiedNameFinder.findShortestImportableQName(file);
+        if (qName != null) return qName.toString();
+
+        String projectPath = file.getProject().getBasePath();
+        List<String> importableNames = new ArrayList<>();
+        PsiFileSystemItem currentFile = file;
+
+        while (!currentFile.getVirtualFile().getCanonicalPath().equals(projectPath)) {
+            importableNames.add(0, currentFile.getVirtualFile().getNameWithoutExtension());
+            currentFile = currentFile.getParent();
+        }
+
+        return String.join(".", importableNames);
+    }
+
+    public static boolean hasAnyPyFile(PsiDirectory directory) {
+        for (PsiFile file : directory.getFiles()) {
+            String fileName = file.getVirtualFile().getName();
+            String extension = file.getVirtualFile().getExtension();
+            if (extension != null && extension.equalsIgnoreCase("py") && !fileName.equals(PyNames.INIT_DOT_PY)) {
+                return true;
+            }
+        }
+        for (PsiDirectory subDirectory : directory.getSubdirectories()) {
+            if (hasAnyPyFile(subDirectory)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
