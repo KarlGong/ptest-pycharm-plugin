@@ -57,6 +57,10 @@ public class PTestConfigurationProducer extends AbstractPythonTestConfigurationP
         if (element == null) return false;
         // is in <if __name__ = "__main__"> section
         if (RunnableScriptFilter.isIfNameMain(location)) return false;
+        // is project folder
+        if (element instanceof PsiDirectory
+                && ((PsiDirectory) element).getVirtualFile().equals(element.getProject().getBaseDir()))
+            return false;
         // is in tool window
         List<PTestStructureViewElement> testTargets = PTestUtil.getSelectedPTestTargetsInTW(context);
         if (!testTargets.isEmpty()) {
@@ -71,7 +75,7 @@ public class PTestConfigurationProducer extends AbstractPythonTestConfigurationP
         if (smtPTestMethod != null) {
             return setupConfigurationForPTestMethodInSMT(smtPTestMethod, config);
         }
-        // is in editor
+        // is in editor / project / structure view
         PyFunction pTestMethod = PTestUtil.getPTestMethod(element);
         if (pTestMethod != null && PTestUtil.getPTestClass(element) != null) {
             return setupConfigurationForPTestMethod(pTestMethod, config);

@@ -109,11 +109,11 @@ public class PTestUtil {
         QualifiedName qName = QualifiedNameFinder.findShortestImportableQName(file);
         if (qName != null) return qName.toString();
 
-        String projectPath = file.getProject().getBasePath();
+        VirtualFile projectDir = file.getProject().getBaseDir();
         List<String> importableNames = new ArrayList<>();
         PsiFileSystemItem currentFile = file;
 
-        while (!currentFile.getVirtualFile().getCanonicalPath().equals(projectPath)) {
+        while (!currentFile.getVirtualFile().equals(projectDir)) {
             importableNames.add(0, currentFile.getVirtualFile().getNameWithoutExtension());
             currentFile = currentFile.getParent();
         }
