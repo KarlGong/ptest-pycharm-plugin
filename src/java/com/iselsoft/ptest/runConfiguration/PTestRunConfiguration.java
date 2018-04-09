@@ -28,8 +28,8 @@ public class PTestRunConfiguration extends AbstractPythonTestRunConfiguration<PT
     private String xunitXML = "";
     private boolean useOptions = false;
     private String options = "";
-    private boolean useVariables = false;
-    private String variables = "";
+    private boolean useProperties = false;
+    private String properties = "";
     private boolean verbose = true;
     private boolean disableScreenshot = false;
 
@@ -87,20 +87,20 @@ public class PTestRunConfiguration extends AbstractPythonTestRunConfiguration<PT
         this.options = options;
     }
 
-    public boolean isUseVariables() {
-        return useVariables;
+    public boolean isUseProperties() {
+        return useProperties;
     }
 
-    public void setUseVariables(boolean useVariables) {
-        this.useVariables = useVariables;
+    public void setUseProperties(boolean useProperties) {
+        this.useProperties = useProperties;
     }
 
-    public String getVariables() {
-        return variables;
+    public String getProperties() {
+        return properties;
     }
 
-    public void setVariables(String variables) {
-        this.variables = variables;
+    public void setProperties(String properties) {
+        this.properties = properties;
     }
 
     public boolean isVerbose() {
@@ -166,8 +166,8 @@ public class PTestRunConfiguration extends AbstractPythonTestRunConfiguration<PT
         xunitXML = JDOMExternalizerUtil.readField(element, "XUNIT_XML");
         useOptions = Boolean.parseBoolean(JDOMExternalizerUtil.readField(element, "USE_OPTIONS"));
         options = JDOMExternalizerUtil.readField(element, "OPTIONS");
-        useVariables = Boolean.parseBoolean(JDOMExternalizerUtil.readField(element, "USE_VARIABLES"));
-        variables = JDOMExternalizerUtil.readField(element, "VARIABLES");
+        useProperties = Boolean.parseBoolean(JDOMExternalizerUtil.readField(element, "USE_PROPERTIES"));
+        properties = JDOMExternalizerUtil.readField(element, "PROPERTIES");
         verbose = Boolean.parseBoolean(JDOMExternalizerUtil.readField(element, "VERBOSE"));
         disableScreenshot = Boolean.parseBoolean(JDOMExternalizerUtil.readField(element, "DISABLE_SCREENSHOT"));
     }
@@ -184,8 +184,8 @@ public class PTestRunConfiguration extends AbstractPythonTestRunConfiguration<PT
         JDOMExternalizerUtil.writeField(element, "XUNIT_XML", xunitXML);
         JDOMExternalizerUtil.writeField(element, "USE_OPTIONS", String.valueOf(useOptions));
         JDOMExternalizerUtil.writeField(element, "OPTIONS", options);
-        JDOMExternalizerUtil.writeField(element, "USE_VARIABLES", String.valueOf(useVariables));
-        JDOMExternalizerUtil.writeField(element, "VARIABLES", variables);
+        JDOMExternalizerUtil.writeField(element, "USE_PROPERTIES", String.valueOf(useProperties));
+        JDOMExternalizerUtil.writeField(element, "PROPERTIES", properties);
         JDOMExternalizerUtil.writeField(element, "VERBOSE", String.valueOf(verbose));
         JDOMExternalizerUtil.writeField(element, "DISABLE_SCREENSHOT", String.valueOf(disableScreenshot));
     }

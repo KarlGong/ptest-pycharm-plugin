@@ -14,8 +14,6 @@ import com.jetbrains.python.run.PyCommonOptionsFormFactory;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class PTestRunConfigurationEditor extends SettingsEditor<PTestRunConfiguration> implements PanelWithAnchor {
     private JPanel rootPanel;
@@ -32,8 +30,8 @@ public class PTestRunConfigurationEditor extends SettingsEditor<PTestRunConfigur
     private JCheckBox optionsCheckBox;
     private RawCommandLineEditor optionsTextField;
 
-    private JCheckBox variablesCheckBox;
-    private RawCommandLineEditor variablesTextField;
+    private JCheckBox propertiesCheckBox;
+    private RawCommandLineEditor propertiesTextField;
     private JCheckBox verboseCheckBox;
     private JCheckBox disableScreenshotCheckBox;
 
@@ -61,7 +59,7 @@ public class PTestRunConfigurationEditor extends SettingsEditor<PTestRunConfigur
         });
 
         optionsCheckBox.addActionListener(e -> optionsTextField.setEnabled(optionsCheckBox.isSelected()));
-        variablesCheckBox.addActionListener(e -> variablesTextField.setEnabled(variablesCheckBox.isSelected()));
+        propertiesCheckBox.addActionListener(e -> propertiesTextField.setEnabled(propertiesCheckBox.isSelected()));
         
     }
     
@@ -91,9 +89,9 @@ public class PTestRunConfigurationEditor extends SettingsEditor<PTestRunConfigur
         optionsTextField.setEnabled(config.isUseOptions());
         optionsTextField.setText(config.getOptions());
         
-        variablesCheckBox.setSelected(config.isUseVariables());
-        variablesTextField.setEnabled(config.isUseVariables());
-        variablesTextField.setText(config.getVariables());
+        propertiesCheckBox.setSelected(config.isUseProperties());
+        propertiesTextField.setEnabled(config.isUseProperties());
+        propertiesTextField.setText(config.getProperties());
         
         verboseCheckBox.setSelected(config.isVerbose());
         disableScreenshotCheckBox.setSelected(config.isDisableScreenshot());
@@ -111,8 +109,8 @@ public class PTestRunConfigurationEditor extends SettingsEditor<PTestRunConfigur
         config.setUseOptions(optionsCheckBox.isSelected());
         config.setOptions(optionsTextField.getText().trim());
         
-        config.setUseVariables(variablesCheckBox.isSelected());
-        config.setVariables(variablesTextField.getText().trim());
+        config.setUseProperties(propertiesCheckBox.isSelected());
+        config.setProperties(propertiesTextField.getText().trim());
         
         config.setVerbose(verboseCheckBox.isSelected());
         config.setDisableScreenshot(disableScreenshotCheckBox.isSelected());
