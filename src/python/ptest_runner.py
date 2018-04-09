@@ -4,9 +4,9 @@ except ImportError:
     raise NameError("No ptest runner found in selected interpreter.")
 
 try:
-    from tcmessages import TeamcityServiceMessages
+    from tc_messages import TeamcityServiceMessages
 except ImportError:
-    raise NameError("No tcmessages module found in selected interpreter.")
+    raise NameError("No tc_messages module found in selected interpreter.")
 
 from ptest.plistener import TestListener
 from ptest.enumeration import TestCaseStatus
@@ -51,7 +51,7 @@ class TeamcityTestListener(TestListener):
 def _main():
     from ptest.main import main
     from ptest.plistener import test_listeners
-    test_listeners.append(TeamcityTestListener())
+    test_listeners.set_outer_test_listener(TeamcityTestListener())
     main()
 
 
