@@ -1,7 +1,7 @@
 <idea-plugin>
   <id>karl.gong.plugin.ptest</id>
   <name>ptest</name>
-  <version>5.4</version>
+  <version>6.0</version>
   <vendor email="karl.gong@outlook.com" url="https://github.com/KarlGong">Karl Gong</vendor>
 
   <description><![CDATA[
@@ -10,7 +10,7 @@
     ]]></description>
 
   <change-notes><![CDATA[
-      <p>5.4</p>
+      <p>6.0</p>
       <ul>
         <li>Support ptest 1.9.0.</li>
       </ul>
