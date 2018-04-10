@@ -1,7 +1,7 @@
 <idea-plugin>
   <id>karl.gong.plugin.ptest</id>
   <name>ptest</name>
-  <version>5.3</version>
+  <version>5.4</version>
   <vendor email="karl.gong@outlook.com" url="https://github.com/KarlGong">Karl Gong</vendor>
 
   <description><![CDATA[
@@ -10,12 +10,13 @@
     ]]></description>
 
   <change-notes><![CDATA[
-      <p>5.3</p>
+      <p>5.4</p>
+      <ul>
+        <li>Support ptest 1.9.0.</li>
+      </ul>
+      <p>1.0 - 5.3</p>
       <ul>
         <li>Support namespace package.</li>
-      </ul>
-      <p>1.0 - 5.2</p>
-      <ul>
         <li>Support pycharm 2017.1</li>
         <li>Change icon for inherited and data provided tests in PTest View.</li>
         <li>Add tool window - PTest View.</li>
