@@ -57,7 +57,7 @@
             </constraints>
             <properties>
               <text value="&amp;Options:"/>
-              <toolTipText value="Specify command line options.&#10;NOTE:&#10;1. Please don't use -t,-R,-v,--disablescreenshot, they are specified in other fields.&#10;2. If you use -n to specify the number of test executors more than one, the testcase output in console might be messed up."/>
+              <toolTipText value="Specify command line options.&#10;NOTE:&#10;1. Please don't use -t,-R,-v,--disable-screenshot, they are specified in other fields.&#10;2. If you use -n to specify the number of test executors more than one, the testcase output in console might be messed up."/>
             </properties>
           </component>
           <component id="14552" class="javax.swing.JCheckBox" binding="propertiesCheckBox">
@@ -125,7 +125,7 @@
             </constraints>
             <properties>
               <text value="&amp;Disable screenshot"/>
-              <toolTipText value="Disable taking screenshot for preporter.&#10;--disablescreenshot command line option in ptest."/>
+              <toolTipText value="Disable taking screenshot for preporter.&#10;--disable-screenshot command line option in ptest."/>
             </properties>
           </component>
         </children>

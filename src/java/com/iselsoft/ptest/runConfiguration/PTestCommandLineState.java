@@ -65,7 +65,7 @@ public class PTestCommandLineState extends PythonTestCommandLineStateBase<PTestR
             script_params.addParameter("-v");
         }
         if (configuration.isDisableScreenshot()) {
-            script_params.addParameter("--disablescreenshot");
+            script_params.addParameter("--disable-screenshot");
         }
     }
 
