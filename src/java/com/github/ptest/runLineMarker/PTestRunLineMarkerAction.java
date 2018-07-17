@@ -1,5 +1,8 @@
-package com.iselsoft.ptest.runLineMarker;
+package com.github.ptest.runLineMarker;
 
+import com.github.ptest.runConfiguration.PTestConfigurationProducer;
+import com.github.ptest.runConfiguration.PTestConfigurationType;
+import com.github.ptest.runConfiguration.PTestRunConfiguration;
 import com.intellij.execution.Executor;
 import com.intellij.execution.ExecutorRegistry;
 import com.intellij.execution.RunManagerEx;
@@ -11,9 +14,6 @@ import com.intellij.execution.runners.ExecutionUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.iselsoft.ptest.runConfiguration.PTestConfigurationProducer;
-import com.iselsoft.ptest.runConfiguration.PTestConfigurationType;
-import com.iselsoft.ptest.runConfiguration.PTestRunConfiguration;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;

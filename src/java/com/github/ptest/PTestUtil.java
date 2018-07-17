@@ -1,4 +1,4 @@
-package com.iselsoft.ptest;
+package com.github.ptest;
 
 import com.intellij.execution.actions.ConfigurationContext;
 import com.intellij.execution.testframework.AbstractTestProxy;
@@ -13,7 +13,7 @@ import com.intellij.psi.PsiFileSystemItem;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.QualifiedName;
 import com.intellij.ui.treeStructure.Tree;
-import com.iselsoft.ptest.toolWindow.PTestStructureViewElement;
+import com.github.ptest.toolWindow.PTestStructureViewElement;
 import com.jetbrains.python.PyNames;
 import com.jetbrains.python.psi.*;
 import com.jetbrains.python.psi.resolve.QualifiedNameFinder;

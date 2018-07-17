@@ -1,5 +1,6 @@
-package com.iselsoft.ptest.toolWindow;
+package com.github.ptest.toolWindow;
 
+import com.github.ptest.PTestUtil;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.structureView.StructureViewTreeElement;
 import com.intellij.navigation.ColoredItemPresentation;
@@ -7,7 +8,6 @@ import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElement;
 import com.intellij.ui.LayeredIcon;
-import com.iselsoft.ptest.PTestUtil;
 import com.jetbrains.python.PyNames;
 import com.jetbrains.python.psi.PyClass;
 import com.jetbrains.python.psi.PyElement;

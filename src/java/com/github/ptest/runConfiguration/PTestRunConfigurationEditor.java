@@ -1,4 +1,4 @@
-package com.iselsoft.ptest.runConfiguration;
+package com.github.ptest.runConfiguration;
 
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
@@ -32,6 +32,7 @@ public class PTestRunConfigurationEditor extends SettingsEditor<PTestRunConfigur
 
     private JCheckBox propertiesCheckBox;
     private RawCommandLineEditor propertiesTextField;
+    
     private JCheckBox verboseCheckBox;
     private JCheckBox disableScreenshotCheckBox;
 

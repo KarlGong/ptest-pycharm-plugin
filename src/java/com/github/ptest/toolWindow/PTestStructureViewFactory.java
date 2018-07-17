@@ -1,4 +1,4 @@
-package com.iselsoft.ptest.toolWindow;
+package com.github.ptest.toolWindow;
 
 import com.intellij.ide.structureView.StructureViewBuilder;
 import com.intellij.ide.structureView.StructureViewModel;

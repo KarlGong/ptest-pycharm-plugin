@@ -1,4 +1,4 @@
-package com.iselsoft.ptest.runConfiguration;
+package com.github.ptest.runConfiguration;
 
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.Executor;

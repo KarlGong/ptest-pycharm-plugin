@@ -1,4 +1,4 @@
-package com.iselsoft.ptest.inspection;
+package com.github.ptest.inspection;
 
 import com.intellij.codeInsight.controlflow.ControlFlowUtil;
 import com.intellij.codeInsight.controlflow.Instruction;

@@ -1,4 +1,4 @@
-package com.iselsoft.ptest.runConfiguration;
+package com.github.ptest.runConfiguration;
 
 import com.intellij.execution.Location;
 import com.intellij.execution.actions.ConfigurationContext;
@@ -9,8 +9,8 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiWhiteSpace;
-import com.iselsoft.ptest.PTestUtil;
-import com.iselsoft.ptest.toolWindow.PTestStructureViewElement;
+import com.github.ptest.PTestUtil;
+import com.github.ptest.toolWindow.PTestStructureViewElement;
 import com.jetbrains.python.psi.*;
 import com.jetbrains.python.run.RunnableScriptFilter;
 import com.jetbrains.python.testing.AbstractPythonTestConfigurationProducer;

@@ -1,9 +1,9 @@
-package com.iselsoft.ptest.runLineMarker;
+package com.github.ptest.runLineMarker;
 
+import com.github.ptest.PTestUtil;
 import com.intellij.execution.lineMarker.RunLineMarkerContributor;
 import com.intellij.icons.AllIcons;
 import com.intellij.psi.PsiElement;
-import com.iselsoft.ptest.PTestUtil;
 import com.jetbrains.python.psi.PyClass;
 import com.jetbrains.python.psi.PyFunction;
 import org.jetbrains.annotations.NotNull;
