@@ -1,7 +1,7 @@
 <idea-plugin>
   <id>karl.gong.plugin.ptest</id>
   <name>ptest</name>
-  <version>6.0</version>
+  <version>6.1</version>
   <vendor email="karl.gong@outlook.com" url="https://github.com/KarlGong">Karl Gong</vendor>
 
   <description><![CDATA[
@@ -10,12 +10,13 @@
     ]]></description>
 
   <change-notes><![CDATA[
-      <p>6.0</p>
+      <p>6.1</p>
+      <ul>
+        <li>Support loading property file.</li>
+      </ul>
+      <p>1.0 - 6.0</p>
       <ul>
         <li>Support ptest 1.9.0.</li>
-      </ul>
-      <p>1.0 - 5.3</p>
-      <ul>
         <li>Support namespace package.</li>
         <li>Support pycharm 2017.1</li>
         <li>Change icon for inherited and data provided tests in PTest View.</li>
