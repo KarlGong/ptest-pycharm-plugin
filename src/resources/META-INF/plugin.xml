@@ -64,6 +64,10 @@
 
   <actions>
     <!-- Add your actions here -->
+    <action id="com.github.ptest.loadPropertyFile.LoadPropertyFileAction" class="com.github.ptest.loadPropertyFile.LoadPropertyFileAction"
+            text="Load Property File for PTest" icon="/icons/com/jetbrains/python/propertySetter.png">
+      <add-to-group group-id="ProjectViewPopupMenu" anchor="after" relative-to-action="ProjectViewPopupMenuRunGroup"/>
+    </action>
   </actions>
 
 </idea-plugin>
