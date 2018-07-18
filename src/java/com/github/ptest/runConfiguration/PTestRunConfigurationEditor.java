@@ -29,7 +29,10 @@ public class PTestRunConfigurationEditor extends SettingsEditor<PTestRunConfigur
 
     private JCheckBox optionsCheckBox;
     private RawCommandLineEditor optionsTextField;
-
+    
+    private JCheckBox propertyFileCheckBox;
+    private TextFieldWithBrowseButton propertyFileTextField;
+    
     private JCheckBox propertiesCheckBox;
     private RawCommandLineEditor propertiesTextField;
     
@@ -44,10 +47,16 @@ public class PTestRunConfigurationEditor extends SettingsEditor<PTestRunConfigur
         commonOptionsForm = PyCommonOptionsFormFactory.getInstance().createForm(configuration.getCommonOptionsFormData());
         commonOptionsPlaceholder.add(commonOptionsForm.getMainPanel());
 
-        final FileChooserDescriptor fileChooserDescriptor = FileChooserDescriptorFactory
+        final FileChooserDescriptor xmlChooserDescriptor = FileChooserDescriptorFactory
                 .createSingleFileDescriptor("xml");
-        fileChooserDescriptor.setTitle("Select XML Path");
-        xunitXMLTextField.addBrowseFolderListener("Select XML Path", "Select xunit xml to run with failed/skipped tests", project, fileChooserDescriptor);
+        xmlChooserDescriptor.setTitle("Select xunit XML");
+        xunitXMLTextField.addBrowseFolderListener("Select xunit XML", "Select xunit xml to run with failed/skipped tests", project, xmlChooserDescriptor);
+
+        final FileChooserDescriptor propertyFileChooserDescriptor = FileChooserDescriptorFactory
+                .createSingleFileDescriptor("ini");
+        propertyFileChooserDescriptor.setTitle("Select Property File");
+        propertyFileTextField.addBrowseFolderListener("Select Property File", "Select .ini Property File to be used by PTest", project, propertyFileChooserDescriptor);
+
 
         runTestRadioButton.addActionListener(e -> {
             testTargetsTextField.setEnabled(runTestRadioButton.isSelected());
@@ -60,6 +69,7 @@ public class PTestRunConfigurationEditor extends SettingsEditor<PTestRunConfigur
         });
 
         optionsCheckBox.addActionListener(e -> optionsTextField.setEnabled(optionsCheckBox.isSelected()));
+        propertyFileCheckBox.addActionListener(e -> propertyFileTextField.setEnabled(propertyFileCheckBox.isSelected()));
         propertiesCheckBox.addActionListener(e -> propertiesTextField.setEnabled(propertiesCheckBox.isSelected()));
         
     }
@@ -90,6 +100,10 @@ public class PTestRunConfigurationEditor extends SettingsEditor<PTestRunConfigur
         optionsTextField.setEnabled(config.isUseOptions());
         optionsTextField.setText(config.getOptions());
         
+        propertyFileCheckBox.setSelected(config.isUsePropertyFile());
+        propertyFileTextField.setEnabled(config.isUsePropertyFile());
+        propertyFileTextField.setText(config.getPropertyFile());
+        
         propertiesCheckBox.setSelected(config.isUseProperties());
         propertiesTextField.setEnabled(config.isUseProperties());
         propertiesTextField.setText(config.getProperties());
@@ -109,6 +123,9 @@ public class PTestRunConfigurationEditor extends SettingsEditor<PTestRunConfigur
         
         config.setUseOptions(optionsCheckBox.isSelected());
         config.setOptions(optionsTextField.getText().trim());
+        
+        config.setUsePropertyFile(propertyFileCheckBox.isSelected());
+        config.setPropertyFile(propertyFileTextField.getText().trim());
         
         config.setUseProperties(propertiesCheckBox.isSelected());
         config.setProperties(propertiesTextField.getText().trim());

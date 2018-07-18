@@ -57,6 +57,10 @@ public class PTestCommandLineState extends PythonTestCommandLineStateBase<PTestR
         if (configuration.isUseOptions() && !StringUtil.isEmptyOrSpaces(options)) {
             script_params.addParametersString(options);
         }
+        if (configuration.isUsePropertyFile()) {
+            script_params.addParameter("-p");
+            script_params.addParameter(configuration.getPropertyFile());
+        }
         String properties = configuration.getProperties();
         if (configuration.isUseProperties() && !StringUtil.isEmptyOrSpaces(properties)) {
             script_params.addParametersString(properties);

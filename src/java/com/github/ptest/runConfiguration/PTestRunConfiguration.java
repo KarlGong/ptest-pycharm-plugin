@@ -28,6 +28,8 @@ public class PTestRunConfiguration extends AbstractPythonTestRunConfiguration<PT
     private String xunitXML = "";
     private boolean useOptions = false;
     private String options = "";
+    private boolean usePropertyFile = false;
+    private String propertyFile = "";
     private boolean useProperties = false;
     private String properties = "";
     private boolean verbose = true;
@@ -87,6 +89,22 @@ public class PTestRunConfiguration extends AbstractPythonTestRunConfiguration<PT
         this.options = options;
     }
 
+    public boolean isUsePropertyFile() {
+        return usePropertyFile;
+    }
+
+    public void setUsePropertyFile(boolean usePropertyFile) {
+        this.usePropertyFile = usePropertyFile;
+    }
+
+    public String getPropertyFile() {
+        return propertyFile;
+    }
+
+    public void setPropertyFile(String propertyFile) {
+        this.propertyFile = propertyFile;
+    }
+    
     public boolean isUseProperties() {
         return useProperties;
     }
@@ -166,6 +184,8 @@ public class PTestRunConfiguration extends AbstractPythonTestRunConfiguration<PT
         xunitXML = JDOMExternalizerUtil.readField(element, "XUNIT_XML");
         useOptions = Boolean.parseBoolean(JDOMExternalizerUtil.readField(element, "USE_OPTIONS"));
         options = JDOMExternalizerUtil.readField(element, "OPTIONS");
+        usePropertyFile = Boolean.parseBoolean(JDOMExternalizerUtil.readField(element, "USE_PROPERTY_FILE"));
+        propertyFile = JDOMExternalizerUtil.readField(element, "PROPERTY_FILE");
         useProperties = Boolean.parseBoolean(JDOMExternalizerUtil.readField(element, "USE_PROPERTIES"));
         properties = JDOMExternalizerUtil.readField(element, "PROPERTIES");
         verbose = Boolean.parseBoolean(JDOMExternalizerUtil.readField(element, "VERBOSE"));
@@ -184,6 +204,8 @@ public class PTestRunConfiguration extends AbstractPythonTestRunConfiguration<PT
         JDOMExternalizerUtil.writeField(element, "XUNIT_XML", xunitXML);
         JDOMExternalizerUtil.writeField(element, "USE_OPTIONS", String.valueOf(useOptions));
         JDOMExternalizerUtil.writeField(element, "OPTIONS", options);
+        JDOMExternalizerUtil.writeField(element, "USE_PROPERTY_FILE", String.valueOf(usePropertyFile));
+        JDOMExternalizerUtil.writeField(element, "PROPERTY_FILE", propertyFile);
         JDOMExternalizerUtil.writeField(element, "USE_PROPERTIES", String.valueOf(useProperties));
         JDOMExternalizerUtil.writeField(element, "PROPERTIES", properties);
         JDOMExternalizerUtil.writeField(element, "VERBOSE", String.valueOf(verbose));
@@ -200,6 +222,10 @@ public class PTestRunConfiguration extends AbstractPythonTestRunConfiguration<PT
             if (StringUtil.isEmptyOrSpaces(xunitXML)) {
                 throw new RuntimeConfigurationError("Please specify xunit XML");
             }
+        }
+        
+        if (usePropertyFile && StringUtil.isEmptyOrSpaces(propertyFile)) {
+            throw new RuntimeConfigurationError("Please specify property file");
         }
 
         String workingDirectory = getWorkingDirectory();

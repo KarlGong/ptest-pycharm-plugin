@@ -16,7 +16,7 @@ import com.jetbrains.python.run.RunnableScriptFilter;
 import com.jetbrains.python.testing.AbstractPythonTestConfigurationProducer;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -243,8 +243,8 @@ public class PTestConfigurationProducer extends AbstractPythonTestConfigurationP
         try {
             setValueForEmptyWorkingDirectory(configuration);
             configuration.setRunFailed(true);
-            String xml = xmlFile.getVirtualFile().getCanonicalPath();
-            String xmlRelativePath = new File(configuration.getWorkingDirectory()).toURI().relativize(new File(xml).toURI()).getPath();
+            String xmlPath = xmlFile.getVirtualFile().getCanonicalPath();
+            String xmlRelativePath = Paths.get(configuration.getWorkingDirectory()).relativize(Paths.get(xmlPath)).toString();
             configuration.setXunitXML(xmlRelativePath);
             configuration.setSuggestedName("ptests in " + xmlRelativePath);
             return true;

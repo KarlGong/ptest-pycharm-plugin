@@ -18,7 +18,7 @@
         <border type="none"/>
         <children/>
       </grid>
-      <grid id="24361" binding="mainPanel" layout-manager="GridLayoutManager" row-count="6" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="24361" binding="mainPanel" layout-manager="GridLayoutManager" row-count="7" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
           <grid row="0" column="0" row-span="2" col-span="3" vsize-policy="3" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -28,17 +28,6 @@
           <size top="0" left="0" bottom="0" right="0"/>
         </border>
         <children>
-          <component id="d7c3d" class="javax.swing.JRadioButton" binding="runFailedRadioButton">
-            <constraints>
-              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="2"/>
-              <selected value="false"/>
-              <text value="&amp;Run failed:"/>
-              <toolTipText value="Specify xunit xml to run with failed/skipped tests.&#10;-R command line option in ptest."/>
-            </properties>
-          </component>
           <component id="618ee" class="javax.swing.JRadioButton" binding="runTestRadioButton">
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
@@ -51,32 +40,42 @@
               <toolTipText value="Specify test targets, separated by comma.&#10;-t command line option in ptest."/>
             </properties>
           </component>
+          <component id="d7c3d" class="javax.swing.JRadioButton" binding="runFailedRadioButton">
+            <constraints>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <horizontalAlignment value="2"/>
+              <selected value="false"/>
+              <text value="&amp;Run failed:"/>
+              <toolTipText value="Specify xunit xml to run with failed/skipped tests.&#10;-R command line option in ptest."/>
+            </properties>
+          </component>
           <component id="dd454" class="javax.swing.JCheckBox" binding="optionsCheckBox">
             <constraints>
               <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <text value="&amp;Options:"/>
-              <toolTipText value="Specify command line options.&#10;NOTE:&#10;1. Please don't use -t,-R,-v,--disable-screenshot, they are specified in other fields.&#10;2. If you use -n to specify the number of test executors more than one, the testcase output in console might be messed up."/>
+              <toolTipText value="Specify command line options.&#10;NOTE:&#10;1. Please don't use -t,-R,-p,-v,--disable-screenshot, they are specified in other fields.&#10;2. If you use -n to specify the number of test executors more than one, the testcase output in console might be messed up."/>
             </properties>
           </component>
-          <component id="14552" class="javax.swing.JCheckBox" binding="propertiesCheckBox">
+          <component id="14552" class="javax.swing.JCheckBox" binding="propertyFileCheckBox">
             <constraints>
               <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="&amp;Properties:"/>
-              <toolTipText value="Specify command line properties definitions.&#10;Format: -D{key}={value}"/>
+              <text value="&amp;Property File:"/>
+              <toolTipText value="Specify the .ini property file.&#10;-p command line option in ptest."/>
             </properties>
           </component>
-          <component id="d2c88" class="com.intellij.openapi.ui.TextFieldWithBrowseButton" binding="xunitXMLTextField">
+          <component id="24562" class="javax.swing.JCheckBox" binding="propertiesCheckBox">
             <constraints>
-              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="7" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <enabled value="false"/>
-              <toolTipText value=""/>
-              <visible value="true"/>
+              <text value="&amp;Properties:"/>
+              <toolTipText value="Specify command line properties definitions.&#10;Format: -D{key}={value}&#10;Note: The properties defined here will overwrite the properties in property file."/>
             </properties>
           </component>
           <component id="24294" class="javax.swing.JTextField" binding="testTargetsTextField">
@@ -89,6 +88,16 @@
               <toolTipText value=""/>
             </properties>
           </component>
+          <component id="d2c88" class="com.intellij.openapi.ui.TextFieldWithBrowseButton" binding="xunitXMLTextField">
+            <constraints>
+              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="7" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <enabled value="false"/>
+              <toolTipText value=""/>
+              <visible value="true"/>
+            </properties>
+          </component>
           <component id="dafb5" class="com.intellij.ui.RawCommandLineEditor" binding="optionsTextField">
             <constraints>
               <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="7" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
@@ -99,9 +108,19 @@
               <toolTipText value=""/>
             </properties>
           </component>
-          <component id="29b6f" class="com.intellij.ui.RawCommandLineEditor" binding="propertiesTextField">
+          <component id="36dc88" class="com.intellij.openapi.ui.TextFieldWithBrowseButton" binding="propertyFileTextField">
             <constraints>
               <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="7" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <enabled value="false"/>
+              <toolTipText value=""/>
+              <visible value="true"/>
+            </properties>
+          </component>
+          <component id="29b6f" class="com.intellij.ui.RawCommandLineEditor" binding="propertiesTextField">
+            <constraints>
+              <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="7" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <dialogCaption value="Enter command line properties"/>
@@ -111,7 +130,7 @@
           </component>
           <component id="e0987" class="javax.swing.JCheckBox" binding="verboseCheckBox">
             <constraints>
-              <grid row="4" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="5" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <selected value="true"/>
@@ -121,7 +140,7 @@
           </component>
           <component id="72ad8" class="javax.swing.JCheckBox" binding="disableScreenshotCheckBox">
             <constraints>
-              <grid row="5" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="6" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <text value="&amp;Disable screenshot"/>
