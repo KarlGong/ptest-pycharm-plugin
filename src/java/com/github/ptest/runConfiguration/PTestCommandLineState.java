@@ -53,7 +53,7 @@ public class PTestCommandLineState extends PythonTestCommandLineStateBase<PTestR
     protected void addAfterParameters(GeneralCommandLine cmd) {
         ParamsGroup script_params = cmd.getParametersList().getParamsGroup(GROUP_SCRIPT);
         assert script_params != null;
-        String options = configuration.getOptions();
+        String options = configuration.getOptiones();
         if (configuration.isUseOptions() && !StringUtil.isEmptyOrSpaces(options)) {
             script_params.addParametersString(options);
         }

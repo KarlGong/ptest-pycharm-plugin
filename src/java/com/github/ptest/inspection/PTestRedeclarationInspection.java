@@ -133,7 +133,7 @@ public class PTestRedeclarationInspection extends PyInspection {
                 if (writeElement != null && readElementRef.get() == null) {
                     final List<LocalQuickFix> quickFixes = new ArrayList<LocalQuickFix>();
                     if (suggestRename(element, writeElement)) {
-                        quickFixes.add(new PyRenameElementQuickFix());
+                        quickFixes.add(new PyRenameElementQuickFix(element));
                     }
                     final PsiElement identifier = element.getNameIdentifier();
                     registerProblem(identifier != null ? identifier : element,
