@@ -81,7 +81,7 @@ public class PTestRunConfiguration extends AbstractPythonTestRunConfiguration<PT
         this.useOptions = useOptions;
     }
 
-    public String getOptiones() {
+    public String getOption() {
         return options;
     }
 

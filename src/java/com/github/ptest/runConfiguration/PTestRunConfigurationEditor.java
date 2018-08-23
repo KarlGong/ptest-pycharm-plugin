@@ -98,7 +98,7 @@ public class PTestRunConfigurationEditor extends SettingsEditor<PTestRunConfigur
         
         optionsCheckBox.setSelected(config.isUseOptions());
         optionsTextField.setEnabled(config.isUseOptions());
-        optionsTextField.setText(config.getOptiones());
+        optionsTextField.setText(config.getOption());
         
         propertyFileCheckBox.setSelected(config.isUsePropertyFile());
         propertyFileTextField.setEnabled(config.isUsePropertyFile());
