@@ -12,11 +12,11 @@ import org.jetbrains.annotations.Nullable;
 public class PTestRunLineMarkerContributor extends RunLineMarkerContributor {
     @Nullable
     @Override
-    public Info getInfo(@NotNull PsiElement psiElement) {
-        if (psiElement instanceof PyFunction && PTestUtil.getPTestMethod(psiElement) != null && PTestUtil.getPTestClass(psiElement) != null) {
-            return new Info(AllIcons.RunConfigurations.TestState.Run, element -> "Run test", PTestRunLineMarkerAction.getActions());
-        } else if (psiElement instanceof PyClass && PTestUtil.getPTestClass(psiElement) != null) {
-            return new Info(AllIcons.RunConfigurations.TestState.Run_run, element -> "Run test class", PTestRunLineMarkerAction.getActions());
+    public Info getInfo(@NotNull PsiElement element) {
+        if (element instanceof PyFunction && PTestUtil.getPTestMethod(element) != null && PTestUtil.getPTestClass(element) != null) {
+            return new Info(AllIcons.RunConfigurations.TestState.Run, e -> "Run test", PTestRunLineMarkerAction.getActions());
+        } else if (element instanceof PyClass && PTestUtil.getPTestClass(element) != null) {
+            return new Info(AllIcons.RunConfigurations.TestState.Run_run, e -> "Run test class", PTestRunLineMarkerAction.getActions());
         }
         return null;
     }

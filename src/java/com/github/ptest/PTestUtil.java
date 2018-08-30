@@ -1,15 +1,15 @@
 package com.github.ptest;
 
+import com.intellij.execution.Location;
 import com.intellij.execution.actions.ConfigurationContext;
 import com.intellij.execution.testframework.AbstractTestProxy;
 import com.intellij.execution.testframework.sm.runner.ui.SMTRunnerTestTreeView;
 import com.intellij.ide.util.treeView.smartTree.TreeElementWrapper;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiFileSystemItem;
+import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.QualifiedName;
 import com.intellij.ui.treeStructure.Tree;
@@ -18,6 +18,7 @@ import com.jetbrains.python.PyNames;
 import com.jetbrains.python.psi.*;
 import com.jetbrains.python.psi.resolve.QualifiedNameFinder;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
@@ -135,5 +136,36 @@ public class PTestUtil {
             }
         }
         return false;
+    }
+    
+    @Nullable
+    public static PsiElement getPsiElement(@Nullable ConfigurationContext context) {
+        // no context
+        if (context == null) return null;
+        // location is invalid
+        final Location location = context.getLocation();
+        if (location == null) return null;
+        // location is white space
+        PsiElement element = location.getPsiElement();
+        if (element instanceof PsiWhiteSpace) {
+            PsiFile containingFile = element.getContainingFile();
+            int textOffset = element.getTextOffset();
+            element = PyUtil.findNonWhitespaceAtOffset(containingFile, textOffset);
+            if (element == null) {
+                element = PyUtil.findNonWhitespaceAtOffset(containingFile, textOffset - 1);
+                if (element == null) {
+                    element = PyUtil.findNonWhitespaceAtOffset(containingFile, textOffset + 1);
+                }
+            }
+        }
+        return element;
+    }
+    
+    @Nullable
+    public static PsiElement getPsiElement(@Nullable AnActionEvent e) {
+        if (e == null) return null;
+        DataContext dataContext = e.getDataContext();
+        ConfigurationContext context = ConfigurationContext.getFromContext(dataContext);
+        return getPsiElement(context);
     }
 }

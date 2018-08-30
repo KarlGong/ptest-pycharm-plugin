@@ -1,4 +1,4 @@
-package com.github.ptest.loadPropertyFile;
+package com.github.ptest.action;
 
 import com.github.ptest.runConfiguration.PTestConfigurationType;
 import com.github.ptest.runConfiguration.PTestRunConfiguration;
@@ -18,7 +18,7 @@ public class LoadPropertyFileAction extends AnAction {
     @Override
     public void update(AnActionEvent e) {
         VirtualFile file = e.getData(PlatformDataKeys.VIRTUAL_FILE);
-        if (file.getExtension() != null && file.getExtension().equalsIgnoreCase("ini")) {
+        if (file!= null && file.getExtension() != null && file.getExtension().equalsIgnoreCase("ini")) {
             e.getPresentation().setVisible(true);
             e.getPresentation().setText(String.format("Load Property File '%s' for PTest", file.getName()));
         } else {

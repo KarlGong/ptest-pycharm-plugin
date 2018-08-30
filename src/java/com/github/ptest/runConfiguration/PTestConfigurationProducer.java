@@ -35,28 +35,11 @@ public class PTestConfigurationProducer extends AbstractPythonTestConfigurationP
 
     @Override
     public boolean setupConfigurationFromContext(PTestRunConfiguration config, ConfigurationContext context, Ref<PsiElement> sourceElement) {
-        // no context
-        if (context == null) return false;
-        // location is invalid
-        final Location location = context.getLocation();
-        if (location == null) return false;
-        // location is white space
-        PsiElement element = location.getPsiElement();
-        if (element instanceof PsiWhiteSpace) {
-            PsiFile containingFile = element.getContainingFile();
-            int textOffset = element.getTextOffset();
-            element = PyUtil.findNonWhitespaceAtOffset(containingFile, textOffset);
-            if (element == null) {
-                element = PyUtil.findNonWhitespaceAtOffset(containingFile, textOffset - 1);
-                if (element == null) {
-                    element = PyUtil.findNonWhitespaceAtOffset(containingFile, textOffset + 1);
-                }
-            }
-        }
+        PsiElement element = PTestUtil.getPsiElement(context);
         // element is invalid
         if (element == null) return false;
         // is in <if __name__ = "__main__"> section
-        if (RunnableScriptFilter.isIfNameMain(location)) return false;
+        if (RunnableScriptFilter.isIfNameMain(context.getLocation())) return false;
         // is project folder
         if (element instanceof PsiDirectory
                 && ((PsiDirectory) element).getVirtualFile().equals(element.getProject().getBaseDir()))
