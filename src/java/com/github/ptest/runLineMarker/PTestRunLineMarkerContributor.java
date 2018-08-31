@@ -1,7 +1,7 @@
 package com.github.ptest.runLineMarker;
 
 import com.github.ptest.PTestUtil;
-import com.github.ptest.runLineMarker.action.GotoActionGroup;
+import com.github.ptest.runLineMarker.action.TestConfigurationActionGroup;
 import com.github.ptest.runLineMarker.action.RunTestAction;
 import com.intellij.execution.Executor;
 import com.intellij.execution.ExecutorRegistry;
@@ -37,7 +37,7 @@ public class PTestRunLineMarkerContributor extends RunLineMarkerContributor {
             actions.add(new RunTestAction(executor, element));
         }
         // goto
-        actions.add(new GotoActionGroup(element));
+        actions.add(new TestConfigurationActionGroup(element));
         return actions.toArray(new AnAction[actions.size()]);
     }
 

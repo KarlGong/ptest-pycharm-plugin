@@ -1,6 +1,7 @@
 package com.github.ptest.runLineMarker.action;
 
 import com.github.ptest.PTestUtil;
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -12,11 +13,12 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class GotoActionGroup extends ActionGroup {
+public class TestConfigurationActionGroup extends ActionGroup {
     final private PsiElement myElement;
 
-    public GotoActionGroup(PsiElement element) {
-        super("Go To", true);
+    public TestConfigurationActionGroup(PsiElement element) {
+        super("Test Configurations", null, AllIcons.Css.Atrule);
+        this.setPopup(true);
         myElement = element;
     }
 
@@ -46,14 +48,14 @@ public class GotoActionGroup extends ActionGroup {
             for (String configWithGroup : new String[]{"BeforeMethod", "AfterMethod", "BeforeGroup", "AfterGroup"}) {
                 if (actions.get(configWithGroup) == null
                         && PTestUtil.hasDecorator(function, configWithGroup, groupName == null ? null : "group", groupName)) {
-                    actions.put(configWithGroup, new NavigateAction("@" + configWithGroup, function));
+                    actions.put(configWithGroup, new NavigateAction(function, configWithGroup, null, AllIcons.Css.Atrule));
                 }
             }
 
             for (String config : new String[]{"BeforeClass", "AfterClass", "BeforeSuite", "AfterSuite"}) {
                 if (actions.get(config) == null
                         && PTestUtil.hasDecorator(function, config, null, null)) {
-                    actions.put(config, new NavigateAction("@" + config, function));
+                    actions.put(config, new NavigateAction(function, config, null, AllIcons.Css.Atrule));
                 }
             }
             return true;
