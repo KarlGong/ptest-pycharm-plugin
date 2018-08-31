@@ -105,7 +105,7 @@ public class PTestStructureViewElement implements StructureViewTreeElement {
             pTestClass.visitMethods(pyFunction -> {
                 PyFunction pTestMethod = PTestUtil.getPTestMethod(pyFunction);
                 boolean isInherited = pyFunction.getContainingClass() != pTestClass;
-                boolean isDataProvided = PTestUtil.hasDecoratorWithParam(pyFunction, "Test", "data_provider");
+                boolean isDataProvided = PTestUtil.hasDecorator(pyFunction, "Test", "data_provider", null);
                 StructureViewTreeElement child = createChild(pTestMethod, isInherited, isDataProvided);
                 if (pTestMethod != null && !children.contains(child)) {
                     children.add(child);

@@ -69,11 +69,7 @@
             text="Load Property File for PTest" icon="/icons/com/jetbrains/python/propertySetter.png">
       <add-to-group group-id="ProjectViewPopupMenu" anchor="after" relative-to-action="ProjectViewPopupMenuRunGroup"/>
     </action>
-
-    <group id="com.github.ptest.action.GotoActionGroup" class="com.github.ptest.action.GotoActionGroup" 
-           text="Go To PTest" popup="true" icon="/icons/com/jetbrains/python/pythonTests.png">
-      <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="EditorPopupMenu3" />
-    </group>
+    
   </actions>
 
 </idea-plugin>

@@ -53,16 +53,16 @@ public class PTestUtil {
         final PyClass containingClass = pyFunction.getContainingClass();
         if (containingClass == null) return null;
 
-        return hasDecorator(pyFunction, "Test") ? pyFunction : null;
+        return hasDecorator(pyFunction, "Test", null, null) ? pyFunction : null;
     }
 
     public static PyClass getPTestClass(@NotNull final PsiElement element) {
         final PyClass pyClass = PsiTreeUtil.getParentOfType(element, PyClass.class, false);
         if (pyClass == null) return null;
 
-        if (hasDecorator(pyClass, "TestClass")) return pyClass;
+        if (hasDecorator(pyClass, "TestClass", null, null)) return pyClass;
         for (PyClass ancestorClass : pyClass.getAncestorClasses(null)) {
-            if (hasDecorator(ancestorClass, "TestClass")) {
+            if (hasDecorator(ancestorClass, "TestClass", null, null)) {
                 return pyClass;
             }
         }
@@ -95,15 +95,18 @@ public class PTestUtil {
         return null;
     }
 
-    public static boolean hasDecorator(PyDecoratable py, String name) {
-        return py.getDecoratorList() != null
-                && py.getDecoratorList().findDecorator(name) != null;
-    }
-
-    public static boolean hasDecoratorWithParam(PyDecoratable py, String decoratorName, String paramName) {
-        return py.getDecoratorList() != null
-                && py.getDecoratorList().findDecorator(decoratorName) != null
-                && py.getDecoratorList().findDecorator(decoratorName).getKeywordArgument(paramName) != null;
+    public static boolean hasDecorator(@NotNull PyDecoratable py, @Nullable String decoratorName,
+                                       @Nullable String paramName, @Nullable String paramValue) {
+        PyDecoratorList decoratorList = py.getDecoratorList();
+        if (decoratorList == null) return false;
+        if (decoratorName == null) return true;
+        PyDecorator decorator = decoratorList.findDecorator(decoratorName);
+        if (decorator == null) return false;
+        if (paramName == null) return true;
+        PyExpression valueExp = decorator.getKeywordArgument(paramName);
+        if (valueExp == null) return false;
+        if (paramValue == null) return true;
+        return valueExp.getText().equals(paramValue);
     }
 
     public static String findShortestImportableName(PsiFileSystemItem file) {
@@ -136,36 +139,5 @@ public class PTestUtil {
             }
         }
         return false;
-    }
-    
-    @Nullable
-    public static PsiElement getPsiElement(@Nullable ConfigurationContext context) {
-        // no context
-        if (context == null) return null;
-        // location is invalid
-        final Location location = context.getLocation();
-        if (location == null) return null;
-        // location is white space
-        PsiElement element = location.getPsiElement();
-        if (element instanceof PsiWhiteSpace) {
-            PsiFile containingFile = element.getContainingFile();
-            int textOffset = element.getTextOffset();
-            element = PyUtil.findNonWhitespaceAtOffset(containingFile, textOffset);
-            if (element == null) {
-                element = PyUtil.findNonWhitespaceAtOffset(containingFile, textOffset - 1);
-                if (element == null) {
-                    element = PyUtil.findNonWhitespaceAtOffset(containingFile, textOffset + 1);
-                }
-            }
-        }
-        return element;
-    }
-    
-    @Nullable
-    public static PsiElement getPsiElement(@Nullable AnActionEvent e) {
-        if (e == null) return null;
-        DataContext dataContext = e.getDataContext();
-        ConfigurationContext context = ConfigurationContext.getFromContext(dataContext);
-        return getPsiElement(context);
     }
 }
