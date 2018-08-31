@@ -1,7 +1,7 @@
 <idea-plugin>
   <id>karl.gong.plugin.ptest</id>
   <name>ptest</name>
-  <version>6.1</version>
+  <version>7.0</version>
   <vendor email="karl.gong@outlook.com" url="https://github.com/KarlGong">Karl Gong</vendor>
 
   <description><![CDATA[
@@ -10,28 +10,19 @@
     ]]></description>
 
   <change-notes><![CDATA[
-      <p>6.1</p>
+      <p>7.0</p>
+      <ul>
+        <li>Support pycharm 2018.2</li>
+        <li>Support navigating to test configurations.</li>
+      </ul>
+      <p>1.0 - 6.1</p>
       <ul>
         <li>Support loading property file.</li>
-      </ul>
-      <p>1.0 - 6.0</p>
-      <ul>
-        <li>Support ptest 1.9.0.</li>
         <li>Support namespace package.</li>
-        <li>Support pycharm 2017.1</li>
-        <li>Change icon for inherited and data provided tests in PTest View.</li>
         <li>Add tool window - PTest View.</li>
-        <li>Fix bug: group in run/debug panel is missed.</li>
-        <li>Fix bug in pycharm 2016.2.2</li>
         <li>Support right click data provided test case in run/debug panel.</li>
         <li>Add gutter marker for test and test class of ptest.</li>
-        <li>Fix no ptest menu shown when right click a class which inherit @TestClass.</li>
-        <li>Fix no ptest menu shown when right click dict.</li>
-        <li>Shorten run configuration name.</li>
-        <li>Support ptest 1.5.1.</li>
-        <li>Support pycharm 5.0.</li>
         <li>Support group in run/debug panel.</li>
-        <li>Support ptest 1.4.</li>
         <li>Support inspecting redeclared decorated names.</li>
         <li>Support rerunning the failed/skipped tests in last run.</li>
         <li>Support running/debugging ptest using the standard run configuration.</li>
@@ -40,7 +31,7 @@
   </change-notes>
 
   <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
-  <idea-version since-build="171"/>
+  <idea-version since-build="182"/>
 
   <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
        on how to target different products -->
