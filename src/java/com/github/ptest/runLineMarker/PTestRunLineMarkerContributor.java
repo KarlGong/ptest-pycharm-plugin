@@ -1,8 +1,9 @@
 package com.github.ptest.runLineMarker;
 
-import com.github.ptest.PTestUtil;
-import com.github.ptest.runLineMarker.action.TestConfigurationActionGroup;
+import com.github.ptest.element.PTestClass;
+import com.github.ptest.element.PTestMethod;
 import com.github.ptest.runLineMarker.action.RunTestAction;
+import com.github.ptest.runLineMarker.action.TestConfigurationActionGroup;
 import com.intellij.execution.Executor;
 import com.intellij.execution.ExecutorRegistry;
 import com.intellij.execution.lineMarker.RunLineMarkerContributor;
@@ -21,9 +22,9 @@ public class PTestRunLineMarkerContributor extends RunLineMarkerContributor {
     @Nullable
     @Override
     public Info getInfo(@NotNull PsiElement element) {
-        if (element instanceof PyFunction && PTestUtil.getPTestMethod(element) != null && PTestUtil.getPTestClass(element) != null) {
+        if (element instanceof PyFunction && PTestMethod.createFrom(element) != null) {
             return new Info(AllIcons.RunConfigurations.TestState.Run, e -> "PTest @Test", getTestActions(element));
-        } else if (element instanceof PyClass && PTestUtil.getPTestClass(element) != null) {
+        } else if (element instanceof PyClass && PTestClass.createFrom(element) != null) {
             return new Info(AllIcons.RunConfigurations.TestState.Run_run, e -> "PTest @TestClass", getTestClassActions(element));
         }
         return null;

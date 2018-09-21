@@ -1,17 +1,20 @@
 package com.github.ptest.runLineMarker.action;
 
 import com.github.ptest.PTestUtil;
+import com.github.ptest.element.PTestMethod;
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.ActionGroup;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.jetbrains.python.psi.PyClass;
 import com.jetbrains.python.psi.PyExpression;
-import com.jetbrains.python.psi.PyFunction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class TestConfigurationActionGroup extends ActionGroup {
     final private PsiElement myElement;
@@ -39,22 +42,20 @@ public class TestConfigurationActionGroup extends ActionGroup {
         actions.put("BeforeSuite", null);
         actions.put("AfterSuite", null);
 
-        PyFunction pyFunction = PTestUtil.getPTestMethod(myElement);
-        PyExpression valueExp = pyFunction.getDecoratorList().findDecorator("Test").getKeywordArgument("group");
+        PTestMethod pTestMethod = PTestMethod.createFrom(myElement);
+        PyExpression valueExp = pTestMethod.getElement().getDecoratorList().findDecorator("Test").getKeywordArgument("group");
         final String groupName = valueExp == null ? null : valueExp.getText();
 
         PyClass pyClass = PsiTreeUtil.getParentOfType(myElement, PyClass.class, false);
         pyClass.visitMethods(function -> {
             for (String configWithGroup : new String[]{"BeforeMethod", "AfterMethod", "BeforeGroup", "AfterGroup"}) {
-                if (actions.get(configWithGroup) == null
-                        && PTestUtil.hasDecorator(function, configWithGroup, groupName == null ? null : "group", groupName)) {
+                if (PTestUtil.hasDecorator(function, configWithGroup, groupName == null ? null : "group", groupName)) {
                     actions.put(configWithGroup, new NavigateAction(function, configWithGroup, null, AllIcons.Css.Atrule));
                 }
             }
 
             for (String config : new String[]{"BeforeClass", "AfterClass", "BeforeSuite", "AfterSuite"}) {
-                if (actions.get(config) == null
-                        && PTestUtil.hasDecorator(function, config, null, null)) {
+                if (PTestUtil.hasDecorator(function, config, null, null)) {
                     actions.put(config, new NavigateAction(function, config, null, AllIcons.Css.Atrule));
                 }
             }

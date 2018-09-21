@@ -161,6 +161,12 @@ public class PTestRunConfiguration extends AbstractPythonTestRunConfiguration<PT
     public void setActionName(String actionName) {
         this.actionName = actionName;
     }
+    
+    public void setValueForEmptyWorkingDirectory() {
+        if (StringUtil.isEmptyOrSpaces(this.getWorkingDirectory())) {
+            this.setWorkingDirectory(this.getProject().getBasePath());
+        }
+    }
 
     @Override
     protected SettingsEditor<PTestRunConfiguration> createConfigurationEditor() {
