@@ -2,7 +2,10 @@ package com.github.ptest.element;
 
 import com.github.ptest.PTestUtil;
 import com.github.ptest.runConfiguration.PTestRunConfiguration;
+import com.intellij.navigation.ColoredItemPresentation;
 import com.intellij.navigation.ItemPresentation;
+import com.intellij.openapi.editor.colors.CodeInsightColors;
+import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.jetbrains.python.PyNames;
@@ -14,9 +17,18 @@ import java.util.List;
 import java.util.Objects;
 
 public class PTestClass extends PTestElement<PyClass> {
+    private boolean myIsRedeclared = false;
 
     public PTestClass(PyClass pyClass) {
         super(pyClass);
+    }
+
+    public void setRedeclared(boolean isRedeclared) {
+        myIsRedeclared = isRedeclared;
+    }
+
+    public boolean isRedeclared() {
+        return myIsRedeclared;
     }
 
     @Override
@@ -41,13 +53,22 @@ public class PTestClass extends PTestElement<PyClass> {
         myElement.visitMethods(pyFunction -> {
             if (PTestUtil.hasDecorator(pyFunction, "Test", null, null)) {
                 PTestMethod pTestMethod = new PTestMethod(this, pyFunction);
-                // deal with duplicated & inherited tests
-                if (children.contains(pTestMethod)) {
-                    if (!pTestMethod.isInherited()) {
-                        children.remove(pTestMethod);
-                        children.add(pTestMethod);
+                // deal with redeclared tests
+                boolean foundDuplicated = false;
+                for (PTestElement c : children) {
+                    if (c instanceof PTestMethod) {
+                        PTestMethod child = (PTestMethod) c;
+                        if (Objects.equals(pTestMethod.getValue().getName(), child.getValue().getName())) {
+                            if (!pTestMethod.isInherited()) {
+                                pTestMethod.setRedeclared(true);
+                                children.add(pTestMethod);
+                            }
+                            foundDuplicated = true;
+                            break;
+                        }
                     }
-                } else {
+                }
+                if (!foundDuplicated) {
                     children.add(pTestMethod);
                 }
             }
@@ -56,13 +77,24 @@ public class PTestClass extends PTestElement<PyClass> {
                     "BeforeClass", "AfterClass", "BeforeSuite", "AfterSuite"}) {
                 if (PTestUtil.hasDecorator(pyFunction, configName, null, null)) {
                     PTestConfiguration pTestConfiguration = new PTestConfiguration(this, pyFunction, configName);
-                    // deal with duplicated & inherited test configurations
-                    if (children.contains(pTestConfiguration)) {
-                        if (!pTestConfiguration.isInherited()) {
-                            children.remove(pTestConfiguration);
-                            children.add(pTestConfiguration);
+                    // deal with redeclared test configurations
+                    boolean foundDuplicated = false;
+                    for (PTestElement c : children) {
+                        if (c instanceof PTestConfiguration) {
+                            PTestConfiguration child = (PTestConfiguration) c;
+                            if (Objects.equals(pTestConfiguration.getGroup(), child.getGroup())
+                                    && Objects.equals(pTestConfiguration.getName(), child.getName())) {
+                                if (!(pTestConfiguration.isInherited()
+                                        && Objects.equals(pTestConfiguration.getValue().getName(), child.getValue().getName()))) {
+                                    pTestConfiguration.setRedeclared(true);
+                                    children.add(pTestConfiguration);
+                                }
+                                foundDuplicated = true;
+                                break;
+                            }
                         }
-                    } else {
+                    }
+                    if (!foundDuplicated) {
                         children.add(pTestConfiguration);
                     }
                 }
@@ -75,11 +107,16 @@ public class PTestClass extends PTestElement<PyClass> {
 
     @Override
     public ItemPresentation getPresentation() {
-        return new ItemPresentation() {
+        return new ColoredItemPresentation() {
             @Override
             public String getPresentableText() {
                 ItemPresentation presentation = myElement.getPresentation();
                 return presentation != null ? presentation.getPresentableText() : PyNames.UNNAMED_ELEMENT;
+            }
+
+            @Override
+            public TextAttributesKey getTextAttributesKey() {
+                return isRedeclared() ? CodeInsightColors.GENERIC_SERVER_ERROR_OR_WARNING : null;
             }
 
             @Override
@@ -99,12 +136,6 @@ public class PTestClass extends PTestElement<PyClass> {
                 return myElement.getIcon(0);
             }
         };
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        // deal with duplicated test classes, only consider in the same module
-        return other instanceof PTestClass && Objects.equals(getValue().getName(), ((PTestClass) other).getValue().getName());
     }
 
     public static PTestClass createFrom(PsiElement element) {

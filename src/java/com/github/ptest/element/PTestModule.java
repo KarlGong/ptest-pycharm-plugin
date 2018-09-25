@@ -12,6 +12,7 @@ import com.jetbrains.python.psi.PyFile;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class PTestModule extends PTestElement<PyFile> {
 
@@ -40,15 +41,31 @@ public class PTestModule extends PTestElement<PyFile> {
         for (PyClass pyClass : myElement.getTopLevelClasses()) {
             if (PTestUtil.hasDecorator(pyClass, "TestClass", null, null)) {
                 PTestClass pTestClass = new PTestClass(pyClass);
-                // deal with duplicated test classes
-                children.remove(pTestClass);
+                // deal with redeclared test classes
+                for (PTestElement c : children) {
+                    if (c instanceof PTestClass) {
+                        PTestClass child = (PTestClass) c;
+                        if (Objects.equals(pTestClass.getValue().getName(), child.getValue().getName())) {
+                            pTestClass.setRedeclared(true);
+                            break;
+                        }
+                    }
+                }
                 children.add(pTestClass);
             } else {
                 for (PyClass ancestorClass : pyClass.getAncestorClasses(null)) {
                     if (PTestUtil.hasDecorator(ancestorClass, "TestClass", null, null)) {
                         PTestClass pTestClass = new PTestClass(pyClass);
-                        // deal with duplicated test classes
-                        children.remove(pTestClass);
+                        // deal with redeclared test classes
+                        for (PTestElement c : children) {
+                            if (c instanceof PTestClass) {
+                                PTestClass child = (PTestClass) c;
+                                if (Objects.equals(pTestClass.getValue().getName(), child.getValue().getName())) {
+                                    pTestClass.setRedeclared(true);
+                                    break;
+                                }
+                            }
+                        }
                         children.add(pTestClass);
                         break;
                     }

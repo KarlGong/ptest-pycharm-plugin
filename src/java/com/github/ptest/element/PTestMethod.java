@@ -16,10 +16,10 @@ import icons.RemoteServersIcons;
 import org.apache.commons.lang.StringUtils;
 
 import javax.swing.*;
-import java.util.Objects;
 
 public class PTestMethod extends PTestElement<PyFunction> {
     private PTestClass myParent;
+    private boolean myIsRedeclared = false;
 
     public PTestMethod(PTestClass parent, PyFunction pyFunction) {
         super(pyFunction);
@@ -37,6 +37,14 @@ public class PTestMethod extends PTestElement<PyFunction> {
     public String getGroup() {
         PyExpression valueExp = myElement.getDecoratorList().findDecorator("Test").getKeywordArgument("group");
         return valueExp == null ? null : valueExp.getText();
+    }
+    
+    public void setRedeclared(boolean isRedeclared) {
+        myIsRedeclared = isRedeclared;
+    } 
+    
+    public boolean isRedeclared() {
+        return myIsRedeclared;
     }
 
     @Override
@@ -67,6 +75,7 @@ public class PTestMethod extends PTestElement<PyFunction> {
 
             @Override
             public TextAttributesKey getTextAttributesKey() {
+                if (isRedeclared()) return CodeInsightColors.GENERIC_SERVER_ERROR_OR_WARNING;
                 return isInherited() ? CodeInsightColors.NOT_USED_ELEMENT_ATTRIBUTES : null;
             }
 
@@ -88,12 +97,6 @@ public class PTestMethod extends PTestElement<PyFunction> {
                 return normalIcon;
             }
         };
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        // deal with duplicated tests, only consider in the same class
-        return other instanceof PTestMethod && Objects.equals(getValue().getName(), ((PTestMethod) other).getValue().getName());
     }
 
     public static PTestMethod createFrom(PsiElement element) {

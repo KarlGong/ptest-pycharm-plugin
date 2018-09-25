@@ -16,6 +16,7 @@ import java.util.Objects;
 public class PTestConfiguration extends PTestElement<PyFunction> {
     private PTestClass myParent;
     private String myName;
+    private boolean myIsRedeclared = false;
 
     public PTestConfiguration(PTestClass parent, PyFunction pyFunction, String name) {
         super(pyFunction);
@@ -36,6 +37,14 @@ public class PTestConfiguration extends PTestElement<PyFunction> {
         return valueExp == null ? null : valueExp.getText();
     }
 
+    public void setRedeclared(boolean isRedeclared) {
+        myIsRedeclared = isRedeclared;
+    }
+
+    public boolean isRedeclared() {
+        return myIsRedeclared;
+    }
+
     @Override
     public ItemPresentation getPresentation() {
         return new ColoredItemPresentation() {
@@ -46,6 +55,7 @@ public class PTestConfiguration extends PTestElement<PyFunction> {
 
             @Override
             public TextAttributesKey getTextAttributesKey() {
+                if (isRedeclared()) return CodeInsightColors.GENERIC_SERVER_ERROR_OR_WARNING;
                 return isInherited() ? CodeInsightColors.NOT_USED_ELEMENT_ATTRIBUTES : null;
             }
 
@@ -60,14 +70,6 @@ public class PTestConfiguration extends PTestElement<PyFunction> {
                 return AllIcons.Css.Atrule;
             }
         };
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        // deal with duplicated test configurations, only consider in the same class
-        return other instanceof PTestConfiguration
-                && Objects.equals(getName(), ((PTestConfiguration) other).getName())
-                && Objects.equals(getGroup(), ((PTestConfiguration) other).getGroup());
     }
 
     @Override
