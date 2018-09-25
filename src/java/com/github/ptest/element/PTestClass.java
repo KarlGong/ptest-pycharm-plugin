@@ -51,6 +51,22 @@ public class PTestClass extends PTestElement<PyClass> {
                     children.add(pTestMethod);
                 }
             }
+            
+            for (String configName : new String[]{"BeforeMethod", "AfterMethod", "BeforeGroup", "AfterGroup", 
+                    "BeforeClass", "AfterClass", "BeforeSuite", "AfterSuite"}) {
+                if (PTestUtil.hasDecorator(pyFunction, configName, null, null)) {
+                    PTestConfiguration pTestConfiguration = new PTestConfiguration(this, pyFunction, configName);
+                    // deal with duplicated & inherited test configurations
+                    if (children.contains(pTestConfiguration)) {
+                        if (!pTestConfiguration.isInherited()) {
+                            children.remove(pTestConfiguration);
+                            children.add(pTestConfiguration);
+                        }
+                    } else {
+                        children.add(pTestConfiguration);
+                    }
+                }
+            }
             return true;
         }, true, null);
 

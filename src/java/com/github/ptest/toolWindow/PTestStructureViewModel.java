@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class PTestStructureViewModel extends StructureViewModelBase {
     public PTestStructureViewModel(@NotNull PsiFile psiFile, @Nullable Editor editor) {
-        super(psiFile, editor, new PTestStructureViewElement(null, PTestModule.createFrom(psiFile)));
+        super(psiFile, editor, new PTestStructureViewElement(PTestModule.createFrom(psiFile)));
         withSorters(Sorter.ALPHA_SORTER);
         withSuitableClasses(PyFunction.class, PyClass.class); // auto scroll from source
     }

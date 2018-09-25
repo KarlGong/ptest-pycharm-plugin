@@ -1,5 +1,6 @@
 package com.github.ptest.toolWindow;
 
+import com.github.ptest.element.PTestConfiguration;
 import com.github.ptest.element.PTestElement;
 import com.intellij.ide.structureView.StructureViewTreeElement;
 import com.intellij.navigation.ItemPresentation;
@@ -12,16 +13,10 @@ import java.util.List;
 import java.util.Objects;
 
 public class PTestStructureViewElement implements StructureViewTreeElement {
-    private PTestStructureViewElement myParent;
     private PTestElement myElement;
 
-    public PTestStructureViewElement(PTestStructureViewElement parent, PTestElement element) {
-        myParent = parent;
+    public PTestStructureViewElement(PTestElement element) {
         myElement = element;
-    }
-
-    public PTestStructureViewElement getParent() {
-        return myParent;
     }
 
     @Override
@@ -76,7 +71,7 @@ public class PTestStructureViewElement implements StructureViewTreeElement {
 
         if (myElement.getChildren() != null) {
             for (Object pTestElement : myElement.getChildren()) {
-                PTestStructureViewElement child = new PTestStructureViewElement(this, (PTestElement) pTestElement);
+                PTestStructureViewElement child = new PTestStructureViewElement((PTestElement) pTestElement);
                 children.add(child);
             }
         }

@@ -2,8 +2,10 @@ package com.github.ptest.element;
 
 import com.github.ptest.PTestUtil;
 import com.github.ptest.runConfiguration.PTestRunConfiguration;
-import com.intellij.icons.AllIcons;
+import com.intellij.navigation.ColoredItemPresentation;
 import com.intellij.navigation.ItemPresentation;
+import com.intellij.openapi.editor.colors.CodeInsightColors;
+import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.ui.LayeredIcon;
@@ -32,6 +34,11 @@ public class PTestMethod extends PTestElement<PyFunction> {
         return PTestUtil.hasDecorator(myElement, "Test", "data_provider", null);
     }
 
+    public String getGroup() {
+        PyExpression valueExp = myElement.getDecoratorList().findDecorator("Test").getKeywordArgument("group");
+        return valueExp == null ? null : valueExp.getText();
+    }
+
     @Override
     public boolean setupConfiguration(PTestRunConfiguration configuration) {
         try {
@@ -52,24 +59,26 @@ public class PTestMethod extends PTestElement<PyFunction> {
 
     @Override
     public ItemPresentation getPresentation() {
-        return new ItemPresentation() {
+        return new ColoredItemPresentation() {
             @Override
             public String getPresentableText() {
                 return myElement.getName();
             }
 
             @Override
+            public TextAttributesKey getTextAttributesKey() {
+                return isInherited() ? CodeInsightColors.NOT_USED_ELEMENT_ATTRIBUTES : null;
+            }
+
+            @Override
             public String getLocationString() {
-                PyExpression valueExp = myElement.getDecoratorList().findDecorator("Test").getKeywordArgument("group");
-                return valueExp == null ? null : StringUtils.strip(valueExp.getText(), "\"");
+                String group = getGroup();
+                return group != null ? StringUtils.strip(group, "\"") : null;
             }
 
             @Override
             public Icon getIcon(boolean open) {
                 Icon normalIcon = myElement.getIcon(0);
-                if (isInherited()) {
-                    normalIcon = AllIcons.Nodes.MethodReference;
-                }
                 if (isDataProvided()) {
                     LayeredIcon icon = new LayeredIcon(2);
                     icon.setIcon(normalIcon, 0);

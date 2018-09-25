@@ -139,22 +139,27 @@ public class PTestConfigurationProducer extends AbstractPythonTestConfigurationP
     
     public boolean setupConfigurationInToolWindow(@NotNull Tree component, @NotNull PTestRunConfiguration configuration) {
         try {
-            List<PTestStructureViewElement> selectedElements = new ArrayList<>();
+            List<PTestElement> selectedElements = new ArrayList<>();
             for (DefaultMutableTreeNode selectedNode : component.getSelectedNodes(DefaultMutableTreeNode.class, null)) {
                 TreeElementWrapper elementWrapper = (TreeElementWrapper) selectedNode.getUserObject();
                 PTestStructureViewElement structureViewElement = (PTestStructureViewElement) elementWrapper.getValue(); 
-                selectedElements.add(structureViewElement);
+                if (!(structureViewElement.getElement() instanceof PTestConfiguration)) { // ignore ptest configuration
+                    selectedElements.add(structureViewElement.getElement());
+                }
             }
             
+            if (selectedElements.size() == 0) return false;
+            
             if (selectedElements.size() == 1) {
-                return selectedElements.get(0).getElement().setupConfiguration(configuration);
+                return selectedElements.get(0).setupConfiguration(configuration);
             }
+            
             configuration.setValueForEmptyWorkingDirectory();
             configuration.setRunTest(true);
             List<String> testTargetTexts = new ArrayList<>();
-            for (PTestStructureViewElement selectedElement : selectedElements) {
+            for (PTestElement selectedElement : selectedElements) {
                 PTestRunConfiguration tempConfig = new PTestRunConfiguration(configuration.getProject(), configuration.getFactory());
-                selectedElement.getElement().setupConfiguration(tempConfig);
+                selectedElement.setupConfiguration(tempConfig);
                 testTargetTexts.add(tempConfig.getTestTargets());
             }
             Collections.sort(testTargetTexts);
