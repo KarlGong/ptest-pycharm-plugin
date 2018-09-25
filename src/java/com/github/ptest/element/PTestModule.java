@@ -72,11 +72,6 @@ public class PTestModule extends PTestElement<PyFile> {
         };
     }
 
-    @Override
-    public boolean isLeaf() {
-        return false;
-    }
-
     public static PTestModule createFrom(PsiElement element) {
         if (element instanceof PyFile) {
             PyFile pyFile = (PyFile) element;

@@ -10,15 +10,15 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class PTestStructureViewFactory implements PsiStructureViewFactory {
-  @Override
-  public StructureViewBuilder getStructureViewBuilder(final PsiFile psiFile) {
-    return new TreeBasedStructureViewBuilder() {
+    @Override
+    public StructureViewBuilder getStructureViewBuilder(final PsiFile psiFile) {
+        return new TreeBasedStructureViewBuilder() {
 
-      @Override
-      @NotNull
-      public StructureViewModel createStructureViewModel(@Nullable Editor editor) {
-        return new PTestStructureViewModel(psiFile, editor);
-      }
-    };
-  }
+            @Override
+            @NotNull
+            public StructureViewModel createStructureViewModel(@Nullable Editor editor) {
+                return new PTestStructureViewModel(psiFile, editor);
+            }
+        };
+    }
 }

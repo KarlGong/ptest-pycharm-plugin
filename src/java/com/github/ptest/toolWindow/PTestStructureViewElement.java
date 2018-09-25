@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class PTestStructureViewElement implements StructureViewTreeElement {
     private PTestStructureViewElement myParent;
@@ -25,40 +26,40 @@ public class PTestStructureViewElement implements StructureViewTreeElement {
 
     @Override
     public PyElement getValue() {
-        PsiElement element = myElement.getElement();
+        PsiElement element = myElement.getValue();
         if (element instanceof PyElement) {
             return (PyElement) element;
         }
         return null;
     }
-    
+
     public PTestElement getElement() {
         return myElement;
     }
 
     @Override
     public void navigate(boolean requestFocus) {
-        getValue().navigate(requestFocus);
+        PyElement element = getValue();
+        if (element != null) {
+            element.navigate(requestFocus);
+        }
     }
 
     @Override
     public boolean canNavigate() {
-        return getValue().canNavigate();
+        return getValue() != null && getValue().canNavigate();
     }
 
     @Override
     public boolean canNavigateToSource() {
-        return getValue().canNavigateToSource();
+        return getValue() != null && getValue().canNavigateToSource();
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (o instanceof StructureViewTreeElement) {
-            final Object value = ((StructureViewTreeElement) o).getValue();
-            final String name = getValue().getName();
-            if (value instanceof PyElement && name != null) {
-                return name.equals(((PyElement) value).getName());
-            }
+    public boolean equals(Object otherObj) {
+        if (otherObj instanceof PTestStructureViewElement) {
+            PyElement element = ((PTestStructureViewElement) otherObj).getValue();
+            return Objects.equals(getValue().getName(), element.getName());
         }
         return false;
     }

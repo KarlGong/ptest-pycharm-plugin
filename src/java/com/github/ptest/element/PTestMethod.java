@@ -22,7 +22,7 @@ public class PTestMethod extends PTestElement<PyFunction> {
     }
 
     public boolean isInherited() {
-        return myElement.getContainingClass() != myParent.getElement();
+        return myElement.getContainingClass() != myParent.getValue();
     }
 
     public boolean isDataProvided() {
@@ -35,16 +35,11 @@ public class PTestMethod extends PTestElement<PyFunction> {
             configuration.setValueForEmptyWorkingDirectory();
             configuration.setRunTest(true);
             String testName = myElement.getName();
-            String testTarget;
-            if (isInherited()) {
-                testTarget = PTestUtil.findShortestImportableName(myParent.getElement().getContainingFile()) + "."
-                        + myParent.getElement().getName() + "." + testName;
-            } else {
-                testTarget = PTestUtil.findShortestImportableName(myElement.getContainingFile()) + "."
-                        + myElement.getContainingClass().getName() + "." + testName;
-            }
+            String testTarget = PTestUtil.findShortestImportableName(myParent.getValue().getContainingFile()) + "."
+                    + myParent.getValue().getName() + "." + testName;
+            String suggestedName = myParent.getValue().getName() + "." + testName;
             configuration.setTestTargets(testTarget);
-            configuration.setSuggestedName("ptest " + myElement.getContainingClass().getName() + "." + testName);
+            configuration.setSuggestedName("ptest " + suggestedName);
             configuration.setActionName("ptest " + testName);
             return true;
         } catch (Exception e) {
@@ -80,11 +75,6 @@ public class PTestMethod extends PTestElement<PyFunction> {
                 return normalIcon;
             }
         };
-    }
-
-    @Override
-    public boolean isLeaf() {
-        return true;
     }
 
     public static PTestMethod createFrom(PsiElement element) {

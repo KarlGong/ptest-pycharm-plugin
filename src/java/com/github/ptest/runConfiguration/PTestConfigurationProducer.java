@@ -69,7 +69,7 @@ public class PTestConfigurationProducer extends AbstractPythonTestConfigurationP
         List<PTestStructureViewElement> testTargets = getSelectedPTestTargetsInTW(context);
         if (!testTargets.isEmpty()) {
             if (testTargets.size() == 1) {
-                testTargets.get(0).getElement().setupConfiguration(config);
+                return testTargets.get(0).getElement().setupConfiguration(config);
             } else {
                 return setupConfigurationForPTestTargetsInTW(testTargets, config);
             }

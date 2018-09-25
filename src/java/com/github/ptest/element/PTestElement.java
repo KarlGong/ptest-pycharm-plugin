@@ -13,7 +13,7 @@ public abstract class PTestElement<E extends PsiElement> {
         myElement = element;
     }
 
-    public E getElement() {
+    public E getValue() {
         return myElement;
     }
 
@@ -26,9 +26,4 @@ public abstract class PTestElement<E extends PsiElement> {
     public ItemPresentation getPresentation() {
         return null;
     }
-
-    public boolean isLeaf() {
-        return false;
-    }
-    
 }

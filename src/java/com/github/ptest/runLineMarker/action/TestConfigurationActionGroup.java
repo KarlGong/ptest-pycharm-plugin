@@ -43,7 +43,7 @@ public class TestConfigurationActionGroup extends ActionGroup {
         actions.put("AfterSuite", null);
 
         PTestMethod pTestMethod = PTestMethod.createFrom(myElement);
-        PyExpression valueExp = pTestMethod.getElement().getDecoratorList().findDecorator("Test").getKeywordArgument("group");
+        PyExpression valueExp = pTestMethod.getValue().getDecoratorList().findDecorator("Test").getKeywordArgument("group");
         final String groupName = valueExp == null ? null : valueExp.getText();
 
         PyClass pyClass = PsiTreeUtil.getParentOfType(myElement, PyClass.class, false);
