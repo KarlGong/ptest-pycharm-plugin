@@ -8,10 +8,13 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.ui.LayeredIcon;
 import com.jetbrains.python.psi.PyClass;
+import com.jetbrains.python.psi.PyExpression;
 import com.jetbrains.python.psi.PyFunction;
 import icons.RemoteServersIcons;
+import org.apache.commons.lang.StringUtils;
 
 import javax.swing.*;
+import java.util.Objects;
 
 public class PTestMethod extends PTestElement<PyFunction> {
     private PTestClass myParent;
@@ -57,7 +60,8 @@ public class PTestMethod extends PTestElement<PyFunction> {
 
             @Override
             public String getLocationString() {
-                return null;
+                PyExpression valueExp = myElement.getDecoratorList().findDecorator("Test").getKeywordArgument("group");
+                return valueExp == null ? null : StringUtils.strip(valueExp.getText(), "\"");
             }
 
             @Override
@@ -75,6 +79,12 @@ public class PTestMethod extends PTestElement<PyFunction> {
                 return normalIcon;
             }
         };
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        // deal with duplicated tests, only consider in the same class
+        return other instanceof PTestMethod && Objects.equals(getValue().getName(), ((PTestMethod) other).getValue().getName());
     }
 
     public static PTestMethod createFrom(PsiElement element) {

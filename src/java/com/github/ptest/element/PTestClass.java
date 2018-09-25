@@ -11,6 +11,7 @@ import com.jetbrains.python.psi.PyClass;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class PTestClass extends PTestElement<PyClass> {
 
@@ -39,7 +40,16 @@ public class PTestClass extends PTestElement<PyClass> {
 
         myElement.visitMethods(pyFunction -> {
             if (PTestUtil.hasDecorator(pyFunction, "Test", null, null)) {
-                children.add(new PTestMethod(this, pyFunction));
+                PTestMethod pTestMethod = new PTestMethod(this, pyFunction);
+                // deal with duplicated & inherited tests
+                if (children.contains(pTestMethod)) {
+                    if (!pTestMethod.isInherited()) {
+                        children.remove(pTestMethod);
+                        children.add(pTestMethod);
+                    }
+                } else {
+                    children.add(pTestMethod);
+                }
             }
             return true;
         }, true, null);
@@ -73,6 +83,12 @@ public class PTestClass extends PTestElement<PyClass> {
                 return myElement.getIcon(0);
             }
         };
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        // deal with duplicated test classes, only consider in the same module
+        return other instanceof PTestClass && Objects.equals(getValue().getName(), ((PTestClass) other).getValue().getName());
     }
 
     public static PTestClass createFrom(PsiElement element) {

@@ -39,11 +39,17 @@ public class PTestModule extends PTestElement<PyFile> {
 
         for (PyClass pyClass : myElement.getTopLevelClasses()) {
             if (PTestUtil.hasDecorator(pyClass, "TestClass", null, null)) {
-                children.add(new PTestClass(pyClass));
+                PTestClass pTestClass = new PTestClass(pyClass);
+                // deal with duplicated test classes
+                children.remove(pTestClass);
+                children.add(pTestClass);
             } else {
                 for (PyClass ancestorClass : pyClass.getAncestorClasses(null)) {
                     if (PTestUtil.hasDecorator(ancestorClass, "TestClass", null, null)) {
-                        children.add(new PTestClass(pyClass));
+                        PTestClass pTestClass = new PTestClass(pyClass);
+                        // deal with duplicated test classes
+                        children.remove(pTestClass);
+                        children.add(pTestClass);
                         break;
                     }
                 }
@@ -51,7 +57,7 @@ public class PTestModule extends PTestElement<PyFile> {
         }
         return children;
     }
-    
+
     @Override
     public ItemPresentation getPresentation() {
         return new ItemPresentation() {
