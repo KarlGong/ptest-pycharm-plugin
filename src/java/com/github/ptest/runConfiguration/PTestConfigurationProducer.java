@@ -6,6 +6,7 @@ import com.intellij.execution.Location;
 import com.intellij.execution.actions.ConfigurationContext;
 import com.intellij.execution.testframework.AbstractTestProxy;
 import com.intellij.execution.testframework.sm.runner.ui.SMTRunnerTestTreeView;
+import com.intellij.ide.dnd.aware.DnDAwareTree;
 import com.intellij.ide.util.treeView.smartTree.TreeElementWrapper;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.util.Ref;
@@ -20,7 +21,7 @@ import com.jetbrains.python.testing.AbstractPythonTestConfigurationProducer;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreePath;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -65,19 +66,15 @@ public class PTestConfigurationProducer extends AbstractPythonTestConfigurationP
         if (element instanceof PsiDirectory
                 && ((PsiDirectory) element).getVirtualFile().equals(element.getProject().getBaseDir()))
             return false;
-        // is in tool window
-        List<PTestStructureViewElement> testTargets = getSelectedPTestTargetsInTW(context);
-        if (!testTargets.isEmpty()) {
-            if (testTargets.size() == 1) {
-                return testTargets.get(0).getElement().setupConfiguration(config);
-            } else {
-                return setupConfigurationForPTestTargetsInTW(testTargets, config);
-            }
-        }
+        // get context component
+        Component component = PlatformDataKeys.CONTEXT_COMPONENT.getData(context.getDataContext());
         // is in test runner 
-        AbstractTestProxy smtPTestMethod = getSelectedPTestMethodInSMT(context);
-        if (smtPTestMethod != null) {
-            return setupConfigurationForPTestMethodInSMT(smtPTestMethod, config);
+        if (component instanceof SMTRunnerTestTreeView) {
+            return setupConfigurationInSMTRunner((SMTRunnerTestTreeView) component, config);
+        }
+        // is in tool window
+        if (component instanceof DnDAwareTree) {
+            return setupConfigurationInToolWindow((Tree) component, config);
         }
         // is in editor / project / structure view
         PTestMethod pTestMethod = PTestMethod.createFrom(element);
@@ -118,47 +115,9 @@ public class PTestConfigurationProducer extends AbstractPythonTestConfigurationP
         return false;
     }
 
-    public List<PTestStructureViewElement> getSelectedPTestTargetsInTW(@NotNull ConfigurationContext context) {
-        List<PTestStructureViewElement> pTestTargets = new ArrayList<>();
+    public boolean setupConfigurationInSMTRunner(@NotNull SMTRunnerTestTreeView component, @NotNull PTestRunConfiguration configuration) {
         try {
-            TreePath[] treePaths = ((Tree) PlatformDataKeys.CONTEXT_COMPONENT.getData(context.getDataContext())).getSelectionPaths();
-            for (TreePath treePath : treePaths) {
-                PTestStructureViewElement element = (PTestStructureViewElement) ((TreeElementWrapper) ((DefaultMutableTreeNode) treePath.getLastPathComponent()).getUserObject()).getValue();
-                pTestTargets.add(element);
-            }
-        } catch (Exception ignored) { }
-        return pTestTargets;
-    }
-
-    public boolean setupConfigurationForPTestTargetsInTW(@NotNull List<PTestStructureViewElement> testTargets, @NotNull PTestRunConfiguration configuration) {
-        try {
-            configuration.setValueForEmptyWorkingDirectory();
-            configuration.setRunTest(true);
-            List<String> testTargetTexts = new ArrayList<>();
-            for (PTestStructureViewElement testTarget : testTargets) {
-                PTestRunConfiguration tempConfig = new PTestRunConfiguration(configuration.getProject(), configuration.getFactory());
-                testTarget.getElement().setupConfiguration(tempConfig);
-                testTargetTexts.add(tempConfig.getTestTargets());
-            }
-            Collections.sort(testTargetTexts);
-            configuration.setTestTargets(String.join(",", testTargetTexts));
-            configuration.setSuggestedName("ptests selected tests");
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    public AbstractTestProxy getSelectedPTestMethodInSMT(@NotNull ConfigurationContext context) {
-        try {
-            return ((SMTRunnerTestTreeView) PlatformDataKeys.CONTEXT_COMPONENT.getData(context.getDataContext())).getSelectedTest();
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    public boolean setupConfigurationForPTestMethodInSMT(@NotNull AbstractTestProxy test, @NotNull PTestRunConfiguration configuration) {
-        try {
+            AbstractTestProxy test = component.getSelectedTest();
             configuration.setValueForEmptyWorkingDirectory();
             configuration.setRunTest(true);
             AbstractTestProxy testClass;
@@ -172,6 +131,35 @@ public class PTestConfigurationProducer extends AbstractPythonTestConfigurationP
             String[] splittedNames = testClass.getName().split("\\.");
             configuration.setSuggestedName("ptest " + splittedNames[splittedNames.length - 1] + "." + testName);
             configuration.setActionName("ptest " + testName);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    
+    public boolean setupConfigurationInToolWindow(@NotNull Tree component, @NotNull PTestRunConfiguration configuration) {
+        try {
+            List<PTestStructureViewElement> selectedElements = new ArrayList<>();
+            for (DefaultMutableTreeNode selectedNode : component.getSelectedNodes(DefaultMutableTreeNode.class, null)) {
+                TreeElementWrapper elementWrapper = (TreeElementWrapper) selectedNode.getUserObject();
+                PTestStructureViewElement structureViewElement = (PTestStructureViewElement) elementWrapper.getValue(); 
+                selectedElements.add(structureViewElement);
+            }
+            
+            if (selectedElements.size() == 1) {
+                return selectedElements.get(0).getElement().setupConfiguration(configuration);
+            }
+            configuration.setValueForEmptyWorkingDirectory();
+            configuration.setRunTest(true);
+            List<String> testTargetTexts = new ArrayList<>();
+            for (PTestStructureViewElement selectedElement : selectedElements) {
+                PTestRunConfiguration tempConfig = new PTestRunConfiguration(configuration.getProject(), configuration.getFactory());
+                selectedElement.getElement().setupConfiguration(tempConfig);
+                testTargetTexts.add(tempConfig.getTestTargets());
+            }
+            Collections.sort(testTargetTexts);
+            configuration.setTestTargets(String.join(",", testTargetTexts));
+            configuration.setSuggestedName("ptests selected tests");
             return true;
         } catch (Exception e) {
             return false;
