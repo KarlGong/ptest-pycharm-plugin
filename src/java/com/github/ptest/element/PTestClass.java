@@ -51,8 +51,8 @@ public class PTestClass extends PTestElement<PyClass> {
                     children.add(pTestMethod);
                 }
             }
-            
-            for (String configName : new String[]{"BeforeMethod", "AfterMethod", "BeforeGroup", "AfterGroup", 
+
+            for (String configName : new String[]{"BeforeMethod", "AfterMethod", "BeforeGroup", "AfterGroup",
                     "BeforeClass", "AfterClass", "BeforeSuite", "AfterSuite"}) {
                 if (PTestUtil.hasDecorator(pyFunction, configName, null, null)) {
                     PTestConfiguration pTestConfiguration = new PTestConfiguration(this, pyFunction, configName);
@@ -84,7 +84,7 @@ public class PTestClass extends PTestElement<PyClass> {
 
             @Override
             public String getLocationString() {
-                int childrenCount = getChildren().size();
+                long childrenCount = getChildren().stream().filter(pTestElement -> pTestElement instanceof PTestMethod).count();
                 if (childrenCount == 0) {
                     return "· no tests";
                 }
