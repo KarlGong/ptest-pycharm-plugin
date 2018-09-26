@@ -19,7 +19,6 @@ import javax.swing.*;
 
 public class PTestMethod extends PTestElement<PyFunction> {
     private PTestClass myParent;
-    private boolean myIsRedeclared = false;
 
     public PTestMethod(PTestClass parent, PyFunction pyFunction) {
         super(pyFunction);
@@ -27,32 +26,24 @@ public class PTestMethod extends PTestElement<PyFunction> {
     }
 
     public boolean isInherited() {
-        return myElement.getContainingClass() != myParent.getValue();
+        return getValue().getContainingClass() != myParent.getValue();
     }
 
     public boolean isDataProvided() {
-        return PTestUtil.hasDecorator(myElement, "Test", "data_provider", null);
+        return PTestUtil.hasDecorator(getValue(), "Test", "data_provider", null);
     }
 
     public String getGroup() {
-        PyExpression valueExp = myElement.getDecoratorList().findDecorator("Test").getKeywordArgument("group");
+        PyExpression valueExp = getValue().getDecoratorList().findDecorator("Test").getKeywordArgument("group");
         return valueExp == null ? null : valueExp.getText();
     }
     
-    public void setRedeclared(boolean isRedeclared) {
-        myIsRedeclared = isRedeclared;
-    } 
-    
-    public boolean isRedeclared() {
-        return myIsRedeclared;
-    }
-
     @Override
     public boolean setupConfiguration(PTestRunConfiguration configuration) {
         try {
             configuration.setValueForEmptyWorkingDirectory();
             configuration.setRunTest(true);
-            String testName = myElement.getName();
+            String testName = getValue().getName();
             String testTarget = PTestUtil.findShortestImportableName(myParent.getValue().getContainingFile()) + "."
                     + myParent.getValue().getName() + "." + testName;
             String suggestedName = myParent.getValue().getName() + "." + testName;
@@ -70,24 +61,29 @@ public class PTestMethod extends PTestElement<PyFunction> {
         return new ColoredItemPresentation() {
             @Override
             public String getPresentableText() {
-                return myElement.getName();
+                return getValue().getName();
             }
 
             @Override
             public TextAttributesKey getTextAttributesKey() {
-                if (isRedeclared()) return CodeInsightColors.GENERIC_SERVER_ERROR_OR_WARNING;
+                if (getErrors().size() > 0) {
+                    return CodeInsightColors.WRONG_REFERENCES_ATTRIBUTES;
+                }
                 return isInherited() ? CodeInsightColors.NOT_USED_ELEMENT_ATTRIBUTES : null;
             }
 
             @Override
             public String getLocationString() {
+                if (getErrors().size() > 0) {
+                    return getErrors().get(0);
+                }
                 String group = getGroup();
                 return group != null ? StringUtils.strip(group, "\"") : null;
             }
 
             @Override
             public Icon getIcon(boolean open) {
-                Icon normalIcon = myElement.getIcon(0);
+                Icon normalIcon = getValue().getIcon(0);
                 if (isDataProvided()) {
                     LayeredIcon icon = new LayeredIcon(2);
                     icon.setIcon(normalIcon, 0);

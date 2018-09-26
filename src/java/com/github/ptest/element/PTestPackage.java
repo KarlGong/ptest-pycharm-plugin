@@ -16,7 +16,7 @@ public class PTestPackage extends PTestElement<PsiDirectory> {
         try {
             configuration.setValueForEmptyWorkingDirectory();
             configuration.setRunTest(true);
-            String testTarget = PTestUtil.findShortestImportableName(myElement);
+            String testTarget = PTestUtil.findShortestImportableName(getValue());
             configuration.setTestTargets(testTarget);
             configuration.setSuggestedName("ptests in " + testTarget);
             return true;

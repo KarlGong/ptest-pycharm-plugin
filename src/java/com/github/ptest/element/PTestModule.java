@@ -25,7 +25,7 @@ public class PTestModule extends PTestElement<PyFile> {
         try {
             configuration.setValueForEmptyWorkingDirectory();
             configuration.setRunTest(true);
-            String testTarget = PTestUtil.findShortestImportableName(myElement);
+            String testTarget = PTestUtil.findShortestImportableName(getValue());
             configuration.setTestTargets(testTarget);
             configuration.setSuggestedName("ptests in " + testTarget);
             return true;
@@ -38,7 +38,7 @@ public class PTestModule extends PTestElement<PyFile> {
     public List<PTestElement> getChildren() {
         List<PTestElement> children = new ArrayList<>();
 
-        for (PyClass pyClass : myElement.getTopLevelClasses()) {
+        for (PyClass pyClass : getValue().getTopLevelClasses()) {
             if (PTestUtil.hasDecorator(pyClass, "TestClass", null, null)) {
                 PTestClass pTestClass = new PTestClass(pyClass);
                 // deal with redeclared test classes
@@ -46,7 +46,7 @@ public class PTestModule extends PTestElement<PyFile> {
                     if (c instanceof PTestClass) {
                         PTestClass child = (PTestClass) c;
                         if (Objects.equals(pTestClass.getValue().getName(), child.getValue().getName())) {
-                            pTestClass.setRedeclared(true);
+                            pTestClass.addError("Redeclared test class " + pTestClass.getValue().getName());
                             break;
                         }
                     }
@@ -61,7 +61,7 @@ public class PTestModule extends PTestElement<PyFile> {
                             if (c instanceof PTestClass) {
                                 PTestClass child = (PTestClass) c;
                                 if (Objects.equals(pTestClass.getValue().getName(), child.getValue().getName())) {
-                                    pTestClass.setRedeclared(true);
+                                    pTestClass.addError("Redeclared test class " + pTestClass.getValue().getName());
                                     break;
                                 }
                             }
@@ -80,7 +80,7 @@ public class PTestModule extends PTestElement<PyFile> {
         return new ItemPresentation() {
             @Override
             public String getPresentableText() {
-                return myElement.getName();
+                return getValue().getName();
             }
 
             @Override
@@ -90,7 +90,7 @@ public class PTestModule extends PTestElement<PyFile> {
 
             @Override
             public Icon getIcon(boolean b) {
-                return myElement.getIcon(0);
+                return getValue().getIcon(0);
             }
         };
     }

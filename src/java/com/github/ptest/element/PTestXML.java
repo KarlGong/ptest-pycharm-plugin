@@ -19,7 +19,7 @@ public class PTestXML extends PTestElement<PsiFile> {
         try {
             configuration.setValueForEmptyWorkingDirectory();
             configuration.setRunFailed(true);
-            String xmlPath = myElement.getVirtualFile().getCanonicalPath();
+            String xmlPath = getValue().getVirtualFile().getCanonicalPath();
             String xmlRelativePath = Paths.get(configuration.getWorkingDirectory()).relativize(Paths.get(xmlPath)).toString();
             configuration.setXunitXML(xmlRelativePath);
             configuration.setSuggestedName("ptests in " + xmlRelativePath);

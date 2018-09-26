@@ -11,12 +11,10 @@ import com.jetbrains.python.psi.PyFunction;
 import org.apache.commons.lang.StringUtils;
 
 import javax.swing.*;
-import java.util.Objects;
 
 public class PTestConfiguration extends PTestElement<PyFunction> {
     private PTestClass myParent;
     private String myName;
-    private boolean myIsRedeclared = false;
 
     public PTestConfiguration(PTestClass parent, PyFunction pyFunction, String name) {
         super(pyFunction);
@@ -25,7 +23,7 @@ public class PTestConfiguration extends PTestElement<PyFunction> {
     }
 
     public boolean isInherited() {
-        return myElement.getContainingClass() != myParent.getValue();
+        return getValue().getContainingClass() != myParent.getValue();
     }
 
     public String getName() {
@@ -33,16 +31,8 @@ public class PTestConfiguration extends PTestElement<PyFunction> {
     }
 
     public String getGroup() {
-        PyExpression valueExp = myElement.getDecoratorList().findDecorator(getName()).getKeywordArgument("group");
+        PyExpression valueExp = getValue().getDecoratorList().findDecorator(getName()).getKeywordArgument("group");
         return valueExp == null ? null : valueExp.getText();
-    }
-
-    public void setRedeclared(boolean isRedeclared) {
-        myIsRedeclared = isRedeclared;
-    }
-
-    public boolean isRedeclared() {
-        return myIsRedeclared;
     }
 
     @Override
@@ -55,12 +45,17 @@ public class PTestConfiguration extends PTestElement<PyFunction> {
 
             @Override
             public TextAttributesKey getTextAttributesKey() {
-                if (isRedeclared()) return CodeInsightColors.GENERIC_SERVER_ERROR_OR_WARNING;
+                if (getErrors().size() > 0) {
+                    return CodeInsightColors.WRONG_REFERENCES_ATTRIBUTES;
+                }
                 return isInherited() ? CodeInsightColors.NOT_USED_ELEMENT_ATTRIBUTES : null;
             }
 
             @Override
             public String getLocationString() {
+                if (getErrors().size() > 0) {
+                    return getErrors().get(0);    
+                }
                 String group = getGroup();
                 return group != null ? StringUtils.strip(group, "\"") : null;
             }

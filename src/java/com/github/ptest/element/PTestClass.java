@@ -10,6 +10,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.jetbrains.python.PyNames;
 import com.jetbrains.python.psi.PyClass;
+import org.apache.commons.lang.StringUtils;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -17,18 +18,9 @@ import java.util.List;
 import java.util.Objects;
 
 public class PTestClass extends PTestElement<PyClass> {
-    private boolean myIsRedeclared = false;
 
     public PTestClass(PyClass pyClass) {
         super(pyClass);
-    }
-
-    public void setRedeclared(boolean isRedeclared) {
-        myIsRedeclared = isRedeclared;
-    }
-
-    public boolean isRedeclared() {
-        return myIsRedeclared;
     }
 
     @Override
@@ -36,10 +28,10 @@ public class PTestClass extends PTestElement<PyClass> {
         try {
             configuration.setValueForEmptyWorkingDirectory();
             configuration.setRunTest(true);
-            String testTarget = PTestUtil.findShortestImportableName(myElement.getContainingFile()) + "."
-                    + myElement.getName();
+            String testTarget = PTestUtil.findShortestImportableName(getValue().getContainingFile()) + "."
+                    + getValue().getName();
             configuration.setTestTargets(testTarget);
-            configuration.setSuggestedName("ptests in " + myElement.getName());
+            configuration.setSuggestedName("ptests in " + getValue().getName());
             return true;
         } catch (Exception e) {
             return false;
@@ -50,7 +42,7 @@ public class PTestClass extends PTestElement<PyClass> {
     public List<PTestElement> getChildren() {
         List<PTestElement> children = new ArrayList<>();
 
-        myElement.visitMethods(pyFunction -> {
+        getValue().visitMethods(pyFunction -> {
             if (PTestUtil.hasDecorator(pyFunction, "Test", null, null)) {
                 PTestMethod pTestMethod = new PTestMethod(this, pyFunction);
                 // deal with redeclared tests
@@ -60,7 +52,7 @@ public class PTestClass extends PTestElement<PyClass> {
                         PTestMethod child = (PTestMethod) c;
                         if (Objects.equals(pTestMethod.getValue().getName(), child.getValue().getName())) {
                             if (!pTestMethod.isInherited()) {
-                                pTestMethod.setRedeclared(true);
+                                pTestMethod.addError("Redeclared test " + pTestMethod.getValue().getName());
                                 children.add(pTestMethod);
                             }
                             foundDuplicated = true;
@@ -86,7 +78,8 @@ public class PTestClass extends PTestElement<PyClass> {
                                     && Objects.equals(pTestConfiguration.getName(), child.getName())) {
                                 if (!(pTestConfiguration.isInherited()
                                         && Objects.equals(pTestConfiguration.getValue().getName(), child.getValue().getName()))) {
-                                    pTestConfiguration.setRedeclared(true);
+                                    pTestConfiguration.addError("Redeclared @" + pTestConfiguration.getName()
+                                            + (pTestConfiguration.getGroup() != null ? " for group " + StringUtils.strip(pTestConfiguration.getGroup(), "\"") : ""));
                                     children.add(pTestConfiguration);
                                 }
                                 foundDuplicated = true;
@@ -110,17 +103,24 @@ public class PTestClass extends PTestElement<PyClass> {
         return new ColoredItemPresentation() {
             @Override
             public String getPresentableText() {
-                ItemPresentation presentation = myElement.getPresentation();
+                ItemPresentation presentation = getValue().getPresentation();
                 return presentation != null ? presentation.getPresentableText() : PyNames.UNNAMED_ELEMENT;
             }
 
             @Override
             public TextAttributesKey getTextAttributesKey() {
-                return isRedeclared() ? CodeInsightColors.GENERIC_SERVER_ERROR_OR_WARNING : null;
+                if (getErrors().size() > 0) {
+                    return CodeInsightColors.WRONG_REFERENCES_ATTRIBUTES;
+                }
+                return null;
             }
 
             @Override
             public String getLocationString() {
+                if (getErrors().size() > 0) {
+                    return getErrors().get(0);
+                }
+                
                 long childrenCount = getChildren().stream().filter(pTestElement -> pTestElement instanceof PTestMethod).count();
                 if (childrenCount == 0) {
                     return "· no tests";
@@ -133,7 +133,7 @@ public class PTestClass extends PTestElement<PyClass> {
 
             @Override
             public Icon getIcon(boolean open) {
-                return myElement.getIcon(0);
+                return getValue().getIcon(0);
             }
         };
     }

@@ -4,10 +4,12 @@ import com.github.ptest.runConfiguration.PTestRunConfiguration;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.psi.PsiElement;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class PTestElement<E extends PsiElement> {
-    protected E myElement;
+    private E myElement;
+    private List<String> myErrors = new ArrayList<>();
 
     public PTestElement(E element) {
         myElement = element;
@@ -15,6 +17,14 @@ public abstract class PTestElement<E extends PsiElement> {
 
     public E getValue() {
         return myElement;
+    }
+    
+    public void addError(String error) {
+        myErrors.add(error);
+    }
+    
+    public List<String> getErrors() {
+        return myErrors;
     }
 
     public abstract boolean setupConfiguration(PTestRunConfiguration configuration);
