@@ -51,7 +51,7 @@ public class PTestClass extends PTestElement<PyClass> {
                     if (c instanceof PTestMethod) {
                         PTestMethod child = (PTestMethod) c;
                         if (Objects.equals(pTestMethod.getValue().getName(), child.getValue().getName())) {
-                            if (!pTestMethod.isInherited()) {
+                            if (!pTestMethod.isInherited() || child.isInherited()) {
                                 pTestMethod.addError("Redeclared test " + pTestMethod.getValue().getName());
                                 children.add(pTestMethod);
                             }
@@ -77,7 +77,8 @@ public class PTestClass extends PTestElement<PyClass> {
                             if (Objects.equals(pTestConfiguration.getGroup(), child.getGroup())
                                     && Objects.equals(pTestConfiguration.getName(), child.getName())) {
                                 if (!(pTestConfiguration.isInherited()
-                                        && Objects.equals(pTestConfiguration.getValue().getName(), child.getValue().getName()))) {
+                                        && Objects.equals(pTestConfiguration.getValue().getName(), child.getValue().getName())) 
+                                        || child.isInherited()) {
                                     pTestConfiguration.addError("Redeclared @" + pTestConfiguration.getName()
                                             + (pTestConfiguration.getGroup() != null ? " for group " + StringUtils.strip(pTestConfiguration.getGroup(), "\"") : ""));
                                     children.add(pTestConfiguration);

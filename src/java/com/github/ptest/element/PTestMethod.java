@@ -26,11 +26,15 @@ public class PTestMethod extends PTestElement<PyFunction> {
     }
 
     public boolean isInherited() {
-        return getValue().getContainingClass() != myParent.getValue();
+        return getValue().getContainingClass() != getParent().getValue();
     }
 
     public boolean isDataProvided() {
         return PTestUtil.hasDecorator(getValue(), "Test", "data_provider", null);
+    }
+    
+    public PTestClass getParent() {
+        return myParent;
     }
 
     public String getGroup() {
@@ -44,9 +48,9 @@ public class PTestMethod extends PTestElement<PyFunction> {
             configuration.setValueForEmptyWorkingDirectory();
             configuration.setRunTest(true);
             String testName = getValue().getName();
-            String testTarget = PTestUtil.findShortestImportableName(myParent.getValue().getContainingFile()) + "."
-                    + myParent.getValue().getName() + "." + testName;
-            String suggestedName = myParent.getValue().getName() + "." + testName;
+            String testTarget = PTestUtil.findShortestImportableName(getParent().getValue().getContainingFile()) + "."
+                    + getParent().getValue().getName() + "." + testName;
+            String suggestedName = getParent().getValue().getName() + "." + testName;
             configuration.setTestTargets(testTarget);
             configuration.setSuggestedName("ptest " + suggestedName);
             configuration.setActionName("ptest " + testName);
