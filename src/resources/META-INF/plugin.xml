@@ -1,22 +1,25 @@
 <idea-plugin>
   <id>karl.gong.plugin.ptest</id>
   <name>ptest</name>
-  <version>7.0</version>
+  <version>7.1</version>
   <vendor email="karl.gong@outlook.com" url="https://github.com/KarlGong">Karl Gong</vendor>
 
-  <description><![CDATA[
+  <description>
+    <![CDATA[
       <p>PyCharm plugin for <a href="https://pypi.python.org/pypi/ptest">ptest</a></p>
       <p>Easily to run/debug ptest using the standard run configuration.</p>
     ]]></description>
 
-  <change-notes><![CDATA[
-      <p>7.0</p>
+  <change-notes>
+    <![CDATA[
+      <p>7.1</p>
+      <ul>
+        <li>Show test count in PTest View.</li>
+      </ul>
+      <p>1.0 - 7.0</p>
       <ul>
         <li>Support pycharm 2018.2</li>
         <li>Support navigating to test configurations.</li>
-      </ul>
-      <p>1.0 - 6.1</p>
-      <ul>
         <li>Support loading property file.</li>
         <li>Support namespace package.</li>
         <li>Add tool window - PTest View.</li>

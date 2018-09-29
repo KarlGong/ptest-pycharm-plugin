@@ -46,7 +46,7 @@ public class PTestClass extends PTestElement<PyClass> {
             if (PTestUtil.hasDecorator(pyFunction, "Test", null, null)) {
                 PTestMethod pTestMethod = new PTestMethod(this, pyFunction);
                 // deal with redeclared tests
-                boolean foundDuplicated = false;
+                boolean foundRedeclared = false;
                 for (PTestElement c : children) {
                     if (c instanceof PTestMethod) {
                         PTestMethod child = (PTestMethod) c;
@@ -55,40 +55,40 @@ public class PTestClass extends PTestElement<PyClass> {
                                 pTestMethod.addError("Redeclared test " + pTestMethod.getValue().getName());
                                 children.add(pTestMethod);
                             }
-                            foundDuplicated = true;
+                            foundRedeclared = true;
                             break;
                         }
                     }
                 }
-                if (!foundDuplicated) {
+                if (!foundRedeclared) {
                     children.add(pTestMethod);
                 }
             }
 
-            for (String configName : new String[]{"BeforeMethod", "AfterMethod", "BeforeGroup", "AfterGroup",
-                    "BeforeClass", "AfterClass", "BeforeSuite", "AfterSuite"}) {
+            for (String configName : new String[]{"BeforeSuite", "AfterSuite", "BeforeClass", "AfterClass",
+                    "BeforeGroup", "AfterGroup", "BeforeMethod", "AfterMethod"}) {
                 if (PTestUtil.hasDecorator(pyFunction, configName, null, null)) {
                     PTestConfiguration pTestConfiguration = new PTestConfiguration(this, pyFunction, configName);
                     // deal with redeclared test configurations
-                    boolean foundDuplicated = false;
+                    boolean foundRedeclared = false;
                     for (PTestElement c : children) {
                         if (c instanceof PTestConfiguration) {
                             PTestConfiguration child = (PTestConfiguration) c;
                             if (Objects.equals(pTestConfiguration.getGroup(), child.getGroup())
                                     && Objects.equals(pTestConfiguration.getName(), child.getName())) {
                                 if (!(pTestConfiguration.isInherited()
-                                        && Objects.equals(pTestConfiguration.getValue().getName(), child.getValue().getName())) 
+                                        && Objects.equals(pTestConfiguration.getValue().getName(), child.getValue().getName()))
                                         || child.isInherited()) {
                                     pTestConfiguration.addError("Redeclared @" + pTestConfiguration.getName()
                                             + (pTestConfiguration.getGroup() != null ? " for group " + StringUtils.strip(pTestConfiguration.getGroup(), "\"") : ""));
                                     children.add(pTestConfiguration);
                                 }
-                                foundDuplicated = true;
+                                foundRedeclared = true;
                                 break;
                             }
                         }
                     }
-                    if (!foundDuplicated) {
+                    if (!foundRedeclared) {
                         children.add(pTestConfiguration);
                     }
                 }
@@ -121,7 +121,7 @@ public class PTestClass extends PTestElement<PyClass> {
                 if (getErrors().size() > 0) {
                     return getErrors().get(0);
                 }
-                
+
                 long childrenCount = getChildren().stream().filter(pTestElement -> pTestElement instanceof PTestMethod).count();
                 if (childrenCount == 0) {
                     return "· no tests";
