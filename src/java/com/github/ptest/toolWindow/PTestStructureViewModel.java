@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class PTestStructureViewModel extends StructureViewModelBase {
+    
     public PTestStructureViewModel(@NotNull PsiFile psiFile, @Nullable Editor editor) {
         super(psiFile, editor, new PTestStructureViewElement(PTestModule.createFrom(psiFile)));
         withSorters(Sorter.ALPHA_SORTER);

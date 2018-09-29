@@ -7,6 +7,7 @@ import com.intellij.execution.actions.ConfigurationContext;
 import com.intellij.execution.testframework.AbstractTestProxy;
 import com.intellij.execution.testframework.sm.runner.ui.SMTRunnerTestTreeView;
 import com.intellij.ide.dnd.aware.DnDAwareTree;
+import com.intellij.ide.structureView.newStructureView.StructureViewComponent;
 import com.intellij.ide.util.treeView.smartTree.TreeElementWrapper;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.util.Ref;
@@ -73,7 +74,7 @@ public class PTestConfigurationProducer extends AbstractPythonTestConfigurationP
             return setupConfigurationInSMTRunner((SMTRunnerTestTreeView) component, config);
         }
         // is in tool window
-        if (component instanceof DnDAwareTree) {
+        if (component != null && component.getClass().getName().equals("com.intellij.ide.structureView.newStructureView.StructureViewComponent$MyTree")) {
             return setupConfigurationInToolWindow((Tree) component, config);
         }
         // is in editor / project / structure view
@@ -136,24 +137,24 @@ public class PTestConfigurationProducer extends AbstractPythonTestConfigurationP
             return false;
         }
     }
-    
+
     public boolean setupConfigurationInToolWindow(@NotNull Tree component, @NotNull PTestRunConfiguration configuration) {
         try {
             List<PTestElement> selectedElements = new ArrayList<>();
             for (DefaultMutableTreeNode selectedNode : component.getSelectedNodes(DefaultMutableTreeNode.class, null)) {
                 TreeElementWrapper elementWrapper = (TreeElementWrapper) selectedNode.getUserObject();
-                PTestStructureViewElement structureViewElement = (PTestStructureViewElement) elementWrapper.getValue(); 
+                PTestStructureViewElement structureViewElement = (PTestStructureViewElement) elementWrapper.getValue();
                 if (!(structureViewElement.getElement() instanceof PTestConfiguration)) { // ignore ptest configuration
                     selectedElements.add(structureViewElement.getElement());
                 }
             }
-            
+
             if (selectedElements.size() == 0) return false;
-            
+
             if (selectedElements.size() == 1) {
                 return selectedElements.get(0).setupConfiguration(configuration);
             }
-            
+
             configuration.setValueForEmptyWorkingDirectory();
             configuration.setRunTest(true);
             List<String> testTargetTexts = new ArrayList<>();
