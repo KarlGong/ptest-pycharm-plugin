@@ -74,7 +74,7 @@ public class PTestConfigurationProducer extends AbstractPythonTestConfigurationP
             return setupConfigurationInSMTRunner((SMTRunnerTestTreeView) component, config);
         }
         // is in tool window
-        if (component != null && component.getClass().getName().equals("com.intellij.ide.structureView.newStructureView.StructureViewComponent$MyTree")) {
+        if (component != null && component.getClass().getName().startsWith("com.intellij.ide.structureView.newStructureView.StructureViewComponent")) {
             return setupConfigurationInToolWindow((Tree) component, config);
         }
         // is in editor / project / structure view
