@@ -1,7 +1,9 @@
 package com.github.ptest.toolWindow;
 
 import com.github.ptest.element.PTestModule;
+import com.intellij.ide.structureView.StructureViewModel.ElementInfoProvider;
 import com.intellij.ide.structureView.StructureViewModelBase;
+import com.intellij.ide.structureView.StructureViewTreeElement;
 import com.intellij.ide.util.treeView.smartTree.Filter;
 import com.intellij.ide.util.treeView.smartTree.Sorter;
 import com.intellij.openapi.editor.Editor;
@@ -11,8 +13,9 @@ import com.jetbrains.python.psi.PyFunction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class PTestStructureViewModel extends StructureViewModelBase {
-    
+
+public class PTestStructureViewModel extends StructureViewModelBase implements ElementInfoProvider {
+
     public PTestStructureViewModel(@NotNull PsiFile psiFile, @Nullable Editor editor) {
         super(psiFile, editor, new PTestStructureViewElement(PTestModule.createFrom(psiFile)));
         withSorters(Sorter.ALPHA_SORTER);
@@ -23,5 +26,15 @@ public class PTestStructureViewModel extends StructureViewModelBase {
     @Override
     public Filter[] getFilters() {
         return new Filter[]{new PTestConfigurationFilter()};
+    }
+
+    @Override
+    public boolean isAlwaysShowsPlus(StructureViewTreeElement element) {
+        return !(element.getValue() instanceof PyFunction);
+    }
+
+    @Override
+    public boolean isAlwaysLeaf(StructureViewTreeElement structureViewTreeElement) {
+        return structureViewTreeElement.getValue() instanceof PyFunction;
     }
 }
