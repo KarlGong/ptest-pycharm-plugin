@@ -1,20 +1,20 @@
 <idea-plugin>
-    <id>karl.gong.plugin.ptest</id>
-    <name>ptest</name>
-    <version>7.2</version>
-    <vendor email="karl.gong@outlook.com" url="https://github.com/KarlGong">Karl Gong</vendor>
+  <id>karl.gong.plugin.ptest</id>
+  <name>ptest</name>
+  <version>7.2</version>
+  <vendor email="karl.gong@outlook.com" url="https://github.com/KarlGong">Karl Gong</vendor>
 
-    <description>
-        <![CDATA[
-      <p>PyCharm plugin for <a href="https://pypi.python.org/pypi/com.github.ptest">com.github.ptest</a></p>
-      <p>Easily to run/debug com.github.ptest using the standard run configuration.</p>
+  <description>
+    <![CDATA[
+      <p>PyCharm plugin for <a href="https://pypi.python.org/pypi/ptest">ptest</a></p>
+      <p>Easily to run/debug ptest using the standard run configuration.</p>
     ]]></description>
 
-    <change-notes>
-        <![CDATA[
+  <change-notes>
+    <![CDATA[
       <p>7.2</p>
       <ul>
-        <li>Fix that test in com.github.ptest view shows a plus icon in pycharm 2018.3.1</li>
+        <li>Fix that test in ptest view shows a plus icon in pycharm 2018.3.1</li>
       </ul>
       <p>1.0 - 7.1</p>
       <ul>
@@ -25,46 +25,46 @@
         <li>Support namespace package.</li>
         <li>Add tool window - PTest View.</li>
         <li>Support right click data provided test case in run/debug panel.</li>
-        <li>Add gutter marker for test and test class of com.github.ptest.</li>
+        <li>Add gutter marker for test and test class of ptest.</li>
         <li>Support group in run/debug panel.</li>
         <li>Support inspecting redeclared decorated names.</li>
         <li>Support rerunning the failed/skipped tests in last run.</li>
-        <li>Support running/debugging com.github.ptest using the standard run configuration.</li>
+        <li>Support running/debugging ptest using the standard run configuration.</li>
       </ul>
     ]]>
-    </change-notes>
+  </change-notes>
 
-    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
-    <idea-version since-build="182"/>
+  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+  <idea-version since-build="182"/>
 
-    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
-         on how to target different products -->
-    <depends>com.intellij.modules.python</depends>
+  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+       on how to target different products -->
+  <depends>com.intellij.modules.python</depends>
+    
+  <extensions defaultExtensionNs="com.intellij">
+    <!-- Add your extensions here -->
+    <configurationType implementation="com.github.ptest.runConfiguration.PTestConfigurationType" order="FIRST"/>
+    <runConfigurationProducer implementation="com.github.ptest.runConfiguration.PTestConfigurationProducer" order="FIRST"/>
+    <inspectionToolProvider implementation="com.github.ptest.inspection.PTestRedeclarationProvider"/>
+    <runLineMarkerContributor implementationClass="com.github.ptest.runLineMarker.PTestRunLineMarkerContributor" language="Python"/>
+    <toolWindow id="PTest View" factoryClass="com.github.ptest.toolWindow.PTestViewToolWindowFactory" anchor="right" icon="/icons/com/jetbrains/python/pythonTests.png"/>
+  </extensions>
 
-    <extensions defaultExtensionNs="com.intellij">
-        <!-- Add your extensions here -->
-        <configurationType implementation="com.github.ptest.runConfiguration.PTestConfigurationType" order="FIRST"/>
-        <runConfigurationProducer implementation="com.github.ptest.runConfiguration.PTestConfigurationProducer" order="FIRST"/>
-        <inspectionToolProvider implementation="com.github.ptest.inspection.PTestRedeclarationProvider"/>
-        <runLineMarkerContributor implementationClass="com.github.ptest.runLineMarker.PTestRunLineMarkerContributor" language="Python"/>
-        <toolWindow id="PTest View" factoryClass="com.github.ptest.toolWindow.PTestViewToolWindowFactory" anchor="right" icon="/icons/com/jetbrains/python/pythonTests.png"/>
-    </extensions>
+  <application-components>
+    <!-- Add your application components here -->
+  </application-components>
 
-    <application-components>
-        <!-- Add your application components here -->
-    </application-components>
+  <project-components>
+    <!-- Add your project components here -->
+  </project-components>
 
-    <project-components>
-        <!-- Add your project components here -->
-    </project-components>
-
-    <actions>
-        <!-- Add your actions here -->
-        <action id="com.github.com.github.ptest.action.LoadPropertyFileAction" class="com.github.ptest.action.LoadPropertyFileAction"
-                text="Load Property File for PTest" icon="/icons/com/jetbrains/python/propertySetter.png">
-            <add-to-group group-id="ProjectViewPopupMenu" anchor="after" relative-to-action="ProjectViewPopupMenuRunGroup"/>
-        </action>
-
-    </actions>
+  <actions>
+    <!-- Add your actions here -->
+    <action id="com.github.ptest.action.LoadPropertyFileAction" class="com.github.ptest.action.LoadPropertyFileAction"
+            text="Load Property File for PTest" icon="/icons/com/jetbrains/python/propertySetter.png">
+      <add-to-group group-id="ProjectViewPopupMenu" anchor="after" relative-to-action="ProjectViewPopupMenuRunGroup"/>
+    </action>
+    
+  </actions>
 
 </idea-plugin>

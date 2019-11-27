@@ -4,6 +4,7 @@ import com.github.ptest.runConfiguration.PTestRunConfiguration;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import com.jetbrains.python.psi.PyClass;
 
 import java.nio.file.Paths;
 

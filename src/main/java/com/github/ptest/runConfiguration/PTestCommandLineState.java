@@ -77,7 +77,7 @@ public class PTestCommandLineState extends PythonTestCommandLineStateBase<PTestR
     protected void addTestRunnerParameters(GeneralCommandLine cmd) {
         ParamsGroup script_params = cmd.getParametersList().getParamsGroup(GROUP_SCRIPT);
         assert script_params != null;
-        String ptestPluginPath = PluginManager.getPlugin(PluginId.getId("karl.gong.plugin.com.github.ptest")).getPath().getAbsolutePath();
+        String ptestPluginPath = PluginManager.getPlugin(PluginId.getId("karl.gong.plugin.ptest")).getPath().getAbsolutePath();
         script_params.addParameter(Paths.get(ptestPluginPath, "lib", "ptest_runner.py").toAbsolutePath().toString());
         addBeforeParameters(cmd);
         script_params.addParameters(getTestSpecs());

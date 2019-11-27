@@ -52,8 +52,8 @@ public class PTestMethod extends PTestElement<PyFunction> {
                     + getParent().getValue().getName() + "." + testName;
             String suggestedName = getParent().getValue().getName() + "." + testName;
             configuration.setTestTargets(testTarget);
-            configuration.setSuggestedName("com/github/ptest " + suggestedName);
-            configuration.setActionName("com/github/ptest " + testName);
+            configuration.setSuggestedName("ptest " + suggestedName);
+            configuration.setActionName("ptest " + testName);
             return true;
         } catch (Exception e) {
             return false;
