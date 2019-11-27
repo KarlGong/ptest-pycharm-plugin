@@ -6,8 +6,6 @@ import com.intellij.execution.Location;
 import com.intellij.execution.actions.ConfigurationContext;
 import com.intellij.execution.testframework.AbstractTestProxy;
 import com.intellij.execution.testframework.sm.runner.ui.SMTRunnerTestTreeView;
-import com.intellij.ide.dnd.aware.DnDAwareTree;
-import com.intellij.ide.structureView.newStructureView.StructureViewComponent;
 import com.intellij.ide.util.treeView.smartTree.TreeElementWrapper;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.util.Ref;
@@ -130,8 +128,8 @@ public class PTestConfigurationProducer extends AbstractPythonTestConfigurationP
             String testName = test.getName();
             configuration.setTestTargets(testClass.getName() + "." + testName);
             String[] splittedNames = testClass.getName().split("\\.");
-            configuration.setSuggestedName("ptest " + splittedNames[splittedNames.length - 1] + "." + testName);
-            configuration.setActionName("ptest " + testName);
+            configuration.setSuggestedName("com/github/ptest " + splittedNames[splittedNames.length - 1] + "." + testName);
+            configuration.setActionName("com/github/ptest " + testName);
             return true;
         } catch (Exception e) {
             return false;
@@ -144,7 +142,7 @@ public class PTestConfigurationProducer extends AbstractPythonTestConfigurationP
             for (DefaultMutableTreeNode selectedNode : component.getSelectedNodes(DefaultMutableTreeNode.class, null)) {
                 TreeElementWrapper elementWrapper = (TreeElementWrapper) selectedNode.getUserObject();
                 PTestStructureViewElement structureViewElement = (PTestStructureViewElement) elementWrapper.getValue();
-                if (!(structureViewElement.getElement() instanceof PTestConfiguration)) { // ignore ptest configuration
+                if (!(structureViewElement.getElement() instanceof PTestConfiguration)) { // ignore com.github.ptest configuration
                     selectedElements.add(structureViewElement.getElement());
                 }
             }

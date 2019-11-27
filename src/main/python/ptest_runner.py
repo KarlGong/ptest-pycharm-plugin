@@ -1,15 +1,15 @@
 try:
-    import ptest
+    import com.github.ptest
 except ImportError:
-    raise NameError("No ptest runner found in selected interpreter.")
+    raise NameError("No com.github.ptest runner found in selected interpreter.")
 
 try:
     from tc_messages import TeamcityServiceMessages
 except ImportError:
     raise NameError("No tc_messages module found in selected interpreter.")
 
-from ptest.plistener import TestListener
-from ptest.enumeration import TestCaseStatus
+from com.github.ptest.plistener import TestListener
+from com.github.ptest.enumeration import TestCaseStatus
 
 
 class TeamcityTestListener(TestListener):
@@ -49,8 +49,8 @@ class TeamcityTestListener(TestListener):
 
 
 def _main():
-    from ptest.main import main
-    from ptest.plistener import test_listeners
+    from com.github.ptest.main import main
+    from com.github.ptest.plistener import test_listeners
     test_listeners.set_outer_test_listener(TeamcityTestListener())
     main()
 
