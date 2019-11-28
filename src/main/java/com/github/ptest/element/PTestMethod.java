@@ -12,7 +12,7 @@ import com.intellij.ui.LayeredIcon;
 import com.jetbrains.python.psi.PyClass;
 import com.jetbrains.python.psi.PyExpression;
 import com.jetbrains.python.psi.PyFunction;
-import icons.RemoteServersIcons;
+import icons.PTestIcons;
 import org.apache.commons.lang.StringUtils;
 
 import javax.swing.*;
@@ -32,7 +32,7 @@ public class PTestMethod extends PTestElement<PyFunction> {
     public boolean isDataProvided() {
         return PTestUtil.hasDecorator(getValue(), "Test", "data_provider", null);
     }
-    
+
     public PTestClass getParent() {
         return myParent;
     }
@@ -41,7 +41,7 @@ public class PTestMethod extends PTestElement<PyFunction> {
         PyExpression valueExp = getValue().getDecoratorList().findDecorator("Test").getKeywordArgument("group");
         return valueExp == null ? null : valueExp.getText();
     }
-    
+
     @Override
     public boolean setupConfiguration(PTestRunConfiguration configuration) {
         try {
@@ -91,7 +91,7 @@ public class PTestMethod extends PTestElement<PyFunction> {
                 if (isDataProvided()) {
                     LayeredIcon icon = new LayeredIcon(2);
                     icon.setIcon(normalIcon, 0);
-                    icon.setIcon(RemoteServersIcons.ResumeScaled, 1);
+                    icon.setIcon(PTestIcons.DataProvided, 1);
                     return icon;
                 }
                 return normalIcon;

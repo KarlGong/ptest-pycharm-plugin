@@ -3,24 +3,21 @@ package com.github.ptest.runLineMarker.action;
 import com.github.ptest.element.PTestConfiguration;
 import com.github.ptest.element.PTestElement;
 import com.github.ptest.element.PTestMethod;
-import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.psi.PsiElement;
+import icons.PTestIcons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class TestConfigurationActionGroup extends ActionGroup {
     final private PsiElement myElement;
 
     public TestConfigurationActionGroup(PsiElement element) {
-        super("Test Configurations", null, AllIcons.Css.Atrule);
+        super("Test Configurations", null, PTestIcons.TestConfiguration);
         this.setPopup(true);
         myElement = element;
     }
@@ -32,15 +29,16 @@ public class TestConfigurationActionGroup extends ActionGroup {
     @NotNull
     @Override
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
-        Map<String, AnAction> actions = new LinkedHashMap<>();
-        actions.put("BeforeSuite", null);
-        actions.put("AfterSuite", null);
-        actions.put("BeforeClass", null);
-        actions.put("AfterClass", null);
-        actions.put("BeforeGroup", null);
-        actions.put("AfterGroup", null);
-        actions.put("BeforeMethod", null);
-        actions.put("AfterMethod", null);
+        Map<String, AnAction> actionsMap = new LinkedHashMap<>();
+        // for sorting the test configurations
+        actionsMap.put("BeforeSuite", null);
+        actionsMap.put("AfterSuite", null);
+        actionsMap.put("BeforeClass", null);
+        actionsMap.put("AfterClass", null);
+        actionsMap.put("BeforeGroup", null);
+        actionsMap.put("AfterGroup", null);
+        actionsMap.put("BeforeMethod", null);
+        actionsMap.put("AfterMethod", null);
 
         PTestMethod pTestMethod = PTestMethod.createFrom(myElement);
         String group = pTestMethod.getGroup();
@@ -50,12 +48,19 @@ public class TestConfigurationActionGroup extends ActionGroup {
                 PTestConfiguration pTestConfiguration = (PTestConfiguration) pTestElement;
                 if (!Arrays.asList("BeforeGroup", "AfterGroup", "BeforeMethod", "AfterMethod").contains(pTestConfiguration.getName())
                         || Objects.equals(group, pTestConfiguration.getGroup())) {
-                    actions.put(pTestConfiguration.getName(), new NavigateAction(pTestConfiguration.getValue(),
-                            pTestConfiguration.getName(), null, AllIcons.Css.Atrule));
+                    actionsMap.put(pTestConfiguration.getName(), new NavigateAction(pTestConfiguration.getValue(),
+                            pTestConfiguration.getName(), null, PTestIcons.TestConfiguration));
                 }
             }
         }
 
-        return actions.values().toArray(new AnAction[actions.size()]);
+        List<AnAction> actions = new LinkedList<>();
+        for(Map.Entry<String, AnAction> entry: actionsMap.entrySet()) {
+            if (entry.getValue() != null) {
+                actions.add(entry.getValue());
+            }
+        }
+        
+        return actions.toArray(new AnAction[actions.size()]);
     }
 }

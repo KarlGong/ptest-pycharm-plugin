@@ -1,9 +1,9 @@
 package com.github.ptest.runConfiguration;
 
 import com.intellij.execution.configurations.*;
-import com.jetbrains.python.run.PythonConfigurationFactoryBase;
-import icons.PythonIcons;
 import com.intellij.openapi.project.Project;
+import com.jetbrains.python.run.PythonConfigurationFactoryBase;
+import icons.PTestIcons;
 
 import javax.swing.*;
 
@@ -12,7 +12,7 @@ public class PTestConfigurationType extends ConfigurationTypeBase {
     public final PTestConfigurationFactory PTEST_FACTORY = new PTestConfigurationFactory(this);
 
     public PTestConfigurationType() {
-        super("ptest", "ptest", "run ptest", PythonIcons.Python.PythonTests);
+        super("ptest", "ptest", "run ptest", PTestIcons.PTest);
     }
 
     public static PTestConfigurationType getInstance() {
@@ -41,7 +41,7 @@ public class PTestConfigurationType extends ConfigurationTypeBase {
 
         @Override
         public Icon getIcon() {
-            return PythonIcons.Python.PythonTests;
+            return PTestIcons.PTest;
         }
     }
 }

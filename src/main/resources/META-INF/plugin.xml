@@ -47,7 +47,7 @@
     <runConfigurationProducer implementation="com.github.ptest.runConfiguration.PTestConfigurationProducer" order="FIRST"/>
     <inspectionToolProvider implementation="com.github.ptest.inspection.PTestRedeclarationProvider"/>
     <runLineMarkerContributor implementationClass="com.github.ptest.runLineMarker.PTestRunLineMarkerContributor" language="Python"/>
-    <toolWindow id="PTest View" factoryClass="com.github.ptest.toolWindow.PTestViewToolWindowFactory" anchor="right" icon="/icons/com/jetbrains/python/pythonTests.png"/>
+    <toolWindow id="PTest View" factoryClass="com.github.ptest.toolWindow.PTestViewToolWindowFactory" anchor="right" icon="PTestIcons.PTest"/>
   </extensions>
 
   <application-components>
@@ -61,7 +61,7 @@
   <actions>
     <!-- Add your actions here -->
     <action id="com.github.ptest.action.LoadPropertyFileAction" class="com.github.ptest.action.LoadPropertyFileAction"
-            text="Load Property File for PTest" icon="/icons/com/jetbrains/python/propertySetter.png">
+            text="Load Property File for PTest" icon="PTestIcons.LoadConfig">
       <add-to-group group-id="ProjectViewPopupMenu" anchor="after" relative-to-action="ProjectViewPopupMenuRunGroup"/>
     </action>
     

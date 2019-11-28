@@ -2,10 +2,10 @@ package com.github.ptest.toolWindow;
 
 import com.github.ptest.element.PTestConfiguration;
 import com.github.ptest.element.PTestElement;
-import com.intellij.icons.AllIcons;
 import com.intellij.ide.util.treeView.smartTree.ActionPresentation;
 import com.intellij.ide.util.treeView.smartTree.Filter;
 import com.intellij.ide.util.treeView.smartTree.TreeElement;
+import icons.PTestIcons;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -28,7 +28,7 @@ public class PTestConfigurationFilter implements Filter {
 
             @Override
             public Icon getIcon() {
-                return AllIcons.Css.Atrule;
+                return PTestIcons.TestConfiguration;
             }
         };
     }

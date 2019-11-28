@@ -7,11 +7,11 @@ import com.github.ptest.runLineMarker.action.TestConfigurationActionGroup;
 import com.intellij.execution.Executor;
 import com.intellij.execution.ExecutorRegistry;
 import com.intellij.execution.lineMarker.RunLineMarkerContributor;
-import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.psi.PsiElement;
 import com.jetbrains.python.psi.PyClass;
 import com.jetbrains.python.psi.PyFunction;
+import icons.PTestIcons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,9 +23,9 @@ public class PTestRunLineMarkerContributor extends RunLineMarkerContributor {
     @Override
     public Info getInfo(@NotNull PsiElement element) {
         if (element instanceof PyFunction && PTestMethod.createFrom(element) != null) {
-            return new Info(AllIcons.RunConfigurations.TestState.Run, e -> "PTest @Test", getTestActions(element));
+            return new Info(PTestIcons.Test, e -> "PTest @Test", getTestActions(element));
         } else if (element instanceof PyClass && PTestClass.createFrom(element) != null) {
-            return new Info(AllIcons.RunConfigurations.TestState.Run_run, e -> "PTest @TestClass", getTestClassActions(element));
+            return new Info(PTestIcons.TestClass, e -> "PTest @TestClass", getTestClassActions(element));
         }
         return null;
     }

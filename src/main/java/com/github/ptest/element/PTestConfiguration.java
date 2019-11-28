@@ -1,13 +1,13 @@
 package com.github.ptest.element;
 
 import com.github.ptest.runConfiguration.PTestRunConfiguration;
-import com.intellij.icons.AllIcons;
 import com.intellij.navigation.ColoredItemPresentation;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.editor.colors.CodeInsightColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.jetbrains.python.psi.PyExpression;
 import com.jetbrains.python.psi.PyFunction;
+import icons.PTestIcons;
 import org.apache.commons.lang.StringUtils;
 
 import javax.swing.*;
@@ -54,7 +54,7 @@ public class PTestConfiguration extends PTestElement<PyFunction> {
             @Override
             public String getLocationString() {
                 if (getErrors().size() > 0) {
-                    return getErrors().get(0);    
+                    return getErrors().get(0);
                 }
                 String group = getGroup();
                 return group != null ? StringUtils.strip(group, "\"") : null;
@@ -62,7 +62,7 @@ public class PTestConfiguration extends PTestElement<PyFunction> {
 
             @Override
             public Icon getIcon(boolean open) {
-                return AllIcons.Css.Atrule;
+                return PTestIcons.TestConfiguration;
             }
         };
     }
