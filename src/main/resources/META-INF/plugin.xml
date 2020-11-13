@@ -1,7 +1,7 @@
 <idea-plugin>
   <id>karl.gong.plugin.ptest</id>
   <name>ptest</name>
-  <version>7.2</version>
+  <version>7.3</version>
   <vendor email="karl.gong@outlook.com" url="https://github.com/KarlGong">Karl Gong</vendor>
 
   <description>
@@ -12,12 +12,13 @@
 
   <change-notes>
     <![CDATA[
-      <p>7.2</p>
+      <p>7.3</p>
+      <ul>
+        <li>Use custom icon not built-in.</li>
+      </ul>
+      <p>1.0 - 7.2</p>
       <ul>
         <li>Fix that test in ptest view shows a plus icon in pycharm 2018.3.1</li>
-      </ul>
-      <p>1.0 - 7.1</p>
-      <ul>
         <li>Show test count in PTest View.</li>
         <li>Support pycharm 2018.2</li>
         <li>Support navigating to test configurations.</li>
