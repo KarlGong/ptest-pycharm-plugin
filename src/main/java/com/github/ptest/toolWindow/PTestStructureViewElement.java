@@ -59,7 +59,7 @@ public class PTestStructureViewElement implements StructureViewTreeElement {
             }
         }
 
-        return children.toArray(new PTestStructureViewElement[children.size()]);
+        return children.toArray(new PTestStructureViewElement[0]);
     }
 
     @NotNull

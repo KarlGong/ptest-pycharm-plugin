@@ -61,6 +61,6 @@ public class TestConfigurationActionGroup extends ActionGroup {
             }
         }
         
-        return actions.toArray(new AnAction[actions.size()]);
+        return actions.toArray(new AnAction[0]);
     }
 }

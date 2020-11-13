@@ -4,6 +4,7 @@ import com.intellij.execution.configurations.*;
 import com.intellij.openapi.project.Project;
 import com.jetbrains.python.run.PythonConfigurationFactoryBase;
 import icons.PTestIcons;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
@@ -27,6 +28,11 @@ public class PTestConfigurationType extends ConfigurationTypeBase {
     public class PTestConfigurationFactory extends PythonConfigurationFactoryBase {
         protected PTestConfigurationFactory(ConfigurationType configurationType) {
             super(configurationType);
+        }
+
+        @Override
+        public String getId() {
+            return "ptest";
         }
 
         @Override

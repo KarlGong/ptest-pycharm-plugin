@@ -34,20 +34,20 @@ public class PTestRunLineMarkerContributor extends RunLineMarkerContributor {
     private static AnAction[] getTestActions(PsiElement element) {
         List<AnAction> actions = new ArrayList<>();
         // runs
-        for (Executor executor : ExecutorRegistry.getInstance().getRegisteredExecutors()) {
+        for (Executor executor : Executor.EXECUTOR_EXTENSION_NAME.getExtensions()) {
             actions.add(new RunTestAction(executor, element));
         }
         // goto
         actions.add(new TestConfigurationActionGroup(element));
-        return actions.toArray(new AnAction[actions.size()]);
+        return actions.toArray(new AnAction[0]);
     }
 
     @NotNull
     private static AnAction[] getTestClassActions(PsiElement element) {
         List<AnAction> actions = new ArrayList<>();
-        for (Executor executor : ExecutorRegistry.getInstance().getRegisteredExecutors()) {
+        for (Executor executor : Executor.EXECUTOR_EXTENSION_NAME.getExtensions()) {
             actions.add(new RunTestAction(executor, element));
         }
-        return actions.toArray(new AnAction[actions.size()]);
+        return actions.toArray(new AnAction[0]);
     }
 }

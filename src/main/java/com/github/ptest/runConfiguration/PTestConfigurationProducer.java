@@ -4,6 +4,7 @@ import com.github.ptest.element.*;
 import com.github.ptest.toolWindow.PTestStructureViewElement;
 import com.intellij.execution.Location;
 import com.intellij.execution.actions.ConfigurationContext;
+import com.intellij.execution.configurations.ConfigurationFactory;
 import com.intellij.execution.testframework.AbstractTestProxy;
 import com.intellij.execution.testframework.sm.runner.ui.SMTRunnerTestTreeView;
 import com.intellij.ide.dnd.aware.DnDAwareTree;
@@ -30,13 +31,19 @@ import java.util.List;
 public class PTestConfigurationProducer extends AbstractPythonTestConfigurationProducer<PTestRunConfiguration> {
 
     public PTestConfigurationProducer() {
-        super(PTestConfigurationType.getInstance().PTEST_FACTORY);
+        super();
     }
 
     @NotNull
     @Override
     public Class<? super PTestRunConfiguration> getConfigurationClass() {
         return PTestRunConfiguration.class;
+    }
+
+    @NotNull
+    @Override
+    public ConfigurationFactory getConfigurationFactory() {
+        return PTestConfigurationType.getInstance().PTEST_FACTORY;
     }
 
     @Override
@@ -64,9 +71,7 @@ public class PTestConfigurationProducer extends AbstractPythonTestConfigurationP
         // is in <if __name__ = "__main__"> section
         if (RunnableScriptFilter.isIfNameMain(location)) return false;
         // is project folder
-        if (element instanceof PsiDirectory
-                && ((PsiDirectory) element).getVirtualFile().equals(element.getProject().getBaseDir()))
-            return false;
+        if (element instanceof PsiDirectory && ((PsiDirectory) element).getVirtualFile().getPath().equals(element.getProject().getBasePath())) return false;
         // get context component
         Component component = PlatformDataKeys.CONTEXT_COMPONENT.getData(context.getDataContext());
         // is in test runner 

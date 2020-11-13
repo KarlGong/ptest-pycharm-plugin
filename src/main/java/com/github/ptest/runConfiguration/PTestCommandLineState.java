@@ -13,6 +13,7 @@ import com.intellij.execution.testframework.sm.runner.ui.SMTRunnerConsoleView;
 import com.intellij.execution.testframework.ui.BaseTestsOutputConsoleView;
 import com.intellij.execution.ui.ConsoleView;
 import com.intellij.ide.plugins.PluginManager;
+import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.util.text.StringUtil;
 import com.jetbrains.python.HelperPackage;
@@ -77,7 +78,7 @@ public class PTestCommandLineState extends PythonTestCommandLineStateBase<PTestR
     protected void addTestRunnerParameters(GeneralCommandLine cmd) {
         ParamsGroup script_params = cmd.getParametersList().getParamsGroup(GROUP_SCRIPT);
         assert script_params != null;
-        String ptestPluginPath = PluginManager.getPlugin(PluginId.getId("karl.gong.plugin.ptest")).getPath().getAbsolutePath();
+        String ptestPluginPath = PluginManagerCore.getPlugin(PluginId.getId("karl.gong.plugin.ptest")).getPluginPath().toAbsolutePath().toString();
         script_params.addParameter(Paths.get(ptestPluginPath, "lib", "ptest_runner.py").toAbsolutePath().toString());
         addBeforeParameters(cmd);
         script_params.addParameters(getTestSpecs());

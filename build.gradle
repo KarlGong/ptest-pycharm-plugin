@@ -1,5 +1,6 @@
 plugins {
-    id 'org.jetbrains.intellij' version '0.4.14'
+    id 'java'
+    id 'org.jetbrains.intellij' version '0.6.3'
 }
 
 repositories {
@@ -8,7 +9,13 @@ repositories {
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
-    version '2019.2'
-    type 'PC'
-    updateSinceUntilBuild false
+    plugins = ['PythonCore']
+    version = '2020.2'
+    type = 'PC'
+    downloadSources = false
+    updateSinceUntilBuild = false
+}
+
+buildSearchableOptions {
+    enabled = false
 }

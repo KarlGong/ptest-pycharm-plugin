@@ -138,7 +138,7 @@ public class PTestRedeclarationInspection extends PyInspection {
                             String.format("Redeclared decorated %s ''%s'' defined above", elementType, name),
                             ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
                             null,
-                            quickFixes.toArray(new LocalQuickFix[quickFixes.size()]));
+                            quickFixes.toArray(new LocalQuickFix[0]));
                 }
             }
         }
