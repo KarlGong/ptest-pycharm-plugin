@@ -7,7 +7,9 @@ import com.github.ptest.runLineMarker.action.TestConfigurationActionGroup;
 import com.intellij.execution.Executor;
 import com.intellij.execution.ExecutorRegistry;
 import com.intellij.execution.lineMarker.RunLineMarkerContributor;
+import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.Separator;
 import com.intellij.psi.PsiElement;
 import com.jetbrains.python.psi.PyClass;
 import com.jetbrains.python.psi.PyFunction;
@@ -37,6 +39,12 @@ public class PTestRunLineMarkerContributor extends RunLineMarkerContributor {
         for (Executor executor : Executor.EXECUTOR_EXTENSION_NAME.getExtensions()) {
             actions.add(new RunTestAction(executor, element));
         }
+        
+        // Modify / Create run configuration, uncomment if needed
+        // AnAction createRunConfiguration = ActionManager.getInstance().getAction("CreateRunConfiguration");
+        // actions.add(createRunConfiguration);
+        
+        actions.add(Separator.getInstance());
         // goto
         actions.add(new TestConfigurationActionGroup(element));
         return actions.toArray(new AnAction[0]);
