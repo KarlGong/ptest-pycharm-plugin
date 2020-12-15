@@ -34,7 +34,7 @@ public class PTestStructureViewModel extends StructureViewModelBase implements E
     }
 
     @Override
-    public boolean isAlwaysLeaf(StructureViewTreeElement structureViewTreeElement) {
-        return structureViewTreeElement.getValue() instanceof PyFunction;
+    public boolean isAlwaysLeaf(StructureViewTreeElement element) {
+        return element.getValue() instanceof PyFunction;
     }
 }

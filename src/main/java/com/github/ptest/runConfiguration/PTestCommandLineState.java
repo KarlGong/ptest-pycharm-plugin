@@ -12,17 +12,20 @@ import com.intellij.execution.testframework.autotest.ToggleAutoTestAction;
 import com.intellij.execution.testframework.sm.runner.ui.SMTRunnerConsoleView;
 import com.intellij.execution.testframework.ui.BaseTestsOutputConsoleView;
 import com.intellij.execution.ui.ConsoleView;
-import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.PluginManagerCore;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.extensions.PluginId;
+import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.util.text.StringUtil;
 import com.jetbrains.python.HelperPackage;
 import com.jetbrains.python.run.CommandLinePatcher;
 import com.jetbrains.python.testing.PythonTestCommandLineStateBase;
+import org.jetbrains.concurrency.AsyncPromise;
 
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class PTestCommandLineState extends PythonTestCommandLineStateBase<PTestRunConfiguration> {
     private final PTestRunConfiguration configuration;
@@ -87,8 +90,13 @@ public class PTestCommandLineState extends PythonTestCommandLineStateBase<PTestR
 
     @Override
     public ExecutionResult execute(Executor executor, CommandLinePatcher... patchers) throws ExecutionException {
-        final ProcessHandler processHandler = startProcess(getDefaultPythonProcessStarter(), patchers);
-        final ConsoleView console = createAndAttachConsole(configuration.getProject(), processHandler, executor);
+        return this.execute(executor, this.getDefaultPythonProcessStarter(), patchers);
+    }
+
+    @Override
+    public ExecutionResult execute(Executor executor, PythonProcessStarter processStarter, CommandLinePatcher... patchers) throws ExecutionException {
+        final ProcessHandler processHandler = startProcess(processStarter, patchers);
+        ConsoleView console = invokeAndWait(() -> createAndAttachConsole(configuration.getProject(), processHandler, executor));
 
         DefaultExecutionResult executionResult = new DefaultExecutionResult(console, processHandler, createActions(console, processHandler));
 
@@ -100,5 +108,17 @@ public class PTestCommandLineState extends PythonTestCommandLineStateBase<PTestR
 
         executionResult.setRestartActions(rerunFailedTestsAction, new ToggleAutoTestAction());
         return executionResult;
+    }
+
+    protected static <T, E extends Throwable> T invokeAndWait(ThrowableComputable<T, E> computable) {
+        AsyncPromise<T> promise = new AsyncPromise<>();
+        ApplicationManager.getApplication().invokeAndWait(() -> {
+            try {
+                promise.setResult(computable.compute());
+            } catch (Throwable error) {
+                promise.setError(error);
+            }
+        });
+        return Objects.requireNonNull(promise.get(), "The execution was cancelled");
     }
 }
